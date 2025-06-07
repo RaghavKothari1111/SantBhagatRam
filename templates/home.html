@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Website{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="tv-plus-gallery">
+    <button class="play-pause-btn" onclick="toggleAutoPlay()">⏸</button>
+    
+    <div class="item-container" id="itemContainer">
+        <!-- Slide 1 -->
+        <div class="gallery-item" data-index="0">
+            <img src="{{ url_for('static', filename='images/slide1.png') }}" alt="Slide 1">
+            <div class="overlay">
+                <h2>Innovation</h2>
+                <p>Technology · Future · Progress</p>
+                <button class="stream-btn">Explore Now</button>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="gallery-item" data-index="1">
+            <img src="{{ url_for('static', filename='images/slide2.png') }}" alt="Slide 2">
+            <div class="overlay">
+                <h2>Creative</h2>
+                <p>Design · Art · Expression</p>
+                <button class="stream-btn">Discover More</button>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="gallery-item" data-index="2">
+            <img src="{{ url_for('static', filename='images/slide3.png') }}" alt="Slide 3">
+            <div class="overlay">
+                <h2>Science</h2>
+                <p>Research · Discovery · Knowledge</p>
+                <button class="stream-btn">Learn More</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow prev" onclick="prevImage()">‹</button>
+        <button class="nav-arrow next" onclick="nextImage()">›</button>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="progress-dots" id="progressDots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+    </div>
+</section>
+
+<div class="after-slider-marquee">
+    <marquee loop="infinite" behaviour="scroll" >
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏 
+      &nbsp;&nbsp;&nbsp;&nbsp;
+     🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    </marquee>
+</div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/slider.js') }}"></script>
+{% endblock %}

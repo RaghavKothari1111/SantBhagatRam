@@ -1,0 +1,13 @@
+.after-slider-marquee {
+    background-color: #7A4C5B;
+    height: 40px;
+    width: 100%; /* Make it full-width */
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #c9c9c9;
+}
+
+.after-slider-marquee marquee {
+    color: white;
+    font-weight: 550;
+}
