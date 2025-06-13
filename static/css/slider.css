@@ -1,11 +1,17 @@
 
 .tv-plus-gallery {
     position: relative;
-    width: 100%;
+    width: 50%;
     height: 70vh;
     min-height: 500px;
     overflow: hidden;
-    margin-top: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom:10px ;
+    border-radius: 5px;
+    border-width: 4px;
+    border-color: #F26096;
+    border-style: solid;
 }
 
 .item-container {

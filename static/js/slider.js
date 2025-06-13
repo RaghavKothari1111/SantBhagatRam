@@ -1,6 +1,6 @@
 // Slider JavaScript
 let currentIndex = 0;
-const totalSlides = 3;
+const totalSlides = 6;
 let autoPlayInterval;
 let isAutoPlaying = true;
 const container = document.getElementById('itemContainer');
