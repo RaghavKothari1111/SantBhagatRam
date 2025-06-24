@@ -37,15 +37,15 @@
     opacity: 1;
 }
 
+/* Navbar Styles */
 .navbar {
     padding: 15px 40px;
     width: 100%;
     position: sticky;
     top: 0;
     z-index: 100;
-    background: linear-gradient(90deg, #F26096, #F68FB5, #E0759C);
+    background: linear-gradient(90deg, #C71585, #D36BA9, #AD1457); /* darker pinks for contrast */
     animation: gradientMove 2s ease infinite;
-
 }
 
 @keyframes gradientMove {
@@ -70,7 +70,7 @@
 }
 
 .logo a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     font-size: 24px;
     font-weight: bold;
@@ -85,7 +85,7 @@
 
 .nav-links a {
     text-decoration: none;
-    color: white;
+    color: #ffffff;
     font-weight: bold;
     padding: 10px 12px;
     display: inline-block;
@@ -94,8 +94,9 @@
 }
 
 .nav-links a:hover {
-    color: #ffedca;
+    color: #ffc1d6; /* soft blush pink for hover */
 }
+
 .nav-links a::after {
     content: '';
     position: absolute;
@@ -103,7 +104,7 @@
     height: 2px;
     bottom: -4px;
     left: 0;
-    background: white;
+    background: #ffe4ee;    
     transition: width 0.3s ease;
 }
 
@@ -111,9 +112,10 @@
     width: 100%;
 }
 
+/* Donate Button */
 .donate-btn {
     display: inline-block;
-    background: linear-gradient(45deg, #e74c3c, #ff6f61);
+    background: linear-gradient(45deg, #D81B60, #EC407A); /* rich rose-pink blend */
     padding: 2px 8px;
     border-radius: 10px;
     font-weight: bold;
@@ -121,11 +123,13 @@
     position: relative;
     overflow: hidden;
     color: white !important;
+    transition: all 0.3s ease;
 }
 
 .donate-btn:hover {
     transform: scale(1.08);
-    box-shadow: 0 8px 20px rgba(255, 0, 191, 0.5);
+    background: linear-gradient(45deg, #AD1457, #F06292); /* deeper pinks on hover */
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6); /* hot pink glow */
     animation: pulse 2s infinite;
 }
 
@@ -137,60 +141,70 @@
 
 /* Dropdown Styles */
 .drop-down_projects {
-    position: relative;
+  position: relative;
 }
 
 .drop-down-menu-projects {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #ffffff;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    list-style: none;
-    padding: 10px 0;
-    margin: 0;
+  position: absolute;
+  top: 100%;
+  left:10px;
+  background: rgba(221, 94, 137, 0.5);
+  backdrop-filter: blur(20px);
+  min-width: 8rem;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 0px 6px 6px 0px;
+  opacity: 0;
+  visibility: hidden;
+  padding: 12px 0;
+  margin: 0;
+  z-index: 999;
 }
 
 .drop-down_projects:hover .drop-down-menu-projects {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 .drop-down-menu-projects li {
-    padding: 0;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 2s ease, transform 1s ease;
+}
+
+.drop-down_projects:hover .drop-down-menu-projects li {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .drop-down-menu-projects a {
     display: block;
-    padding: 10px 20px;
-    color: rgb(0, 0, 0);
+    padding: 12px 20px;
+    color: white;
     text-decoration: none;
-    transition: background-color 0.3s;
+    font-weight: bolder;
+    position: relative;
+    /* transition: all 0.3s ease; */
+    white-space: nowrap;
+}
+.drop-down-menu-projects a:hover{
+    color: white;
 }
 
-.drop-down-menu-projects a:hover {
-    color: rgb(0, 0, 0);
-}
 
-.drop-down-menu-projects li a::after{
+.drop-down-menu-projects li a::after {
     content: '';
     position: absolute;
     width: 0%;
     height: 2px;
-    bottom: -4px;
-    left: 0;
-    background: rgb(0, 0, 0);
+    bottom: 6px;
+    left: 18px;
+    background: #ffffff;
     transition: width 0.3s ease;
 }
+
 .drop-down-menu-projects li a:hover::after {
-    width: 100%;
+    width: calc(100% - 40px);
 }
 
 /* Responsive Header */

@@ -8,85 +8,148 @@
 {% endblock %}
 
 {% block content %}
-<section class="tv-plus-gallery">
-    <button class="play-pause-btn" onclick="toggleAutoPlay()">⏸</button>
-    
-    <div class="item-container" id="itemContainer">
-        <!-- Slide 1 -->
-        <div class="gallery-item" data-index="0">
-            <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1">
-            <div class="overlay">
-                <!-- <h2>Innovation</h2>
-                <p>Technology · Future · Progress</p> -->
-                <button class="stream-btn">Explore Now</button>
+<div class="home-main-container">
+    <!-- Left Side - Image Slider -->
+    <section class="tv-plus-gallery">
+        
+        
+        <div class="item-container" id="itemContainer">
+            <!-- Slide 1 -->
+            <div class="gallery-item" data-index="0">
+                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1">
+                <div class="overlay">
+                    <button class="stream-btn">Explore Now</button>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="gallery-item" data-index="1">
+                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2">
+                <div class="overlay">
+                    <button class="stream-btn">Discover More</button>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="gallery-item" data-index="2">
+                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3">
+                <div class="overlay">
+                    <button class="stream-btn">Learn More</button>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="3">
+                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
+                <div class="overlay">
+                    <button class="stream-btn">Explore Now</button>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="4">
+                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5">
+                <div class="overlay">
+                    <button class="stream-btn">Explore Now</button>
+                </div>
+            </div>
+
+            <div class="gallery-item" data-index="5">
+                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6">
+                <div class="overlay">
+                    <button class="stream-btn">Explore Now</button>
+                </div>
             </div>
         </div>
 
-        <!-- Slide 2 -->
-        <div class="gallery-item" data-index="1">
-            <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2">
-            <div class="overlay">
-                <!-- <h2>Creative</h2>
-                <p>Design · Art · Expression</p> -->
-                <button class="stream-btn">Discover More</button>
+        <!-- Navigation Arrows -->
+        <div class="nav-arrows">
+            <button class="nav-arrow prev" onclick="prevImage()">‹</button>
+            <button class="nav-arrow next" onclick="nextImage()">›</button>
+        </div>
+        <div class="slide-control">
+            <button class="play-pause-btn" onclick="toggleAutoPlay()">
+                <img id="playPauseIcon" src="{{ url_for('static', filename='images/slider/pause.png') }}" alt="Pause"/>
+            </button>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                <span class="dot" onclick="goToSlide(3)"></span>
+                <span class="dot" onclick="goToSlide(4)"></span>
+                <span class="dot" onclick="goToSlide(5)"></span>
             </div>
         </div>
+    </section>
 
-        <!-- Slide 3 -->
-        <div class="gallery-item" data-index="2">
-            <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3">
-            <div class="overlay">
-                <!-- <h2>Science</h2>
-                <p>Research · Discovery · Knowledge</p> -->
-                <button class="stream-btn">Learn More</button>
+    <!-- Right Side - Information Scroller -->
+    <section class="info-section">
+        <div class="info-content">
+            <div class="website-title">
+                <h1>संत भगत राम धार्मिक सेवा संस्थान चितौड़गढ़</h1>
+                <p class="subtitle">समाज सेवा और धार्मिक कार्यों के लिए समर्पित</p>
+            </div>
+
+            <div class="objectives-section">
+                <div class="objectives-header">
+                    <h2>उद्देश्य</h2>
+                </div>
+                
+                <div class="objectives-scroller">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <span class="objective-number">1</span>
+                            <p class="objective-text">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">2</span>
+                            <p class="objective-text">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">3</span>
+                            <p class="objective-text">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">4</span>
+                            <p class="objective-text">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">5</span>
+                            <p class="objective-text">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">6</span>
+                            <p class="objective-text">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
+                        </li>
+                        
+                        <li class="objective-item">
+                            <span class="objective-number">1</span>
+                            <p class="objective-text">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">2</span>
+                            <p class="objective-text">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">3</span>
+                            <p class="objective-text">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">4</span>
+                            <p class="objective-text">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">5</span>
+                            <p class="objective-text">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
+                        </li>
+                        <li class="objective-item">
+                            <span class="objective-number">6</span>
+                            <p class="objective-text">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-
-        <div class="gallery-item" data-index="3">
-            <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
-            <div class="overlay">
-                <!-- <h2>Innovation</h2>
-                <p>Technology · Future · Progress</p> -->
-                <button class="stream-btn">Explore Now</button>
-            </div>
-        </div>
-
-        <div class="gallery-item" data-index="4">
-            <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5">
-            <div class="overlay">
-                <!-- <h2>Innovation</h2>
-                <p>Technology · Future · Progress</p> -->
-                <button class="stream-btn">Explore Now</button>
-            </div>
-        </div>
-
-        <div class="gallery-item" data-index="5">
-            <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6">
-            <div class="overlay">
-                <!-- <h2>Innovation</h2>
-                <p>Technology · Future · Progress</p> -->
-                <button class="stream-btn">Explore Now</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation Arrows -->
-    <div class="nav-arrows">
-        <button class="nav-arrow prev" onclick="prevImage()">‹</button>
-        <button class="nav-arrow next" onclick="nextImage()">›</button>
-    </div>
-
-    <!-- Progress Dots -->
-    <div class="progress-dots" id="progressDots">
-        <span class="dot active" onclick="goToSlide(0)"></span>
-        <span class="dot" onclick="goToSlide(1)"></span>
-        <span class="dot" onclick="goToSlide(2)"></span>
-        <span class="dot" onclick="goToSlide(3)"></span>
-        <span class="dot" onclick="goToSlide(4)"></span>
-        <span class="dot" onclick="goToSlide(5)"></span>
-
-    </div>
-</section>
+    </section>
+</div>
 
 <div class="after-slider-marquee">
     <marquee loop="infinite" behaviour="scroll" >
@@ -95,12 +158,9 @@
       &nbsp;&nbsp;&nbsp;&nbsp;
      🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
     </marquee>
 </div>
 {% endblock %}
-
-
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
