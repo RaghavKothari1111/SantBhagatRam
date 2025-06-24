@@ -48,11 +48,11 @@
     animation: gradientMove 2s ease infinite;
 }
 
-@keyframes gradientMove {
+    @keyframes gradientMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
+} 
 
 .nav-content {
     display: flex;
@@ -148,8 +148,8 @@
   position: absolute;
   top: 100%;
   left:10px;
-  background: rgba(221, 94, 137, 0.5);
-  backdrop-filter: blur(20px);
+  background: rgba(224, 224, 224, 0.3);
+  backdrop-filter: blur(10px);
   min-width: 8rem;
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
   border-radius: 0px 6px 6px 0px;
@@ -180,7 +180,7 @@
 .drop-down-menu-projects a {
     display: block;
     padding: 12px 20px;
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     font-weight: bolder;
     position: relative;
@@ -188,7 +188,7 @@
     white-space: nowrap;
 }
 .drop-down-menu-projects a:hover{
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 
@@ -199,7 +199,7 @@
     height: 2px;
     bottom: 6px;
     left: 18px;
-    background: #ffffff;
+    background: #000000;
     transition: width 0.3s ease;
 }
 
