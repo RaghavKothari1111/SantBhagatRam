@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     
+
+    
     <!-- Extra CSS for specific pages -->
     {% block extra_css %}{% endblock %}
 </head>
@@ -73,7 +75,7 @@
                 </li>
                 <li><a href="/photos">Photos</a></li>
                 <li><a href="/videos">Videos</a></li>
-                <li><a href="/donate" class="donate-btn">Donate</a></li>
+                <li><a href="/donate">Donate</a></li>
             </ul>
         </nav>
     </div>
@@ -101,7 +103,8 @@
 </footer>
 
 <!-- Load extra JS at the bottom -->
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+{% endblock %}
 
 </body>
 </html>
