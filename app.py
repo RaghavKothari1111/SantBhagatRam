@@ -39,11 +39,7 @@ def videos():
 def donate():
     return render_template('donate.html')
 
-@app.route('/healthz')
-def healthz():
-    return "OK"
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
-    print("Starting Flask app...")
     app.run(host="0.0.0.0", port=port)
