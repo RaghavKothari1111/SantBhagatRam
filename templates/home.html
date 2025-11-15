@@ -18,7 +18,7 @@
             <div class="gallery-item" data-index="0">
                 <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1">
                 <div class="overlay">
-                    <button class="stream-btn">Explore Now</button>
+                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@
             <div class="gallery-item" data-index="1">
                 <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2">
                 <div class="overlay">
-                    <button class="stream-btn">Discover More</button>
+                    <button class="stream-btn" data-lang-home="discoverMore">Discover More</button>
                 </div>
             </div>
 
@@ -34,28 +34,28 @@
             <div class="gallery-item" data-index="2">
                 <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3">
                 <div class="overlay">
-                    <button class="stream-btn">Learn More</button>
+                    <button class="stream-btn" data-lang-home="learnMore">Learn More</button>
                 </div>
             </div>
 
             <div class="gallery-item" data-index="3">
                 <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
                 <div class="overlay">
-                    <button class="stream-btn">Explore Now</button>
+                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
                 </div>
             </div>
 
             <div class="gallery-item" data-index="4">
                 <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5">
                 <div class="overlay">
-                    <button class="stream-btn">Explore Now</button>
+                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
                 </div>
             </div>
 
             <div class="gallery-item" data-index="5">
                 <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6">
                 <div class="overlay">
-                    <button class="stream-btn">Explore Now</button>
+                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
                 </div>
             </div>
         </div>
@@ -84,65 +84,53 @@
     <section class="info-section">
         <div class="info-content">
             <div class="website-title">
-                <h1>संत भगत राम धार्मिक सेवा संस्थान चितौड़गढ़</h1>
-                <p class="subtitle">समाज सेवा और धार्मिक कार्यों के लिए समर्पित</p>
+                <h1 data-lang-home="title">संत भगत राम धार्मिक सेवा संस्थान चितौड़गढ़</h1>
+                <p class="subtitle" data-lang-home="subtitle">समाज सेवा और धार्मिक कार्यों के लिए समर्पित</p>
             </div>
 
             <div class="objectives-section">
                 <div class="objectives-header">
-                    <h2>उद्देश्य</h2>
+                    <h2 data-lang-home="objectives">उद्देश्य</h2>
                 </div>
                 
                 <div class="objectives-scroller">
                     <ul class="objectives-list">
                         <li class="objective-item">
-                            <span class="objective-number">1</span>
-                            <p class="objective-text">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
+                            <p class="objective-text" data-lang-home="objective1">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">2</span>
-                            <p class="objective-text">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
+                            <p class="objective-text" data-lang-home="objective2">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">3</span>
-                            <p class="objective-text">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
+                            <p class="objective-text" data-lang-home="objective3">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">4</span>
-                            <p class="objective-text">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
+                            <p class="objective-text" data-lang-home="objective4">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">5</span>
-                            <p class="objective-text">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
+                            <p class="objective-text" data-lang-home="objective5">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">6</span>
-                            <p class="objective-text">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
+                            <p class="objective-text" data-lang-home="objective6">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
                         </li>
                         
                         <li class="objective-item">
-                            <span class="objective-number">1</span>
-                            <p class="objective-text">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
+                            <p class="objective-text" data-lang-home="objective1">पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">2</span>
-                            <p class="objective-text">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
+                            <p class="objective-text" data-lang-home="objective2">बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">3</span>
-                            <p class="objective-text">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
+                            <p class="objective-text" data-lang-home="objective3">अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">4</span>
-                            <p class="objective-text">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
+                            <p class="objective-text" data-lang-home="objective4">चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">5</span>
-                            <p class="objective-text">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
+                            <p class="objective-text" data-lang-home="objective5">आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।</p>
                         </li>
                         <li class="objective-item">
-                            <span class="objective-number">6</span>
-                            <p class="objective-text">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
+                            <p class="objective-text" data-lang-home="objective6">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
                         </li>
                     </ul>
                 </div>
@@ -152,7 +140,7 @@
 </div>
 
 <div class="after-slider-marquee">
-    <marquee loop="infinite" behaviour="scroll" >
+    <marquee loop="infinite" behaviour="scroll" data-lang-marquee>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏 
       &nbsp;&nbsp;&nbsp;&nbsp;
@@ -160,8 +148,120 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </marquee>
 </div>
+
+<!-- Latest From Blog Section -->
+<section class="home-blog-section">
+    <div class="home-blog-container">
+        <div class="home-blog-header">
+            <h2 data-lang-home="blogSectionTitle">Latest From Blog</h2>
+            <p data-lang-home="blogSectionSubtitle">Stay updated with our latest activities and events</p>
+        </div>
+        
+        <div class="home-blog-grid">
+            {% if home_blogs %}
+                {% for blog in home_blogs %}
+                <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="home-blog-card" aria-label="{{ blog.title }}">
+                    <div class="home-blog-card-image">
+                        {% if blog.image %}
+                            <img src="{{ blog.image }}" alt="{{ blog.title }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ blog.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="home-blog-card-content">
+                        <div class="home-blog-card-meta">
+                            <span class="home-blog-card-date" data-lang-blog="datePrefix">दिनांक:</span>
+                            <span class="home-blog-card-date-value" data-lang-blog-date-hi="{{ blog.date }}" data-lang-blog-date-en="{{ blog.dateEn or blog.date }}">{{ blog.date }}</span>
+                            <span class="home-blog-card-category" data-lang-blog-category-hi="{{ blog.category }}" data-lang-blog-category-en="{{ blog.categoryEn or blog.category }}">{{ blog.category }}</span>
+                        </div>
+                        <h3 class="home-blog-card-title" data-lang-blog-title-hi="{{ blog.title }}" data-lang-blog-title-en="{{ blog.titleEn or blog.title }}">{{ blog.title }}</h3>
+                        <p class="home-blog-card-excerpt" data-lang-blog-excerpt-hi="{{ blog.excerpt }}" data-lang-blog-excerpt-en="{{ blog.excerptEn or blog.excerpt }}">{{ blog.excerpt }}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="home-blog-empty">No blogs available yet. Check back soon!</div>
+            {% endif %}
+        </div>
+        
+        <div class="home-blog-view-all">
+            <a href="{{ url_for('blog') }}" class="view-all-btn" data-lang-home="viewAllBlogs">View All Blogs →</a>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
+<script>
+    // Objectives slider touch and scroll handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const objectivesList = document.querySelector('.objectives-list');
+        const objectivesScroller = document.querySelector('.objectives-scroller');
+        let touchTimeout = null;
+        let isPaused = false;
+
+        if (objectivesList && objectivesScroller) {
+            // Ensure overflow is hidden for animation to work
+            objectivesScroller.style.overflow = 'hidden';
+
+            // Touch event handlers - pause on touch, resume on release
+            objectivesScroller.addEventListener('touchstart', function(e) {
+                // Pause auto-scroll when user touches
+                objectivesList.style.animationPlayState = 'paused';
+                objectivesList.classList.add('touch-active');
+                isPaused = true;
+                
+                // Clear any existing timeout
+                if (touchTimeout) {
+                    clearTimeout(touchTimeout);
+                }
+            }, { passive: true });
+
+            objectivesScroller.addEventListener('touchend', function() {
+                // Resume auto-scroll after a short delay
+                if (touchTimeout) {
+                    clearTimeout(touchTimeout);
+                }
+                
+                touchTimeout = setTimeout(function() {
+                    objectivesList.style.animationPlayState = 'running';
+                    objectivesList.classList.remove('touch-active');
+                    isPaused = false;
+                }, 1500); // Resume after 1.5 seconds
+            }, { passive: true });
+
+            // Also pause on touchmove (when user is actively scrolling)
+            objectivesScroller.addEventListener('touchmove', function() {
+                if (!isPaused) {
+                    objectivesList.style.animationPlayState = 'paused';
+                    objectivesList.classList.add('touch-active');
+                    isPaused = true;
+                }
+                
+                // Reset the resume timeout
+                if (touchTimeout) {
+                    clearTimeout(touchTimeout);
+                }
+                touchTimeout = setTimeout(function() {
+                    objectivesList.style.animationPlayState = 'running';
+                    objectivesList.classList.remove('touch-active');
+                    isPaused = false;
+                }, 1500);
+            }, { passive: true });
+
+            // Mouse events for desktop hover
+            objectivesScroller.addEventListener('mouseenter', function() {
+                objectivesList.style.animationPlayState = 'paused';
+            });
+
+            objectivesScroller.addEventListener('mouseleave', function() {
+                if (!isPaused) {
+                    objectivesList.style.animationPlayState = 'running';
+                }
+            });
+        }
+    });
+
+</script>
 {% endblock %}

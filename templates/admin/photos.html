@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Photos{% endblock %}
+{% block page_title %}Photo Gallery Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Photo Categories</h2>
+    <a href="{{ url_for('admin_add_photo_gallery') }}" class="btn btn-primary">
+        <span>+</span> Add Category
+    </a>
+</div>
+
+{% if galleries %}
+    <div class="gallery-admin-grid">
+        {% for gallery in galleries %}
+        <div class="gallery-admin-card">
+            <div class="gallery-card-cover">
+                {% if gallery.coverImage %}
+                    <img src="{{ gallery.coverImage }}" alt="{{ gallery.title }}">
+                {% elif gallery.photos and gallery.photos[0].url %}
+                    <img src="{{ gallery.photos[0].url }}" alt="{{ gallery.title }}">
+                {% else %}
+                    <div class="gallery-cover-placeholder">No Cover</div>
+                {% endif %}
+                <span class="gallery-photo-count">
+                    {{ gallery.photoCount or (gallery.photos|length) }} photos
+                </span>
+            </div>
+            <div class="gallery-card-body">
+                <p class="gallery-card-date">{{ gallery.date or gallery.dateEn }}</p>
+                <h3>{{ gallery.title or gallery.titleEn }}</h3>
+                <p class="gallery-card-description">
+                    {{ (gallery.description or gallery.descriptionEn)[:120] }}{% if (gallery.description or gallery.descriptionEn)|length > 120 %}...{% endif %}
+                </p>
+                <div class="gallery-card-actions">
+                    <a href="{{ url_for('admin_edit_photo_gallery', gallery_id=gallery.id) }}" class="btn btn-sm btn-edit">Edit</a>
+                    <form method="POST" action="{{ url_for('admin_delete_photo_gallery', gallery_id=gallery.id) }}" onsubmit="return confirm('Delete this photo category?');">
+                        <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>No photo categories yet. <a href="{{ url_for('admin_add_photo_gallery') }}">Create the first one</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if event %}Edit Event{% else %}Add Event{% endif %}{% endblock %}
+{% block page_title %}{% if event %}Edit Event{% else %}Add New Event{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if event %}{{ url_for('admin_edit_event', event_id=event.id) }}{% else %}{{ url_for('admin_add_event') }}{% endif %}" enctype="multipart/form-data" class="admin-form">
+        <div class="form-section">
+            <h3>Event Information</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title (Hindi) *</label>
+                    <input type="text" id="title" name="title" value="{% if event %}{{ event.title }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="titleEn">Title (English) *</label>
+                    <input type="text" id="titleEn" name="titleEn" value="{% if event %}{{ event.titleEn }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">Date *</label>
+                    <input type="date" id="date" name="date" value="{% if event %}{{ event.date }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">Time *</label>
+                    <input type="time" id="time" name="time" value="{% if event %}{{ event.time }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="location">Location (Hindi) *</label>
+                    <input type="text" id="location" name="location" value="{% if event %}{{ event.location }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="locationEn">Location (English) *</label>
+                    <input type="text" id="locationEn" name="locationEn" value="{% if event %}{{ event.locationEn }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Hindi) *</label>
+                <textarea id="description" name="description" rows="4" required>{% if event %}{{ event.description }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="descriptionEn">Description (English) *</label>
+                <textarea id="descriptionEn" name="descriptionEn" rows="4" required>{% if event %}{{ event.descriptionEn }}{% endif %}</textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Image</h3>
+            
+            {% if event and event.image %}
+                <div class="current-image">
+                    <label>Current Image:</label>
+                    <img src="{{ event.image }}" alt="Current Image" class="preview-image">
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="image">{% if event and event.image %}Change Image{% else %}Upload Image{% endif %}</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <small>Allowed formats: PNG, JPG, JPEG, GIF, WEBP (Max 16MB)</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_events') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if event %}Update Event{% else %}Add Event{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

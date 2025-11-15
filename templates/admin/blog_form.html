@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if blog %}Edit Blog{% else %}Add Blog{% endif %}{% endblock %}
+{% block page_title %}{% if blog %}Edit Blog{% else %}Add New Blog{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if blog %}{{ url_for('admin_edit_blog', blog_id=blog.id) }}{% else %}{{ url_for('admin_add_blog') }}{% endif %}" enctype="multipart/form-data" class="admin-form">
+        <div class="form-section">
+            <h3>Basic Information</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title (Hindi) *</label>
+                    <input type="text" id="title" name="title" value="{% if blog %}{{ blog.title }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="titleEn">Title (English) *</label>
+                    <input type="text" id="titleEn" name="titleEn" value="{% if blog %}{{ blog.titleEn }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Category (Hindi) *</label>
+                    <input type="text" id="category" name="category" value="{% if blog %}{{ blog.category }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoryEn">Category (English) *</label>
+                    <input type="text" id="categoryEn" name="categoryEn" value="{% if blog %}{{ blog.categoryEn }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">Date (Hindi) *</label>
+                    <input type="text" id="date" name="date" value="{% if blog %}{{ blog.date }}{% endif %}" placeholder="15 जून, 2024" required>
+                </div>
+                <div class="form-group">
+                    <label for="dateEn">Date (English) *</label>
+                    <input type="text" id="dateEn" name="dateEn" value="{% if blog %}{{ blog.dateEn }}{% endif %}" placeholder="June 15, 2024" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Content</h3>
+            
+            <div class="form-group">
+                <label for="excerpt">Excerpt (Hindi) *</label>
+                <textarea id="excerpt" name="excerpt" rows="3" required>{% if blog %}{{ blog.excerpt }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="excerptEn">Excerpt (English) *</label>
+                <textarea id="excerptEn" name="excerptEn" rows="3" required>{% if blog %}{{ blog.excerptEn }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content (Hindi) *</label>
+                <textarea id="content" name="content" rows="8" required>{% if blog %}{{ blog.content }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="contentEn">Content (English) *</label>
+                <textarea id="contentEn" name="contentEn" rows="8" required>{% if blog %}{{ blog.contentEn }}{% endif %}</textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Image</h3>
+            
+            {% if blog and blog.image %}
+                <div class="current-image">
+                    <label>Current Image:</label>
+                    <img src="{{ blog.image }}" alt="Current Image" class="preview-image">
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="image">{% if blog and blog.image %}Change Image{% else %}Upload Image{% endif %}</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <small>Allowed formats: PNG, JPG, JPEG, GIF, WEBP (Max 16MB)</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_blogs') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if blog %}Update Blog{% else %}Add Blog{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

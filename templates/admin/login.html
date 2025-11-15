@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - SantBhagatRam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="login-page minimalist">
+    <div class="auth-shell">
+        <div class="auth-card">
+            <div class="auth-avatar">SB</div>
+            <h1>Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to manage SantBhagatRam</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('admin_login') }}" class="auth-form">
+                <label>
+                    <span>Username</span>
+                    <input type="text" name="username" placeholder="Enter your username" required autofocus>
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </label>
+                <button type="submit" class="primary-btn block">Sign In</button>
+            </form>
+
+            <p class="auth-footer"><a href="/">← Back to website</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}Donate - SantBhagatRam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/donate.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="donate-container">
+    <!-- Hero Section -->
+    <div class="donate-hero">
+        <div class="hero-content">
+            <div class="hero-icon">🙏</div>
+            <h1 class="hero-title" data-lang-donate="heroTitle">दान करें और सेवा में सहयोग करें</h1>
+            <p class="hero-subtitle" data-lang-donate="heroSubtitle">आपका दान हमारे समाज सेवा के कार्यों को आगे बढ़ाने में मदद करता है</p>
+        </div>
+    </div>
+
+    <!-- Donation Cards -->
+    <div class="donation-cards-container">
+        <div class="donation-card">
+            <div class="card-icon">💝</div>
+            <h3 data-lang-donate="regularDonation">नियमित दान</h3>
+            <p data-lang-donate="regularDesc">मासिक या वार्षिक दान करके हमारे कार्यों में निरंतर सहयोग करें</p>
+            <div class="amount-options">
+                <button class="amount-btn" data-amount="500">₹500</button>
+                <button class="amount-btn" data-amount="1000">₹1,000</button>
+                <button class="amount-btn" data-amount="2500">₹2,500</button>
+                <button class="amount-btn" data-amount="5000">₹5,000</button>
+            </div>
+        </div>
+
+        <div class="donation-card featured">
+            <div class="featured-badge" data-lang-donate="popular">⭐ लोकप्रिय</div>
+            <div class="card-icon">🌟</div>
+            <h3 data-lang-donate="oneTimeDonation">एकमुश्त दान</h3>
+            <p data-lang-donate="oneTimeDesc">एक बार में दान करके हमारी सेवा में योगदान दें</p>
+            <div class="custom-amount">
+                <label for="customAmount" data-lang-donate="enterAmount">अपनी राशि दर्ज करें:</label>
+                <div class="input-group">
+                    <span class="currency">₹</span>
+                    <input type="number" id="customAmount" placeholder="0" min="100" step="100">
+                </div>
+            </div>
+        </div>
+
+        <div class="donation-card">
+            <div class="card-icon">🎁</div>
+            <h3 data-lang-donate="specialDonation">विशेष दान</h3>
+            <p data-lang-donate="specialDesc">विशेष कार्यक्रमों या परियोजनाओं के लिए दान करें</p>
+            <div class="amount-options">
+                <button class="amount-btn" data-amount="10000">₹10,000</button>
+                <button class="amount-btn" data-amount="25000">₹25,000</button>
+                <button class="amount-btn" data-amount="50000">₹50,000</button>
+                <button class="amount-btn" data-amount="100000">₹1,00,000</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="payment-section">
+        <h2 class="section-title" data-lang-donate="paymentMethods">भुगतान के तरीके</h2>
+        <div class="payment-methods">
+            <div class="payment-method">
+                <div class="method-icon">📱</div>
+                <h4 data-lang-donate="upi">UPI</h4>
+                <p data-lang-donate="upiDesc">PhonePe, Google Pay, Paytm</p>
+                <div class="upi-id">santbhagatram@paytm</div>
+                <button class="copy-btn" onclick="copyToClipboard('santbhagatram@paytm')" data-lang-donate="copy">कॉपी करें</button>
+            </div>
+            <div class="payment-method">
+                <div class="method-icon">🏦</div>
+                <h4 data-lang-donate="bankTransfer">Bank Transfer</h4>
+                <p data-lang-donate="bankDesc">Direct Bank Transfer</p>
+                <div class="bank-details">
+                    <p><strong>Account Name:</strong> SantBhagatRam</p>
+                    <p><strong>Account Number:</strong> 1234567890</p>
+                    <p><strong>IFSC Code:</strong> SBIN0001234</p>
+                    <p><strong>Bank:</strong> State Bank of India</p>
+                </div>
+            </div>
+            <div class="payment-method">
+                <div class="method-icon">💳</div>
+                <h4 data-lang-donate="cardPayment">Card Payment</h4>
+                <p data-lang-donate="cardDesc">Credit/Debit Card</p>
+                <button class="donate-btn-primary" onclick="showCardForm()" data-lang-donate="payWithCard">कार्ड से भुगतान</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Form -->
+    <div class="donation-form-section">
+        <h2 class="section-title" data-lang-donate="donationInfo">दान की जानकारी</h2>
+        <form class="donation-form" id="donationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="donorName" data-lang-donate="name">नाम *</label>
+                    <input type="text" id="donorName" name="donorName" required data-lang-donate="namePlaceholder" placeholder="आपका नाम">
+                </div>
+                <div class="form-group">
+                    <label for="donorEmail" data-lang-donate="email">ईमेल *</label>
+                    <input type="email" id="donorEmail" name="donorEmail" required data-lang-donate="emailPlaceholder" placeholder="आपका ईमेल">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="donorPhone" data-lang-donate="phone">फोन नंबर *</label>
+                    <input type="tel" id="donorPhone" name="donorPhone" required data-lang-donate="phonePlaceholder" placeholder="आपका फोन नंबर">
+                </div>
+                <div class="form-group">
+                    <label for="donationAmount" data-lang-donate="amount">दान राशि (₹) *</label>
+                    <input type="number" id="donationAmount" name="donationAmount" required placeholder="0" min="100" step="100">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="donationMessage" data-lang-donate="message">संदेश (वैकल्पिक)</label>
+                <textarea id="donationMessage" name="donationMessage" rows="4" data-lang-donate="messagePlaceholder" placeholder="आपका संदेश..."></textarea>
+            </div>
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" required>
+                    <span data-lang-donate="agreement">मैं दान करने के लिए सहमत हूं और मुझे पता है कि यह राशि वापस नहीं की जाएगी</span>
+                </label>
+            </div>
+            <button type="submit" class="submit-donate-btn gooey-donate">
+                <span class="gooey-effect"></span>
+                <span data-lang-donate="submitDonate">दान करें 🙏</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Impact Section -->
+    <div class="impact-section">
+        <h2 class="section-title" data-lang-donate="impact">आपके दान का प्रभाव</h2>
+        <div class="impact-grid">
+            <div class="impact-item">
+                <div class="impact-number">500+</div>
+                <div class="impact-label" data-lang-donate="familiesHelped">परिवारों की मदद</div>
+            </div>
+            <div class="impact-item">
+                <div class="impact-number">50+</div>
+                <div class="impact-label" data-lang-donate="programsOrganized">कार्यक्रम आयोजित</div>
+            </div>
+            <div class="impact-item">
+                <div class="impact-number">1000+</div>
+                <div class="impact-label" data-lang-donate="peopleReached">लोगों तक पहुंच</div>
+            </div>
+            <div class="impact-item">
+                <div class="impact-number">24/7</div>
+                <div class="impact-label" data-lang-donate="serviceAvailable">सेवा उपलब्ध</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/donate-particles.js') }}"></script>
+<script>
+    // Amount button selection
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('donationAmount').value = this.dataset.amount;
+        });
+    });
+
+    // Custom amount input
+    document.getElementById('customAmount').addEventListener('input', function() {
+        document.getElementById('donationAmount').value = this.value;
+    });
+
+    // Copy to clipboard
+    function copyToClipboard(text) {
+        const lang = localStorage.getItem('selectedLanguage') || 'hi';
+        const messages = {
+            en: 'Copied: ' + text,
+            hi: 'कॉपी हो गया: ' + text
+        };
+        navigator.clipboard.writeText(text).then(() => {
+            alert(messages[lang]);
+        });
+    }
+
+    // Form submission
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const lang = localStorage.getItem('selectedLanguage') || 'hi';
+        const messages = {
+            en: 'Thank you! Your donation will help our social service work.',
+            hi: 'धन्यवाद! आपका दान हमारे समाज सेवा के कार्यों में मदद करेगा।'
+        };
+        alert(messages[lang]);
+        // Here you would typically send the data to your backend
+    });
+
+    function showCardForm() {
+        const lang = localStorage.getItem('selectedLanguage') || 'hi';
+        const messages = {
+            en: 'Card payment form will be available soon.',
+            hi: 'कार्ड भुगतान फॉर्म जल्द ही उपलब्ध होगा।'
+        };
+        alert(messages[lang]);
+    }
+</script>
+{% endblock %}
+

@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+
+{% block title %}Events - SantBhagatRam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/events.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="events-container">
+    <!-- Header -->
+    <div class="events-header">
+        <h1 data-lang-events="title">Events & Calendar</h1>
+        <p data-lang-events="subtitle">Stay updated with our upcoming events and spiritual gatherings</p>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="events-tabs">
+        <button class="tab-btn active" data-tab="upcoming" data-lang-events="tabUpcoming">Upcoming Events</button>
+        <button class="tab-btn" data-tab="calendar" data-lang-events="tabCalendar">Event Calendar</button>
+    </div>
+
+    <!-- Upcoming Events Section -->
+    <section class="events-section active" id="upcomingSection">
+        <div class="events-grid" id="eventsGrid">
+            {% for event in events %}
+            <div class="event-card" data-event-id="{{ event.id }}">
+                <div class="event-image">
+                    <img src="{{ event.image }}" alt="{{ event.titleEn }}">
+                </div>
+                <div class="event-content">
+                    <div class="event-date-time">
+                        <span class="event-date">{{ event.date }}</span>
+                        <span class="event-time">{{ event.time }}</span>
+                    </div>
+                    <h3 class="event-title"
+                        data-title-hi="{{ event.title }}"
+                        data-title-en="{{ event.titleEn }}"
+                    >{{ event.title }}</h3>
+                    <div class="event-location">
+                        <span class="location-icon">📍</span>
+                        <span class="event-location-text"
+                            data-location-hi="{{ event.location }}"
+                            data-location-en="{{ event.locationEn }}"
+                        >{{ event.location }}</span>
+                    </div>
+                    <p class="event-description"
+                        data-description-hi="{{ event.description }}"
+                        data-description-en="{{ event.descriptionEn }}"
+                    >{{ event.description }}</p>
+                    <div class="event-actions">
+                        <div class="calendar-buttons">
+                            <a href="#" class="calendar-btn google" data-add-google="{{ event.id }}">
+                                <span>Google Calendar</span>
+                            </a>
+                            <a href="#" class="calendar-btn outlook" data-add-outlook="{{ event.id }}">
+                                <span>Outlook</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="events-section" id="calendarSection">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="prevMonth" aria-label="Previous month">‹</button>
+                <h2 class="calendar-month-year" id="calendarMonthYear"></h2>
+                <button class="calendar-nav-btn" id="nextMonth" aria-label="Next month">›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be dynamically generated -->
+            </div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-dot has-event"></span>
+                    <span data-lang-events="legendHasEvent">Has Events</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot today"></span>
+                    <span data-lang-events="legendToday">Today</span>
+                </div>
+            </div>
+        </div>
+        <div class="selected-date-events" id="selectedDateEvents">
+            <div class="no-events-message" data-lang-events="noEventsMessage">
+                Select a date to view events
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.eventsData = {{ events_json|safe }};
+window.skipJsEventRender = true;
+window.skipJsCalendarRender = true;
+</script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+<script>
+(function() {
+    const events = window.eventsData || [];
+    
+    function formatGoogleUrl(event) {
+        const start = new Date(`${event.date}T${event.time}`);
+        const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+        const title = encodeURIComponent(event.titleEn);
+        const desc = encodeURIComponent(event.descriptionEn);
+        const loc = encodeURIComponent(event.locationEn);
+        const dates = `${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${end.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
+        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${desc}&location=${loc}`;
+    }
+
+    function formatOutlookUrl(event) {
+        const start = new Date(`${event.date}T${event.time}`);
+        const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+        const title = encodeURIComponent(event.titleEn);
+        const desc = encodeURIComponent(event.descriptionEn);
+        const loc = encodeURIComponent(event.locationEn);
+        return `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${desc}&location=${loc}`;
+    }
+
+    function formatTimeString(timeStr) {
+        try {
+            const [h, m] = timeStr.split(':');
+            const hour = parseInt(h, 10);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            return `${displayHour}:${m} ${ampm}`;
+        } catch (e) {
+            return timeStr;
+        }
+    }
+
+    function updateCalendarButtons(lang) {
+        document.querySelectorAll('[data-add-google]').forEach(btn => {
+            const eventId = btn.getAttribute('data-add-google');
+            const event = events.find(e => e.id === eventId);
+            if (event) {
+                btn.href = formatGoogleUrl(event);
+                btn.querySelector('span').textContent = lang === 'en' ? 'Google Calendar' : 'Google कैलेंडर';
+            }
+        });
+        document.querySelectorAll('[data-add-outlook]').forEach(btn => {
+            const eventId = btn.getAttribute('data-add-outlook');
+            const event = events.find(e => e.id === eventId);
+            if (event) {
+                btn.href = formatOutlookUrl(event);
+                btn.querySelector('span').textContent = 'Outlook';
+            }
+        });
+    }
+
+    function applyEventLanguage(lang) {
+        document.querySelectorAll('.event-card').forEach(card => {
+            const titleEl = card.querySelector('.event-title');
+            const locEl = card.querySelector('.event-location-text');
+            const descEl = card.querySelector('.event-description');
+            if (titleEl) {
+                titleEl.textContent = lang === 'en' ? titleEl.dataset.titleEn : titleEl.dataset.titleHi;
+            }
+            if (locEl) {
+                locEl.textContent = lang === 'en' ? locEl.dataset.locationEn : locEl.dataset.locationHi;
+            }
+            if (descEl) {
+                descEl.textContent = lang === 'en' ? descEl.dataset.descriptionEn : descEl.dataset.descriptionHi;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.events-section');
+        const calendarGrid = document.getElementById('calendarGrid');
+        const monthYearLabel = document.getElementById('calendarMonthYear');
+        const selectedEventsContainer = document.getElementById('selectedDateEvents');
+        const prevBtn = document.getElementById('prevMonth');
+        const nextBtn = document.getElementById('nextMonth');
+
+        let calendarDate = new Date();
+        let selectedCalendarDate = null;
+
+        function getLang() {
+            return window.getCurrentLanguage ? window.getCurrentLanguage() : (localStorage.getItem('selectedLanguage') || 'hi');
+        }
+
+        function showEventsFor(dateString) {
+            selectedCalendarDate = dateString;
+            if (!selectedEventsContainer) return;
+            const lang = getLang();
+            const dateEvents = events.filter(e => e.date === dateString);
+
+            if (!dateString || dateEvents.length === 0) {
+                const msg = lang === 'en' ? 'Select a date to view events' : 'कार्यक्रम देखने के लिए एक तारीख चुनें';
+                selectedEventsContainer.innerHTML = `<div class="no-events-message"><p>${msg}</p></div>`;
+                return;
+            }
+
+            const formattedDate = new Date(dateString).toLocaleDateString(lang === 'en' ? 'en-US' : 'hi-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            selectedEventsContainer.innerHTML = `
+                <h3 class="selected-date-title">${formattedDate}</h3>
+                <div class="date-events-list">
+                    ${dateEvents.map(event => {
+                        const title = lang === 'en' ? event.titleEn : event.title;
+                        const description = lang === 'en' ? event.descriptionEn : event.description;
+                        const location = lang === 'en' ? event.locationEn : event.location;
+                        const time = formatTimeString(event.time);
+                        return `
+                            <div class="date-event-item">
+                                <div class="date-event-time">${time}</div>
+                                <div class="date-event-content">
+                                    <h4>${title}</h4>
+                                    <p class="date-event-location">📍 ${location}</p>
+                                    <p class="date-event-description">${description}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function renderCalendarUI() {
+            if (!calendarGrid || !monthYearLabel) return;
+
+            const lang = getLang();
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const monthNames = lang === 'en'
+                ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                : ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
+
+            monthYearLabel.textContent = `${monthNames[month]} ${year}`;
+            calendarGrid.innerHTML = '';
+
+            const dayHeaders = lang === 'en'
+                ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                : ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
+
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                calendarGrid.appendChild(header);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty';
+                calendarGrid.appendChild(empty);
+            }
+
+            const eventDates = new Set(events.map(e => e.date));
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+
+                if (eventDates.has(dateString)) {
+                    dayElement.classList.add('has-event');
+                }
+
+                if (selectedCalendarDate === dateString) {
+                    dayElement.classList.add('selected');
+                }
+
+                dayElement.addEventListener('click', function() {
+                    showEventsFor(dateString);
+                    renderCalendarUI();
+                });
+
+                calendarGrid.appendChild(dayElement);
+            }
+
+            if (!selectedCalendarDate) {
+                const firstEventThisMonth = events.find(e => {
+                    const d = new Date(e.date);
+                    return d.getFullYear() === year && d.getMonth() === month;
+                });
+                if (firstEventThisMonth) {
+                    showEventsFor(firstEventThisMonth.date);
+                } else {
+                    showEventsFor(null);
+                }
+            } else if (selectedCalendarDate) {
+                const selectedDateObj = new Date(selectedCalendarDate);
+                if (selectedDateObj.getFullYear() === year && selectedDateObj.getMonth() === month) {
+                    showEventsFor(selectedCalendarDate);
+                }
+            }
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                renderCalendarUI();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                renderCalendarUI();
+            });
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(targetTab + 'Section').classList.add('active');
+
+                if (targetTab === 'calendar') {
+                    renderCalendarUI();
+                }
+            });
+        });
+
+        const lang = getLang();
+        applyEventLanguage(lang);
+        updateCalendarButtons(lang);
+        renderCalendarUI();
+
+        window.addEventListener('languageChanged', function(event) {
+            const lang = event.detail.lang || 'hi';
+            applyEventLanguage(lang);
+            updateCalendarButtons(lang);
+            renderCalendarUI();
+        });
+    });
+})();
+</script>
+{% endblock %}

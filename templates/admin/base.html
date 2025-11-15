@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %} - SantBhagatRam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="admin-shell">
+    <header class="admin-topbar">
+        <div class="brand">
+            <div class="brand-icon">SB</div>
+            <div class="brand-copy">
+                <span class="brand-label">SantBhagatRam</span>
+                <span class="brand-subtext">Admin Control</span>
+            </div>
+        </div>
+        <nav class="topbar-nav">
+            <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{{ url_for('admin_blogs') }}" class="{% if 'admin_blogs' in request.endpoint or 'admin_add_blog' in request.endpoint or 'admin_edit_blog' in request.endpoint %}active{% endif %}">Blogs</a>
+            <a href="{{ url_for('admin_events') }}" class="{% if 'admin_events' in request.endpoint or 'admin_add_event' in request.endpoint or 'admin_edit_event' in request.endpoint %}active{% endif %}">Events</a>
+            <a href="{{ url_for('admin_photos') }}" class="{% if 'admin_photos' in request.endpoint or 'admin_add_photo_gallery' in request.endpoint or 'admin_edit_photo_gallery' in request.endpoint %}active{% endif %}">Photos</a>
+        </nav>
+        <div class="topbar-actions">
+            <a href="/" target="_blank" class="ghost-btn">View Site</a>
+            <a href="{{ url_for('admin_logout') }}" class="primary-btn">Sign Out</a>
+        </div>
+    </header>
+
+    <main class="admin-main-area">
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow">Control center</p>
+                <h1>{% block page_title %}Admin Panel{% endblock %}</h1>
+            </div>
+            <div class="page-heading-actions">
+                {% block page_actions %}{% endblock %}
+            </div>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="admin-content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script>
+        setTimeout(function() {
+            document.querySelectorAll('.flash-message').forEach(msg => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 4000);
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

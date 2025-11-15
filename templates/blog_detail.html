@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.titleEn }} - Blog - SantBhagatRam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
+<style>
+    .blog-detail-container {
+        width: min(1900px, 100%);
+        margin: 0 auto;
+        padding: clamp(24px, 5vw, 80px);
+        background: transparent;
+        min-height: calc(100vh - 140px);
+    }
+
+    .blog-detail-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .blog-detail-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(-20px, -10px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        color: #4f46e5;
+        text-decoration: none;
+        border-radius: 10px;
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        background: transparent;
+        transition: all 0.2s ease;
+    }
+
+    .blog-detail-back svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .blog-detail-back:hover {
+        color: #312e81;
+        background: transparent;
+        box-shadow: 0 8px 14px rgba(15, 23, 42, 0.12);
+        transform: translate(-20px, -12px);
+    }
+
+    .blog-detail-image-wrapper {
+        width: min(360px, 75vw);
+        margin: 18px auto 26px;
+        border-radius: 24px;
+        overflow: hidden;
+        aspect-ratio: 3 / 4;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+        background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+        position: relative;
+    }
+
+    .blog-detail-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: inherit;
+    }
+
+    .blog-detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .blog-detail-date,
+    .blog-detail-category {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 18px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        background: transparent;
+        color: #4338ca;
+    }
+
+    .blog-detail-category {
+        border-color: rgba(79, 70, 229, 0.35);
+        color: #4c1d95;
+    }
+
+    .blog-detail-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 24px;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+        text-align: center;
+    }
+
+    .blog-detail-content {
+        background: white;
+        padding: clamp(28px, 4vw, 52px);
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7f0;
+        margin-top: 30px;
+        width: 100%;
+    }
+
+    .blog-detail-text {
+        color: #374151;
+        font-size: 1.1rem;
+        line-height: 1.9;
+        letter-spacing: 0.01em;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .blog-detail-actions {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .blog-detail-share {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .share-btn {
+        padding: 10px 20px;
+        background: #f3f4f6;
+        color: #374151;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .share-btn:hover {
+        background: #e5e7eb;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .blog-detail-container {
+            padding: 30px 20px;
+        }
+
+        .blog-detail-title {
+            font-size: 2rem;
+        }
+
+        .blog-detail-content {
+            padding: 24px;
+        }
+
+        .blog-detail-image-wrapper {
+            width: 100%;
+            margin: 12px auto 28px;
+        }
+
+        .blog-detail-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="blog-detail-container">
+    <div class="blog-detail-header">
+        <a href="{{ url_for('blog') }}" class="blog-detail-back" aria-label="Back to Blogs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+
+        <div class="blog-detail-meta">
+            <span class="blog-detail-date" data-lang-blog-date-hi="{{ blog.date }}" data-lang-blog-date-en="{{ blog.dateEn }}">{{ blog.date }}</span>
+            <span class="blog-detail-category" data-lang-blog-category-hi="{{ blog.category }}" data-lang-blog-category-en="{{ blog.categoryEn }}">{{ blog.category }}</span>
+        </div>
+
+        <h1 class="blog-detail-title" data-lang-blog-title-hi="{{ blog.title }}" data-lang-blog-title-en="{{ blog.titleEn }}">{{ blog.title }}</h1>
+
+        {% if blog.image %}
+            <div class="blog-detail-image-wrapper">
+                <img src="{{ blog.image }}" alt="{{ blog.title }}" class="blog-detail-image">
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="blog-detail-content">
+        <div class="blog-detail-text" data-lang-blog-content-hi="{{ blog.content }}" data-lang-blog-content-en="{{ blog.contentEn }}">
+            {{ blog.content }}
+        </div>
+
+        <div class="blog-detail-actions">
+            <a href="{{ url_for('blog') }}" class="share-btn" data-lang-blog="backToBlogs">← ब्लॉग पर वापस जाएं</a>
+            <div class="blog-detail-share">
+                <button class="share-btn" onclick="shareBlog()" data-lang-blog="share">शेयर करें</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Ensure translations are applied after page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            if (window.applyLanguage) {
+                const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
+                window.applyLanguage(lang);
+            }
+        }, 300);
+    });
+    
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            if (window.applyLanguage) {
+                const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
+                window.applyLanguage(lang);
+            }
+        }, 200);
+    });
+
+    // Share functionality
+    function shareBlog() {
+        const url = window.location.href;
+        const title = document.querySelector('.blog-detail-title').textContent;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).catch(err => console.log('Error sharing', err));
+        } else {
+            // Fallback: Copy to clipboard
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback: Show URL
+                prompt('Copy this link:', url);
+            });
+        }
+    }
+</script>
+{% endblock %}
+
