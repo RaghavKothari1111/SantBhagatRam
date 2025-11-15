@@ -3,7 +3,7 @@ Authentication utilities for admin panel.
 """
 from functools import wraps
 from flask import session, redirect, url_for, request, flash
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 import os
 
 def login_required(f):
@@ -24,27 +24,21 @@ def verify_password(username, password):
     # Get credentials from environment or config
     admin_username = os.environ.get('ADMIN_USERNAME') or Config.ADMIN_USERNAME
     admin_password = os.environ.get('ADMIN_PASSWORD') or None
-    admin_password_hash = os.environ.get('ADMIN_PASSWORD_HASH') or None
+    admin_password_hash = os.environ.get('ADMIN_PASSWORD_HASH') or Config.ADMIN_PASSWORD_HASH
     
     # Check username
     if username != admin_username:
         return False
     
-    # If password hash is set in environment, use it
+    # If password hash is set, prefer it
     if admin_password_hash:
         return check_password_hash(admin_password_hash, password)
     
-    # Otherwise, check plain password (for initial setup)
+    # Otherwise, allow plain password via env (useful for local dev only)
     if admin_password:
         return password == admin_password
     
-    # Default password for initial setup (CHANGE THIS!)
-    default_password = 'admin123'
-    if password == default_password:
-        # Generate hash for future use
-        print("WARNING: Using default password! Set ADMIN_PASSWORD_HASH environment variable.")
-        return True
-    
+    print("ERROR: Admin password is not configured. Set ADMIN_PASSWORD_HASH (recommended) or ADMIN_PASSWORD.")
     return False
 
 def init_session(username):

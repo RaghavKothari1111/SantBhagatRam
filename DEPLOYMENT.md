@@ -1,25 +1,26 @@
 # Deployment Guide
 
-## Admin Panel Setup
+## Environment & Secrets
 
-### 1. Environment Configuration
-
-Create a `.env` file in the root directory (copy from `.env.example`):
+### 1. Create a local env file
 
 ```bash
-cp .env.example .env
+cp example.env .env
 ```
 
-Edit `.env` and set:
-- `SECRET_KEY`: Generate a strong random secret key
-- `ADMIN_USERNAME`: Your admin username
-- `ADMIN_PASSWORD` or `ADMIN_PASSWORD_HASH`: Your admin password (use hash for production)
-- `SESSION_COOKIE_SECURE`: Set to `true` if using HTTPS
+Edit `.env` and fill in:
+- `SECRET_KEY`: Strong random string (see step 3)
+- `ADMIN_USERNAME`: Admin login ID
+- `ADMIN_PASSWORD_HASH`: Output of the hashing step below
+- `ADMIN_PASSWORD`: *(optional – dev only)* plain text fallback
+- `ADMIN_ALLOWED_IPS`: *(optional)* comma-separated list like `1.2.3.4,5.6.7.8`
+- `SESSION_COOKIE_SECURE`: `true` when serving over HTTPS
+- `FLASK_DEBUG`: `false` for production
 
-### 2. Generate Password Hash (Recommended for Production)
+### 2. Generate Password Hash (recommended)
 
 ```bash
-python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('your-password'))"
+python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('YOUR-STRONG-PASSWORD'))"
 ```
 
 Copy the output and set it as `ADMIN_PASSWORD_HASH` in your `.env` file.
@@ -32,20 +33,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 Copy the output and set it as `SECRET_KEY` in your `.env` file.
 
-### 4. Initial Setup
-
-1. **Default Credentials** (for first-time setup):
-   - Username: `admin`
-   - Password: `admin123`
-   
-   **⚠️ IMPORTANT**: Change these immediately after first login!
-
-2. **Access Admin Panel**:
-   - Navigate to `/admin/login`
-   - Login with your credentials
-   - Change password via environment variables
-
-### 5. Directory Structure
+### 4. Directory Structure
 
 Ensure these directories exist:
 - `static/uploads/` - For uploaded images
@@ -53,7 +41,7 @@ Ensure these directories exist:
 
 The application will create these automatically on first run.
 
-### 6. Production Deployment
+## Production Deployment
 
 #### Using Gunicorn (Recommended)
 
@@ -69,34 +57,70 @@ Set these in your hosting environment:
 - `ADMIN_PASSWORD_HASH` (recommended)
 - `SESSION_COOKIE_SECURE=true` (if using HTTPS)
 - `FLASK_DEBUG=false` (IMPORTANT: Disable debug mode in production!)
+- `ADMIN_ALLOWED_IPS` *(optional but recommended for admin lock-down)*
 - `PORT` (if needed by your hosting provider)
 
-### 7. Security Checklist
+## Deploying on Railway
 
-- [ ] Change default admin password
-- [ ] Use `ADMIN_PASSWORD_HASH` instead of `ADMIN_PASSWORD`
-- [ ] Set `SESSION_COOKIE_SECURE=true` for HTTPS
-- [ ] Use a strong `SECRET_KEY`
-- [ ] Keep `.env` file secure (never commit it)
-- [ ] Regularly backup `data/` directory
-- [ ] Use HTTPS in production
-- [ ] Restrict access to `/admin/*` routes if possible
+Railway natively understands the included `Procfile` (`web: gunicorn app:app`). Recommended steps:
 
-### 8. Data Backup
+1. **Create a Railway project**
+   ```bash
+   railway init
+   railway up
+   ```
+   Or use the Railway dashboard ➜ *New Project* ➜ *Deploy from GitHub* ➜ select this repo.
+
+2. **Set environment variables** under *Variables*:
+
+| Variable | Example | Notes |
+| --- | --- | --- |
+| `SECRET_KEY` | `railway-$(openssl rand -hex 32)` | Required |
+| `ADMIN_USERNAME` | `admin` | Required |
+| `ADMIN_PASSWORD_HASH` | *(hash output)* | Required for production logins |
+| `FLASK_DEBUG` | `false` | Ensures debug is disabled |
+| `SESSION_COOKIE_SECURE` | `true` | Enforce HTTPS cookies |
+| `ADMIN_ALLOWED_IPS` | `12.34.56.78` | Optional allow-list for `/admin` |
+
+3. **Persist uploads / data** *(optional but recommended)*  
+   Railway’s ephemeral filesystem resets on each deploy. Create volumes if you need persistent uploads:
+   ```bash
+   railway volume create uploads --mountPath /app/static/uploads
+   railway volume create data --mountPath /app/data
+   ```
+   Then redeploy so Gunicorn sees the mounted paths.
+
+4. **Trigger a deploy**  
+   Railway builds the image using `requirements.txt` and starts the Gunicorn process defined in `Procfile`.
+
+5. **Add a custom domain (optional)** and force HTTPS inside Railway settings.
+
+## Security Checklist
+
+- [ ] Use `ADMIN_PASSWORD_HASH` (not `ADMIN_PASSWORD`) in production.
+- [ ] Generate and set a unique `SECRET_KEY`.
+- [ ] Keep `.env`/Railway variables private—never commit secrets.
+- [ ] Set `FLASK_DEBUG=false` and `SESSION_COOKIE_SECURE=true`.
+- [ ] (Optional) Restrict `/admin/*` via `ADMIN_ALLOWED_IPS`.
+- [ ] Serve the site via HTTPS.
+- [ ] Regularly backup the `data/` folder and `static/uploads/`.
+- [ ] Rotate admin credentials periodically.
+
+## Data Backup
 
 Backup these files regularly:
 - `data/blogs_data.json`
 - `data/events_data.json`
 - `static/uploads/` directory
 
-### 9. Accessing Admin Panel
+## Accessing Admin Panel
 
 - **Login URL**: `https://yourdomain.com/admin/login`
 - **Dashboard**: `https://yourdomain.com/admin`
 - **Blogs**: `https://yourdomain.com/admin/blogs`
 - **Events**: `https://yourdomain.com/admin/events`
 
-### 10. Features
+## Features
 
 - ✅ Secure authentication
 - ✅ Blog management (Add, Edit, Delete)
@@ -106,7 +130,7 @@ Backup these files regularly:
 - ✅ Session management
 - ✅ Responsive admin interface
 
-### Troubleshooting
+## Troubleshooting
 
 **Can't login?**
 - Check `.env` file exists and has correct credentials

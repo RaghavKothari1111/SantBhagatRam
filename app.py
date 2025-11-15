@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory, abort
 from datetime import datetime
 import json
 import os
@@ -19,6 +19,7 @@ from data_manager import (
 app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = Config.SECRET_KEY
+ALLOWED_ADMIN_IPS = [ip.strip() for ip in Config.ADMIN_ALLOWED_IPS.split(',') if ip.strip()]
 
 # Security headers
 @app.after_request
@@ -30,6 +31,15 @@ def set_security_headers(response):
     if request.is_secure or os.environ.get('FORCE_HTTPS', '').lower() == 'true':
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     return response
+
+@app.before_request
+def enforce_admin_ip_restriction():
+    """Optional IP allow-list for /admin routes"""
+    if ALLOWED_ADMIN_IPS and request.path.startswith('/admin'):
+        forwarded_for = request.headers.get('X-Forwarded-For', '')
+        candidate_ip = forwarded_for.split(',')[0].strip() if forwarded_for else (request.remote_addr or '')
+        if candidate_ip not in ALLOWED_ADMIN_IPS:
+            abort(403)
 
 @app.context_processor
 def inject_current_year():
