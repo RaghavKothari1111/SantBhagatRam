@@ -39,6 +39,21 @@
             background: #6366f1;
             color: white;
         }
+
+        /* Disable accidental text selection on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            body,
+            body * {
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            body.text-selectable,
+            body.text-selectable * {
+                -webkit-user-select: text;
+                user-select: text;
+            }
+        }
         
         /* Hide all social media icons */
         .social-icons,
@@ -230,6 +245,46 @@
 
 <!-- Load extra JS at the bottom -->
 <script src="{{ url_for('static', filename='js/language.js') }}"></script>
+<script>
+    (function() {
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        if (!isTouchDevice) return;
+
+        const longPressDuration = 1500; // ms
+        const selectionResetDelay = 3000; // ms
+        let pressTimer = null;
+        let resetTimer = null;
+        const body = document.body;
+
+        const enableSelection = () => {
+            body.classList.add('text-selectable');
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(() => {
+                body.classList.remove('text-selectable');
+            }, selectionResetDelay);
+        };
+
+        const clearPressTimer = () => {
+            if (pressTimer) {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+            }
+        };
+
+        const handleTouchStart = () => {
+            if (pressTimer || body.classList.contains('text-selectable')) return;
+            pressTimer = setTimeout(() => {
+                enableSelection();
+                pressTimer = null;
+            }, longPressDuration);
+        };
+
+        body.addEventListener('touchstart', handleTouchStart, { passive: true });
+        ['touchend', 'touchcancel', 'touchmove'].forEach(evt => {
+            body.addEventListener(evt, clearPressTimer, { passive: true });
+        });
+    })();
+</script>
 {% block extra_js %}
 {% endblock %}
 
