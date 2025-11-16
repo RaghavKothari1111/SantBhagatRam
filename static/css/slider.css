@@ -29,8 +29,8 @@
     overflow: hidden;
     touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: 0; /* No bottom margin */
-    padding-bottom: 0; /* No bottom padding */
+    margin: 0; /* No margins */
+    padding: 0; /* No padding */
 }
 
 /* Individual slide - all same size */
@@ -140,6 +140,7 @@
     border: none;
     box-shadow: none;
     z-index: 1;
+    line-height: 1; /* Remove line-height spacing */
 }
 
 /* Progress dots */
@@ -254,8 +255,8 @@
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 400px;
-        margin-bottom: 0; /* Remove any margin */
-        padding-bottom: 0; /* No bottom padding */
+        margin: 0; /* Remove all margins */
+        padding: 0; /* Remove all padding */
     }
     
     .gallery-item {
@@ -276,10 +277,11 @@
     }
     
     .slide-control {
-        padding: 0; /* Remove all padding between slider and dots */
+        padding: 0 !important; /* Remove all padding between slider and dots */
         gap: 10px;
-        margin-top: 0; /* Remove any margin */
-        margin-bottom: 0; /* Remove any margin */
+        margin-top: 0 !important; /* Remove any margin */
+        margin-bottom: 0 !important; /* Remove any margin */
+        line-height: 1; /* Remove line-height spacing */
     }
     
     .dot {
@@ -303,8 +305,8 @@
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 300px;
-        margin-bottom: 0; /* Remove any margin */
-        padding-bottom: 0; /* No bottom padding */
+        margin: 0; /* Remove all margins */
+        padding: 0; /* Remove all padding */
     }
     
     .overlay {
@@ -319,10 +321,11 @@
     }
     
     .slide-control {
-        padding: 0; /* Remove all padding between slider and dots */
+        padding: 0 !important; /* Remove all padding between slider and dots */
         gap: 8px;
-        margin-top: 0; /* Remove any margin */
-        margin-bottom: 0; /* Remove any margin */
+        margin-top: 0 !important; /* Remove any margin */
+        margin-bottom: 0 !important; /* Remove any margin */
+        line-height: 1; /* Remove line-height spacing */
     }
     
     .play-pause-btn {
