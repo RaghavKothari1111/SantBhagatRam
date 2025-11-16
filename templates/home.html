@@ -183,63 +183,106 @@
         const objectivesScroller = document.querySelector('.objectives-scroller');
         let touchTimeout = null;
         let isPaused = false;
+        let isManuallyPaused = false; // Track manual pause state
 
         if (objectivesList && objectivesScroller) {
             // Ensure overflow is hidden for animation to work
             objectivesScroller.style.overflow = 'hidden';
 
-            // Touch event handlers - pause on touch, resume on release
+            // Click/tap handler for toggle functionality (mobile)
+            objectivesScroller.addEventListener('click', function(e) {
+                // Only toggle on mobile devices
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+                if (isMobile) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (isManuallyPaused) {
+                        // Resume animation
+                        objectivesList.style.animationPlayState = 'running';
+                        objectivesList.classList.remove('touch-active');
+                        isManuallyPaused = false;
+                        isPaused = false;
+                        // Clear any pending timeout
+                        if (touchTimeout) {
+                            clearTimeout(touchTimeout);
+                            touchTimeout = null;
+                        }
+                    } else {
+                        // Pause animation
+                        objectivesList.style.animationPlayState = 'paused';
+                        objectivesList.classList.add('touch-active');
+                        isManuallyPaused = true;
+                        isPaused = true;
+                        // Clear any pending timeout
+                        if (touchTimeout) {
+                            clearTimeout(touchTimeout);
+                            touchTimeout = null;
+                        }
+                    }
+                }
+            });
+
+            // Touch event handlers - pause on touch, resume on release (only if not manually paused)
             objectivesScroller.addEventListener('touchstart', function(e) {
-                // Pause auto-scroll when user touches
-                objectivesList.style.animationPlayState = 'paused';
-                objectivesList.classList.add('touch-active');
-                isPaused = true;
-                
-                // Clear any existing timeout
-                if (touchTimeout) {
-                    clearTimeout(touchTimeout);
+                // Only auto-pause if not manually paused
+                if (!isManuallyPaused) {
+                    objectivesList.style.animationPlayState = 'paused';
+                    objectivesList.classList.add('touch-active');
+                    isPaused = true;
+                    
+                    // Clear any existing timeout
+                    if (touchTimeout) {
+                        clearTimeout(touchTimeout);
+                    }
                 }
             }, { passive: true });
 
             objectivesScroller.addEventListener('touchend', function() {
-                // Resume auto-scroll after a short delay
-                if (touchTimeout) {
-                    clearTimeout(touchTimeout);
+                // Only auto-resume if not manually paused
+                if (!isManuallyPaused) {
+                    if (touchTimeout) {
+                        clearTimeout(touchTimeout);
+                    }
+                    
+                    touchTimeout = setTimeout(function() {
+                        objectivesList.style.animationPlayState = 'running';
+                        objectivesList.classList.remove('touch-active');
+                        isPaused = false;
+                    }, 1500); // Resume after 1.5 seconds
                 }
-                
-                touchTimeout = setTimeout(function() {
-                    objectivesList.style.animationPlayState = 'running';
-                    objectivesList.classList.remove('touch-active');
-                    isPaused = false;
-                }, 1500); // Resume after 1.5 seconds
             }, { passive: true });
 
             // Also pause on touchmove (when user is actively scrolling)
             objectivesScroller.addEventListener('touchmove', function() {
-                if (!isPaused) {
+                if (!isManuallyPaused && !isPaused) {
                     objectivesList.style.animationPlayState = 'paused';
                     objectivesList.classList.add('touch-active');
                     isPaused = true;
                 }
                 
-                // Reset the resume timeout
-                if (touchTimeout) {
-                    clearTimeout(touchTimeout);
+                // Reset the resume timeout (only if not manually paused)
+                if (!isManuallyPaused) {
+                    if (touchTimeout) {
+                        clearTimeout(touchTimeout);
+                    }
+                    touchTimeout = setTimeout(function() {
+                        objectivesList.style.animationPlayState = 'running';
+                        objectivesList.classList.remove('touch-active');
+                        isPaused = false;
+                    }, 1500);
                 }
-                touchTimeout = setTimeout(function() {
-                    objectivesList.style.animationPlayState = 'running';
-                    objectivesList.classList.remove('touch-active');
-                    isPaused = false;
-                }, 1500);
             }, { passive: true });
 
             // Mouse events for desktop hover
             objectivesScroller.addEventListener('mouseenter', function() {
-                objectivesList.style.animationPlayState = 'paused';
+                if (!isManuallyPaused) {
+                    objectivesList.style.animationPlayState = 'paused';
+                }
             });
 
             objectivesScroller.addEventListener('mouseleave', function() {
-                if (!isPaused) {
+                if (!isPaused && !isManuallyPaused) {
                     objectivesList.style.animationPlayState = 'running';
                 }
             });

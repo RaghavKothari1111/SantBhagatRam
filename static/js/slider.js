@@ -14,6 +14,25 @@ let dots = document.querySelectorAll('.dot');
 const playPauseIcon = document.getElementById('playPauseIcon');
 let slides = document.querySelectorAll('.gallery-item');
 
+// Helper function to detect mobile
+function isMobileDevice() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+
+// Helper function to get transition duration based on device
+function getTransitionDuration() {
+    return isMobileDevice() ? 400 : 800; // 0.4s for mobile, 0.8s for desktop
+}
+
+// Helper function to get transition string based on device
+function getTransitionString() {
+    if (isMobileDevice()) {
+        return 'left 0.4s ease-out, opacity 0.4s ease-out';
+    } else {
+        return 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+}
+
 // Initialize totalSlides dynamically
 function initializeSlider() {
     slides = document.querySelectorAll('.gallery-item');
@@ -108,7 +127,7 @@ function calculateSlidePositions(instant = false) {
         if (instant || isDragging) {
             slide.style.transition = 'none';
         } else {
-            slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            slide.style.transition = getTransitionString();
         }
         
         slide.style.left = `${finalX}px`;
@@ -156,7 +175,7 @@ function updateSlider() {
     
     // Re-enable transitions
     slides.forEach(slide => {
-        slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        slide.style.transition = getTransitionString();
     });
     
     // Update dots
@@ -167,9 +186,10 @@ function updateSlider() {
     // Animate to new positions
     calculateSlidePositions();
     
+    const duration = getTransitionDuration();
     setTimeout(() => {
         isTransitioning = false;
-    }, 800);
+    }, duration);
 }
 
 function nextImage() {
@@ -204,11 +224,11 @@ function nextImage() {
             
             // Re-enable transitions for next movement
             slides.forEach(slide => {
-                slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                slide.style.transition = getTransitionString();
             });
             
             isTransitioning = false;
-        }, 800); // Match transition duration
+        }, getTransitionDuration()); // Match transition duration
     } else {
         // Normal forward movement
         currentIndex++;
@@ -248,11 +268,11 @@ function prevImage() {
             
             // Re-enable transitions for next movement
             slides.forEach(slide => {
-                slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                slide.style.transition = getTransitionString();
             });
             
             isTransitioning = false;
-        }, 800); // Match transition duration
+        }, getTransitionDuration()); // Match transition duration
     } else {
         // Normal backward movement
         currentIndex--;
@@ -344,12 +364,12 @@ function handleDragEnd(e) {
     
     // Re-enable transitions
     slides.forEach(slide => {
-        slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        slide.style.transition = getTransitionString();
     });
     
     // Lower threshold for mobile devices (easier to trigger)
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    const threshold = isMobile ? 10 : 15; // Percentage threshold to trigger slide change
+    const threshold = isMobileDevice() ? 10 : 15; // Percentage threshold to trigger slide change
+    const duration = getTransitionDuration();
     
     if (Math.abs(dragOffset) > threshold) {
         if (dragOffset > 0) {
@@ -371,10 +391,10 @@ function handleDragEnd(e) {
                     calculateSlidePositions(true);
                     void container.offsetWidth;
                     slides.forEach(slide => {
-                        slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        slide.style.transition = getTransitionString();
                     });
                     isTransitioning = false;
-                }, 800);
+                }, duration);
             } else {
                 currentIndex--;
                 updateSlider();
@@ -398,10 +418,10 @@ function handleDragEnd(e) {
                     calculateSlidePositions(true);
                     void container.offsetWidth;
                     slides.forEach(slide => {
-                        slide.style.transition = 'left 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        slide.style.transition = getTransitionString();
                     });
                     isTransitioning = false;
-                }, 800);
+                }, duration);
             } else {
                 currentIndex++;
                 updateSlider();

@@ -244,6 +244,7 @@
 @media (max-width: 768px) {
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
+        padding: 20px 0 0 0; /* Reduced top padding */
     }
     
     .item-container {
@@ -269,7 +270,7 @@
     }
     
     .slide-control {
-        padding: 15px 0;
+        padding: 8px 0; /* Reduced padding between slider and dots */
         gap: 10px;
     }
     
@@ -287,6 +288,7 @@
 @media (max-width: 480px) {
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
+        padding: 15px 0 0 0; /* Reduced top padding */
     }
     
     .item-container {
@@ -306,7 +308,7 @@
     }
     
     .slide-control {
-        padding: 12px 0;
+        padding: 6px 0; /* Further reduced padding between slider and dots */
         gap: 8px;
     }
     
