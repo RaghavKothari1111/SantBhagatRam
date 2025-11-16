@@ -12,6 +12,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    gap: 0; /* No gap between flex items */
 }
 
 /* Container for all slides */
@@ -28,6 +29,8 @@
     overflow: hidden;
     touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
+    margin-bottom: 0; /* No bottom margin */
+    padding-bottom: 0; /* No bottom padding */
 }
 
 /* Individual slide - all same size */
@@ -245,12 +248,14 @@
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
         padding: 10px 0 0 0; /* Significantly reduced top padding */
+        gap: 0; /* No gap between items */
     }
     
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 400px;
         margin-bottom: 0; /* Remove any margin */
+        padding-bottom: 0; /* No bottom padding */
     }
     
     .gallery-item {
@@ -271,9 +276,10 @@
     }
     
     .slide-control {
-        padding: 4px 0; /* Significantly reduced padding between slider and dots */
+        padding: 0; /* Remove all padding between slider and dots */
         gap: 10px;
         margin-top: 0; /* Remove any margin */
+        margin-bottom: 0; /* Remove any margin */
     }
     
     .dot {
@@ -291,12 +297,14 @@
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
         padding: 8px 0 0 0; /* Significantly reduced top padding */
+        gap: 0; /* No gap between items */
     }
     
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 300px;
         margin-bottom: 0; /* Remove any margin */
+        padding-bottom: 0; /* No bottom padding */
     }
     
     .overlay {
@@ -311,9 +319,10 @@
     }
     
     .slide-control {
-        padding: 2px 0; /* Significantly reduced padding between slider and dots */
+        padding: 0; /* Remove all padding between slider and dots */
         gap: 8px;
         margin-top: 0; /* Remove any margin */
+        margin-bottom: 0; /* Remove any margin */
     }
     
     .play-pause-btn {

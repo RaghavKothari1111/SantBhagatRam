@@ -181,12 +181,14 @@
     document.addEventListener('DOMContentLoaded', function() {
         const objectivesList = document.querySelector('.objectives-list');
         const objectivesScroller = document.querySelector('.objectives-scroller');
+        const objectiveItems = document.querySelectorAll('.objective-item');
         let touchTimeout = null;
         let isPaused = false;
         let isManuallyPaused = false; // Track manual pause state
         let touchStartTime = 0;
         let touchStartY = 0;
         let hasMoved = false;
+        let highlightedItem = null; // Track which item is currently highlighted
 
         if (objectivesList && objectivesScroller) {
             // Ensure overflow is hidden for animation to work
@@ -194,6 +196,64 @@
 
             // Detect if mobile
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+            // Function to remove highlight from all items
+            function removeAllHighlights() {
+                objectiveItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                highlightedItem = null;
+            }
+
+            // Function to highlight an item
+            function highlightItem(item) {
+                removeAllHighlights();
+                item.classList.add('active');
+                highlightedItem = item;
+            }
+
+            // Function to unhighlight current item
+            function unhighlightItem() {
+                if (highlightedItem) {
+                    highlightedItem.classList.remove('active');
+                    highlightedItem = null;
+                }
+            }
+
+            // Add click handlers to individual objective items (mobile only)
+            if (isMobile) {
+                objectiveItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Check if this item is already highlighted
+                        if (item === highlightedItem) {
+                            // Unhighlight and resume
+                            unhighlightItem();
+                            objectivesList.style.animationPlayState = 'running';
+                            objectivesList.classList.remove('touch-active');
+                            isManuallyPaused = false;
+                            isPaused = false;
+                            if (touchTimeout) {
+                                clearTimeout(touchTimeout);
+                                touchTimeout = null;
+                            }
+                        } else {
+                            // Highlight this item and pause
+                            highlightItem(item);
+                            objectivesList.style.animationPlayState = 'paused';
+                            objectivesList.classList.add('touch-active');
+                            isManuallyPaused = true;
+                            isPaused = true;
+                            if (touchTimeout) {
+                                clearTimeout(touchTimeout);
+                                touchTimeout = null;
+                            }
+                        }
+                    });
+                });
+            }
 
             // Touch start - track if it's a tap or scroll
             objectivesScroller.addEventListener('touchstart', function(e) {
@@ -244,36 +304,8 @@
             objectivesScroller.addEventListener('touchend', function(e) {
                 const touchDuration = Date.now() - touchStartTime;
                 
-                // If it's a quick tap (not a scroll) and on mobile, toggle
-                if (isMobile && touchDuration < 300 && !hasMoved) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    if (isManuallyPaused) {
-                        // Resume animation
-                        objectivesList.style.animationPlayState = 'running';
-                        objectivesList.classList.remove('touch-active');
-                        isManuallyPaused = false;
-                        isPaused = false;
-                        // Clear any pending timeout
-                        if (touchTimeout) {
-                            clearTimeout(touchTimeout);
-                            touchTimeout = null;
-                        }
-                    } else {
-                        // Pause animation
-                        objectivesList.style.animationPlayState = 'paused';
-                        objectivesList.classList.add('touch-active');
-                        isManuallyPaused = true;
-                        isPaused = true;
-                        // Clear any pending timeout
-                        if (touchTimeout) {
-                            clearTimeout(touchTimeout);
-                            touchTimeout = null;
-                        }
-                    }
-                } else {
-                    // It was a scroll, not a tap - only auto-resume if not manually paused
+                // If it was a scroll, not a tap - only auto-resume if not manually paused
+                if (hasMoved || touchDuration >= 300) {
                     if (!isManuallyPaused) {
                         if (touchTimeout) {
                             clearTimeout(touchTimeout);
@@ -290,41 +322,7 @@
                 // Reset tracking variables
                 hasMoved = false;
                 touchStartTime = 0;
-            }, { passive: false });
-
-            // Click handler as fallback (for devices that don't fire touchend properly)
-            objectivesScroller.addEventListener('click', function(e) {
-                if (isMobile) {
-                    // Only handle if touchend didn't already handle it
-                    const timeSinceTouch = Date.now() - touchStartTime;
-                    if (timeSinceTouch > 300) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        if (isManuallyPaused) {
-                            // Resume animation
-                            objectivesList.style.animationPlayState = 'running';
-                            objectivesList.classList.remove('touch-active');
-                            isManuallyPaused = false;
-                            isPaused = false;
-                            if (touchTimeout) {
-                                clearTimeout(touchTimeout);
-                                touchTimeout = null;
-                            }
-                        } else {
-                            // Pause animation
-                            objectivesList.style.animationPlayState = 'paused';
-                            objectivesList.classList.add('touch-active');
-                            isManuallyPaused = true;
-                            isPaused = true;
-                            if (touchTimeout) {
-                                clearTimeout(touchTimeout);
-                                touchTimeout = null;
-                            }
-                        }
-                    }
-                }
-            });
+            }, { passive: true });
 
             // Mouse events for desktop hover
             objectivesScroller.addEventListener('mouseenter', function() {

@@ -123,6 +123,15 @@
     border-color: #d1d5db;
 }
 
+/* Active/highlighted state for mobile clicks */
+.objective-item.active {
+    background: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-left-color: #4f46e5;
+    border-color: #d1d5db;
+}
+
 .objective-text {
     color: #111827;
     font-size: 17px;
