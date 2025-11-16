@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if category %}Edit Category{% else %}Add Category{% endif %}{% endblock %}
+{% block page_title %}{% if category %}Edit Category{% else %}Add New Category{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if category %}{{ url_for('admin_edit_video_category', category_id=category.id) }}{% else %}{{ url_for('admin_add_video_category') }}{% endif %}" class="admin-form">
+        <div class="form-section">
+            <h3>Category Information</h3>
+            
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" id="title" name="title" value="{% if category %}{{ category.title }}{% endif %}" required placeholder="e.g., Latest Videos">
+                <small>This will appear in large, bold text in the dropdown</small>
+            </div>
+
+            <div class="form-group">
+                <label for="link">Link *</label>
+                <input type="url" id="link" name="link" value="{% if category %}{{ category.link }}{% endif %}" required placeholder="https://...">
+                <small>Full URL to the category page or video playlist</small>
+            </div>
+
+            <div class="form-group">
+                <label for="font_size">Font Size</label>
+                <select id="font_size" name="font_size">
+                    <option value="large" {% if category and category.font_size == 'large' %}selected{% endif %}>Large (24px, Bold)</option>
+                    <option value="small" {% if category and category.font_size == 'small' %}selected{% endif %}>Small (17px, Regular)</option>
+                </select>
+                <small>Categories typically use "Large" font size</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_videos_dropdown') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if category %}Update Category{% else %}Add Category{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

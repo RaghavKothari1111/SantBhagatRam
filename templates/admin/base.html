@@ -23,6 +23,7 @@
             <a href="{{ url_for('admin_events') }}" class="{% if 'admin_events' in request.endpoint or 'admin_add_event' in request.endpoint or 'admin_edit_event' in request.endpoint %}active{% endif %}">Events</a>
             <a href="{{ url_for('admin_photos') }}" class="{% if 'admin_photos' in request.endpoint or 'admin_add_photo_gallery' in request.endpoint or 'admin_edit_photo_gallery' in request.endpoint %}active{% endif %}">Photos</a>
             <a href="{{ url_for('admin_slider') }}" class="{% if 'admin_slider' in request.endpoint or 'admin_add_slider_image' in request.endpoint or 'admin_edit_slider_image' in request.endpoint %}active{% endif %}">Slider</a>
+            <a href="{{ url_for('admin_navbar_dropdowns') }}" class="{% if 'admin_navbar_dropdowns' in request.endpoint or 'admin_manage_dropdown' in request.endpoint or 'admin_add_dropdown_column' in request.endpoint or 'admin_edit_dropdown_column' in request.endpoint or 'admin_add_dropdown_item' in request.endpoint or 'admin_edit_dropdown_item' in request.endpoint or 'admin_edit_global_social_media' in request.endpoint %}active{% endif %}">Navbar Dropdowns</a>
         </nav>
         <div class="topbar-actions">
             <a href="/" target="_blank" class="ghost-btn">View Site</a>

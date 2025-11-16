@@ -12,10 +12,17 @@
     width: 100%;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
     background: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid #e5e7eb;
+    --navbar-height: 72px;
+    transition: border-bottom 0.2s ease;
+}
+
+/* Remove navbar border when dropdown is open */
+body:has(.drop-down_projects:hover) .navbar {
+    border-bottom: none;
 } 
 
 .nav-content {
@@ -41,7 +48,7 @@
     font-weight: 700;
     transition: color 0.2s ease;
     letter-spacing: -0.5px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .logo a:hover {
@@ -77,15 +84,15 @@
     padding: 12px 20px;
     display: inline-block;
     position: relative;
-    transition: all 0.2s ease;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 16px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
     white-space: nowrap;
     min-width: fit-content;
     flex-shrink: 0;
     line-height: 1.5;
     letter-spacing: 0.01em;
+    background-color: transparent;
 }
 
 /* Larger font size for Hindi */
@@ -95,13 +102,33 @@ body.lang-hindi .nav-links a {
 }
 
 .nav-links a:hover {
-    color: #6366f1;
-    background: #f3f4f6;
+    color: #000000 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: none !important;
 }
 
-/* Remove underline effect */
-.nav-links a::after {
-    display: none;
+/* Animated underline effect on hover - only for navbar links, not dropdown items */
+.nav-links > li > a::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 20px;
+    width: 0;
+    height: 2px;
+    background-color: #6366f1;
+    transition: width 0.3s ease;
+}
+
+.nav-links > li > a:hover::after {
+    width: calc(100% - 40px);
+}
+
+/* Remove underline from dropdown menu items */
+[class*="drop-down-menu-"] a::after {
+    display: none !important;
+    content: none !important;
 }
 
 /* Language Toggle Button */
@@ -112,18 +139,25 @@ body.lang-hindi .nav-links a {
     padding: 10px 18px;
     background: #f3f4f6;
     border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
     color: #4b5563;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif;
+    transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background-color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                backdrop-filter 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
     margin-left: 4px;
     white-space: nowrap;
     min-width: fit-content;
     flex-shrink: 0;
     line-height: 1.4;
+    transform: scale(1);
+    will-change: transform;
+    position: relative;
 }
 
 /* Larger font size for Hindi */
@@ -133,9 +167,13 @@ body.lang-hindi .language-toggle {
 }
 
 .language-toggle:hover {
-    background: #6366f1;
-    color: white;
-    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.15) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+    color: #6366f1 !important;
+    border-color: rgba(99, 102, 241, 0.25) !important;
+    transform: scale(1.08) !important;
+    transform-origin: center;
 }
 
 .language-toggle-icon {
@@ -156,7 +194,7 @@ body.lang-hindi .language-toggle {
     color: white !important;
     transition: all 0.2s ease;
     font-size: 17px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
     border: none;
     white-space: nowrap;
     min-width: fit-content;
@@ -195,59 +233,310 @@ body.lang-hindi .donate-btn {
     position: relative;
 }
 
-.drop-down-menu-projects {
-    position: absolute;
-    top: calc(100% + 8px);
+/* Dropdown menu */
+.nav-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height, 72px) - 1px);
     left: 0;
-    background: #ffffff;
-    min-width: 200px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-radius: 8px;
-    opacity: 0;
-    visibility: hidden;
-    padding: 8px;
+    width: 100%;
+    background: #ffffff !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    padding: 0;
     margin: 0;
     z-index: 999;
-    border: 1px solid #e5e7eb;
-    transform: translateY(-8px);
-    transition: all 0.2s ease;
+    border: none;
+    border-top: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out, visibility 0.18s;
+    will-change: transform, opacity;
 }
 
-.drop-down_projects:hover .drop-down-menu-projects {
+.nav-dropdown.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
 }
 
-.drop-down-menu-projects li {
+/* Blur overlay below dropdown */
+.blur-overlay {
+    position: fixed;
+    top: var(--navbar-height, 72px);
+    left: 0;
+    width: 100%;
+    height: calc(100% - var(--navbar-height, 72px));
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out, visibility 0.18s;
+}
+
+.blur-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+/* Apply dropdown-content styling to all dropdowns */
+[class*="drop-down-menu-"] .dropdown-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 80px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    background: #ffffff !important;
+    pointer-events: all; /* Only content area captures mouse events */
+}
+
+/* Legacy support for specific dropdowns */
+.drop-down-menu-projects .dropdown-content,
+.drop-down-menu-videos .dropdown-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 80px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    background: #ffffff !important;
+    pointer-events: all; /* Only content area captures mouse events */
+}
+
+.drop-down-menu-projects li,
+.drop-down-menu-videos li {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
+/* Apply column styling to all dropdowns */
+[class*="drop-down-menu-"] .dropdown-column {
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+    flex-basis: 0;
+}
+
+[class*="drop-down-menu-"] .dropdown-column-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+[class*="drop-down-menu-"] .dropdown-column-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Legacy support for specific dropdowns */
+.drop-down-menu-projects .dropdown-column,
+.drop-down-menu-videos .dropdown-column {
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+    flex-basis: 0;
+}
+
+.drop-down-menu-projects .dropdown-column-title,
+.drop-down-menu-videos .dropdown-column-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.drop-down-menu-projects .dropdown-column-heading,
+.drop-down-menu-videos .dropdown-column-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.01em;
+}
+
 .drop-down-menu-projects a {
-    display: block;
-    padding: 12px 16px;
+    display: inline-block;
+    padding: 0;
     color: #4b5563;
     text-decoration: none;
     font-weight: 500;
     position: relative;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    font-size: 15px;
-    border-radius: 6px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: none;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-size: 17px;
+    border-radius: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transform: scale(1);
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    line-height: 1.5;
+}
+
+.drop-down-menu-projects li {
+    padding: 4px 0;
+    display: block;
 }
 
 .drop-down-menu-projects a:hover {
-    color: #6366f1;
-    background: #f3f4f6;
-    padding-left: 16px;
+    color: #000000 !important;
+    transform: scale(1.02) !important;
+    transform-origin: left center;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-/* Remove underline from dropdown */
-.drop-down-menu-projects li a::after {
-    display: none;
+/* Remove underline from all dropdown menus */
+.drop-down-menu-projects li a::after,
+[class*="drop-down-menu-"] li a::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Generic Dropdown Styles - Apply to all dropdowns */
+[class*="drop-down-menu-"] {
+    position: fixed;
+    top: calc(var(--navbar-height, 72px) - 1px);
+    left: 0;
+    width: 100%;
+    background: #ffffff !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+    border: none;
+    border-top: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out, visibility 0.18s;
+    will-change: transform, opacity;
+}
+
+[class*="drop-down-menu-"].open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* All dropdown containers */
+[class*="drop-down_"] {
+    position: relative;
+}
+
+/* Dropdown item font sizes */
+.dropdown-item-large {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    color: #111827 !important;
+    margin-bottom: 4px;
+}
+
+.dropdown-item-small {
+    font-size: 17px !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #4b5563 !important;
+}
+
+/* Apply font sizes to all dropdowns */
+[class*="drop-down-menu-"] .dropdown-item-large {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    color: #111827 !important;
+}
+
+[class*="drop-down-menu-"] .dropdown-item-small {
+    font-size: 17px !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #4b5563 !important;
+}
+
+/* All dropdown links - same hover effect */
+[class*="drop-down-menu-"] a {
+    display: inline-block;
+    padding: 0;
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: none;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    border-radius: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transform: scale(1);
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    line-height: 1.5;
+}
+
+[class*="drop-down-menu-"] li {
+    padding: 4px 0;
+    display: block;
+    width: fit-content;
+}
+
+[class*="drop-down-menu-"] ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+[class*="drop-down-menu-"] a:hover {
+    color: #000000 !important;
+    transform: scale(1.02) !important;
+    transform-origin: left center;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* Mobile Menu Toggle (Three Dots) */
@@ -363,16 +652,22 @@ body.lang-hindi .donate-btn {
         transition: background-color 0.2s ease;
     }
 
+    /* Remove underline effect on mobile */
+    .nav-links > li > a::after {
+        display: none !important;
+    }
+
     .nav-links a:hover,
     .nav-links a:active {
         background: #f5f5f7;
+        color: #1d1d1f !important;
     }
 
-    .drop-down_projects {
+    [class*="drop-down_"] {
         width: 100%;
     }
 
-    .drop-down-menu-projects {
+    [class*="drop-down-menu-"] {
         position: static;
         opacity: 1;
         visibility: visible;
@@ -387,15 +682,41 @@ body.lang-hindi .donate-btn {
         background: transparent;
     }
 
-    .drop-down_projects:hover .drop-down-menu-projects,
-    .drop-down_projects.active .drop-down-menu-projects {
-        max-height: 200px;
+    [class*="drop-down_"]:hover [class*="drop-down-menu-"],
+    [class*="drop-down_"].active [class*="drop-down-menu-"] {
+        max-height: 500px;
+        overflow-y: auto;
     }
 
-    .drop-down-menu-projects a {
+    /* Dropdown content adjustments for mobile */
+    [class*="drop-down-menu-"] .dropdown-content {
+        padding: 20px 24px !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+    }
+
+    [class*="drop-down-menu-"] .dropdown-column {
+        min-width: 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    [class*="drop-down-menu-"] a {
         padding-left: 48px;
         font-size: 15px;
         color: #6e6e73;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    [class*="drop-down-menu-"] li {
+        width: 100% !important;
+    }
+
+    /* Remove hover transform on mobile */
+    [class*="drop-down-menu-"] a:hover {
+        transform: none !important;
+        color: #1d1d1f !important;
     }
 
     .donate-btn {

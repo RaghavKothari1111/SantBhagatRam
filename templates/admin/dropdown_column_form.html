@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if column %}Edit Column{% else %}Add Column{% endif %}{% endblock %}
+{% block page_title %}{% if column %}Edit Column{% else %}Add New Column{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if column %}{{ url_for('admin_edit_dropdown_column', nav_item=nav_item, column_id=column.id) }}{% else %}{{ url_for('admin_add_dropdown_column', nav_item=nav_item) }}{% endif %}" class="admin-form">
+        <div class="form-section">
+            <h3>Column Information</h3>
+            
+            <div class="form-group">
+                <label for="title">Column Title *</label>
+                <input type="text" id="title" name="title" value="{% if column %}{{ column.title }}{% endif %}" required placeholder="e.g., Shop, Quick Links">
+                <small>This appears as a small uppercase label above the column</small>
+            </div>
+
+            <div class="form-group">
+                <label for="heading">Column Heading (Optional)</label>
+                <input type="text" id="heading" name="heading" value="{% if column %}{{ column.heading }}{% endif %}" placeholder="e.g., Shop the Latest">
+                <small>Optional large heading that appears below the title</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_manage_dropdown', nav_item=nav_item) }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if column %}Update Column{% else %}Add Column{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

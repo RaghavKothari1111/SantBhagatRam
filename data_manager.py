@@ -411,3 +411,347 @@ def update_slider_order(image_ids):
     
     return save_json_data(Config.SLIDER_DATA_FILE, images)
 
+# Videos Dropdown Management
+def get_videos_dropdown_data():
+    """Get videos dropdown data"""
+    default_data = {
+        'categories': [],
+        'links': [],
+        'social_media': {
+            'youtube': 'https://www.youtube.com/@Santdigvijayramji/',
+            'instagram': 'https://www.instagram.com/santdigvijayramji/?hl=en'
+        }
+    }
+    data = load_json_data(Config.VIDEOS_DROPDOWN_DATA_FILE, default=default_data)
+    
+    # Ensure social_media exists
+    if 'social_media' not in data:
+        data['social_media'] = default_data['social_media']
+    
+    # Sort categories and links by order
+    if 'categories' in data:
+        data['categories'].sort(key=lambda x: x.get('order', 0))
+    if 'links' in data:
+        data['links'].sort(key=lambda x: x.get('order', 0))
+    
+    return data
+
+def save_videos_dropdown_data(data):
+    """Save videos dropdown data"""
+    return save_json_data(Config.VIDEOS_DROPDOWN_DATA_FILE, data)
+
+def add_video_category(category_data):
+    """Add a new video category"""
+    data = get_videos_dropdown_data()
+    if 'categories' not in data:
+        data['categories'] = []
+    
+    category_id = str(uuid.uuid4())[:8]
+    category_data['id'] = category_id
+    category_data['order'] = category_data.get('order', len(data['categories']) + 1)
+    category_data['created_at'] = datetime.now().isoformat()
+    category_data['font_size'] = category_data.get('font_size', 'large')
+    
+    data['categories'].append(category_data)
+    return save_videos_dropdown_data(data), category_id
+
+def update_video_category(category_id, category_data):
+    """Update a video category"""
+    data = get_videos_dropdown_data()
+    if 'categories' not in data:
+        return False
+    
+    for i, cat in enumerate(data['categories']):
+        if str(cat.get('id')) == str(category_id):
+            category_data['id'] = category_id
+            category_data['order'] = cat.get('order', i + 1)
+            category_data['updated_at'] = datetime.now().isoformat()
+            if 'created_at' in cat:
+                category_data['created_at'] = cat['created_at']
+            category_data['font_size'] = category_data.get('font_size', 'large')
+            data['categories'][i] = category_data
+            return save_videos_dropdown_data(data)
+    return False
+
+def delete_video_category(category_id):
+    """Delete a video category"""
+    data = get_videos_dropdown_data()
+    if 'categories' not in data:
+        return False
+    
+    data['categories'] = [cat for cat in data['categories'] if str(cat.get('id')) != str(category_id)]
+    return save_videos_dropdown_data(data)
+
+def add_video_link(link_data):
+    """Add a new video link"""
+    data = get_videos_dropdown_data()
+    if 'links' not in data:
+        data['links'] = []
+    
+    link_id = str(uuid.uuid4())[:8]
+    link_data['id'] = link_id
+    link_data['order'] = link_data.get('order', len(data['links']) + 1)
+    link_data['created_at'] = datetime.now().isoformat()
+    link_data['font_size'] = link_data.get('font_size', 'small')
+    
+    data['links'].append(link_data)
+    return save_videos_dropdown_data(data), link_id
+
+def update_video_link(link_id, link_data):
+    """Update a video link"""
+    data = get_videos_dropdown_data()
+    if 'links' not in data:
+        return False
+    
+    for i, link in enumerate(data['links']):
+        if str(link.get('id')) == str(link_id):
+            link_data['id'] = link_id
+            link_data['order'] = link.get('order', i + 1)
+            link_data['updated_at'] = datetime.now().isoformat()
+            if 'created_at' in link:
+                link_data['created_at'] = link['created_at']
+            link_data['font_size'] = link_data.get('font_size', 'small')
+            data['links'][i] = link_data
+            return save_videos_dropdown_data(data)
+    return False
+
+def delete_video_link(link_id):
+    """Delete a video link"""
+    data = get_videos_dropdown_data()
+    if 'links' not in data:
+        return False
+    
+    data['links'] = [link for link in data['links'] if str(link.get('id')) != str(link_id)]
+    return save_videos_dropdown_data(data)
+
+def update_video_order(item_type, item_ids):
+    """Update video dropdown item ordering (categories or links)"""
+    data = get_videos_dropdown_data()
+    key = 'categories' if item_type == 'category' else 'links'
+    
+    if key not in data:
+        data[key] = []
+    
+    item_dict = {str(item.get('id')): item for item in data[key]}
+    
+    for index, item_id in enumerate(item_ids, start=1):
+        if str(item_id) in item_dict:
+            item_dict[str(item_id)]['order'] = index
+            item_dict[str(item_id)]['updated_at'] = datetime.now().isoformat()
+    
+    data[key] = list(item_dict.values())
+    return save_videos_dropdown_data(data)
+
+def update_social_media(social_data):
+    """Update social media links"""
+    data = get_videos_dropdown_data()
+    data['social_media'] = social_data
+    return save_videos_dropdown_data(data)
+
+# Generic Navbar Dropdowns Management
+def get_navbar_dropdowns_data():
+    """Get all navbar dropdowns data"""
+    default_data = {
+        'social_media': {
+            'youtube': 'https://www.youtube.com/@Santdigvijayramji/',
+            'instagram': 'https://www.instagram.com/santdigvijayramji/?hl=en'
+        },
+        'dropdowns': {
+            'projects': {'enabled': True, 'columns': []},
+            'videos': {'enabled': True, 'columns': []},
+            'blog': {'enabled': False, 'columns': []},
+            'photos': {'enabled': False, 'columns': []},
+            'events': {'enabled': False, 'columns': []}
+        }
+    }
+    data = load_json_data(Config.NAVBAR_DROPDOWNS_DATA_FILE, default=default_data)
+    
+    # Ensure structure exists
+    if 'social_media' not in data:
+        data['social_media'] = default_data['social_media']
+    if 'dropdowns' not in data:
+        data['dropdowns'] = default_data['dropdowns']
+    
+    # Sort columns by order and items within each column by order
+    for nav_item, dropdown_data in data.get('dropdowns', {}).items():
+        if 'columns' in dropdown_data:
+            # Sort columns by order
+            dropdown_data['columns'].sort(key=lambda x: x.get('order', 0))
+            # Sort items in each column by order
+            for column in dropdown_data['columns']:
+                if 'items' in column:
+                    column['items'].sort(key=lambda x: x.get('order', 0))
+    
+    return data
+
+def save_navbar_dropdowns_data(data):
+    """Save navbar dropdowns data"""
+    return save_json_data(Config.NAVBAR_DROPDOWNS_DATA_FILE, data)
+
+def get_dropdown_for_nav_item(nav_item):
+    """Get dropdown data for a specific navbar item"""
+    data = get_navbar_dropdowns_data()
+    return data.get('dropdowns', {}).get(nav_item, {'enabled': False, 'columns': []})
+
+def update_dropdown_for_nav_item(nav_item, dropdown_data):
+    """Update dropdown data for a specific navbar item"""
+    data = get_navbar_dropdowns_data()
+    if 'dropdowns' not in data:
+        data['dropdowns'] = {}
+    data['dropdowns'][nav_item] = dropdown_data
+    return save_navbar_dropdowns_data(data)
+
+def toggle_dropdown_enabled(nav_item, enabled):
+    """Enable or disable dropdown for a navbar item"""
+    data = get_navbar_dropdowns_data()
+    if 'dropdowns' not in data:
+        data['dropdowns'] = {}
+    if nav_item not in data['dropdowns']:
+        data['dropdowns'][nav_item] = {'enabled': False, 'columns': []}
+    data['dropdowns'][nav_item]['enabled'] = enabled
+    return save_navbar_dropdowns_data(data)
+
+def add_dropdown_column(nav_item, column_data):
+    """Add a column to a dropdown"""
+    data = get_navbar_dropdowns_data()
+    if 'dropdowns' not in data:
+        data['dropdowns'] = {}
+    if nav_item not in data['dropdowns']:
+        data['dropdowns'][nav_item] = {'enabled': True, 'columns': []}
+    
+    column_id = str(uuid.uuid4())[:8]
+    column_data['id'] = column_id
+    column_data['order'] = column_data.get('order', len(data['dropdowns'][nav_item]['columns']) + 1)
+    if 'items' not in column_data:
+        column_data['items'] = []
+    
+    data['dropdowns'][nav_item]['columns'].append(column_data)
+    return save_navbar_dropdowns_data(data), column_id
+
+def update_dropdown_column(nav_item, column_id, column_data):
+    """Update a dropdown column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    for i, col in enumerate(data['dropdowns'][nav_item]['columns']):
+        if str(col.get('id')) == str(column_id):
+            column_data['id'] = column_id
+            column_data['order'] = col.get('order', i + 1)
+            if 'items' not in column_data:
+                column_data['items'] = col.get('items', [])
+            data['dropdowns'][nav_item]['columns'][i] = column_data
+            return save_navbar_dropdowns_data(data)
+    return False
+
+def delete_dropdown_column(nav_item, column_id):
+    """Delete a dropdown column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    data['dropdowns'][nav_item]['columns'] = [
+        col for col in data['dropdowns'][nav_item]['columns'] 
+        if str(col.get('id')) != str(column_id)
+    ]
+    return save_navbar_dropdowns_data(data)
+
+def add_dropdown_item(nav_item, column_id, item_data):
+    """Add an item to a dropdown column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False, None
+    
+    for col in data['dropdowns'][nav_item]['columns']:
+        if str(col.get('id')) == str(column_id):
+            if 'items' not in col:
+                col['items'] = []
+            
+            item_id = str(uuid.uuid4())[:8]
+            item_data['id'] = item_id
+            item_data['order'] = item_data.get('order', len(col['items']) + 1)
+            item_data['font_size'] = item_data.get('font_size', 'small')
+            
+            col['items'].append(item_data)
+            return save_navbar_dropdowns_data(data), item_id
+    return False, None
+
+def update_dropdown_item(nav_item, column_id, item_id, item_data):
+    """Update an item in a dropdown column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    for col in data['dropdowns'][nav_item]['columns']:
+        if str(col.get('id')) == str(column_id):
+            if 'items' not in col:
+                return False
+            
+            for i, item in enumerate(col['items']):
+                if str(item.get('id')) == str(item_id):
+                    item_data['id'] = item_id
+                    item_data['order'] = item.get('order', i + 1)
+                    item_data['font_size'] = item_data.get('font_size', 'small')
+                    col['items'][i] = item_data
+                    return save_navbar_dropdowns_data(data)
+    return False
+
+def delete_dropdown_item(nav_item, column_id, item_id):
+    """Delete an item from a dropdown column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    for col in data['dropdowns'][nav_item]['columns']:
+        if str(col.get('id')) == str(column_id):
+            if 'items' not in col:
+                return False
+            col['items'] = [
+                item for item in col['items'] 
+                if str(item.get('id')) != str(item_id)
+            ]
+            return save_navbar_dropdowns_data(data)
+    return False
+
+def update_dropdown_column_order(nav_item, column_ids):
+    """Update column order for a dropdown"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    column_dict = {str(col.get('id')): col for col in data['dropdowns'][nav_item]['columns']}
+    
+    for index, col_id in enumerate(column_ids, start=1):
+        if str(col_id) in column_dict:
+            column_dict[str(col_id)]['order'] = index
+    
+    data['dropdowns'][nav_item]['columns'] = list(column_dict.values())
+    return save_navbar_dropdowns_data(data)
+
+def update_dropdown_item_order(nav_item, column_id, item_ids):
+    """Update item order within a column"""
+    data = get_navbar_dropdowns_data()
+    if nav_item not in data.get('dropdowns', {}):
+        return False
+    
+    for col in data['dropdowns'][nav_item]['columns']:
+        if str(col.get('id')) == str(column_id):
+            if 'items' not in col:
+                return False
+            
+            item_dict = {str(item.get('id')): item for item in col['items']}
+            
+            for index, item_id in enumerate(item_ids, start=1):
+                if str(item_id) in item_dict:
+                    item_dict[str(item_id)]['order'] = index
+            
+            col['items'] = list(item_dict.values())
+            return save_navbar_dropdowns_data(data)
+    return False
+
+def update_global_social_media(social_data):
+    """Update global social media links (used in all dropdowns)"""
+    data = get_navbar_dropdowns_data()
+    data['social_media'] = social_data
+    return save_navbar_dropdowns_data(data)
+

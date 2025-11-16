@@ -1,0 +1,143 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Navbar Dropdowns{% endblock %}
+{% block page_title %}Navbar Dropdowns Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Manage Dropdowns for Navbar Items</h2>
+    <a href="{{ url_for('admin_edit_global_social_media') }}" class="btn btn-secondary">
+        Edit Social Media Links
+    </a>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+    <div class="card-header">
+        <h3>Global Social Media Links</h3>
+        <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">These links appear in all dropdown menus</p>
+    </div>
+    <div style="padding: 16px;">
+        <p><strong>YouTube:</strong> <a href="{{ social_media.youtube }}" target="_blank">{{ social_media.youtube }}</a></p>
+        <p><strong>Instagram:</strong> <a href="{{ social_media.instagram }}" target="_blank">{{ social_media.instagram }}</a></p>
+        <a href="{{ url_for('admin_edit_global_social_media') }}" class="btn btn-sm btn-edit" style="margin-top: 12px;">Edit Social Media</a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+    {% for nav_item in nav_items %}
+        {% set dropdown = dropdowns_data.get(nav_item, {}) %}
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ nav_item|title }}</h3>
+                <label class="toggle-switch">
+                    <input type="checkbox" 
+                           class="toggle-dropdown" 
+                           data-nav-item="{{ nav_item }}"
+                           {% if dropdown.get('enabled') %}checked{% endif %}>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div style="padding: 16px;">
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 16px;">
+                    {% if dropdown.get('enabled') %}
+                        Dropdown is <strong>enabled</strong> with {{ dropdown.get('columns', [])|length }} column(s)
+                    {% else %}
+                        Dropdown is <strong>disabled</strong>
+                    {% endif %}
+                </p>
+                {% if dropdown.get('enabled') %}
+                    <a href="{{ url_for('admin_manage_dropdown', nav_item=nav_item) }}" class="btn btn-primary" style="width: 100%;">
+                        Manage Dropdown
+                    </a>
+                {% else %}
+                    <p style="color: #9ca3af; font-size: 13px;">Enable dropdown to manage content</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const toggles = document.querySelectorAll('.toggle-dropdown');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const navItem = this.getAttribute('data-nav-item');
+            const enabled = this.checked;
+            
+            fetch('{{ url_for("admin_toggle_dropdown", nav_item="PLACEHOLDER") }}'.replace('PLACEHOLDER', navItem), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enabled: enabled })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error toggling dropdown: ' + (data.error || 'Unknown error'));
+                    this.checked = !enabled; // Revert checkbox
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error toggling dropdown');
+                this.checked = !enabled; // Revert checkbox
+            });
+        });
+    });
+})();
+</script>
+<style>
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #6366f1;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+</style>
+{% endblock %}
+

@@ -15,7 +15,13 @@ from data_manager import (
     get_all_slider_images, get_slider_image_by_id, add_slider_image, update_slider_image,
     delete_slider_image, update_slider_order,
     save_json_data, migrate_blog_ids_to_slugs, update_blog_order, update_event_order,
-    migrate_event_orders
+    migrate_event_orders,
+    get_videos_dropdown_data, add_video_category, update_video_category, delete_video_category,
+    add_video_link, update_video_link, delete_video_link, update_video_order, update_social_media,
+    get_navbar_dropdowns_data, get_dropdown_for_nav_item, update_dropdown_for_nav_item,
+    toggle_dropdown_enabled, add_dropdown_column, update_dropdown_column, delete_dropdown_column,
+    add_dropdown_item, update_dropdown_item, delete_dropdown_item,
+    update_dropdown_column_order, update_dropdown_item_order, update_global_social_media
 )
 
 app = Flask(__name__)
@@ -45,7 +51,13 @@ def enforce_admin_ip_restriction():
 
 @app.context_processor
 def inject_current_year():
-    return dict(current_year=datetime.now().year)
+    videos_dropdown_data = get_videos_dropdown_data()
+    navbar_dropdowns_data = get_navbar_dropdowns_data()
+    return dict(
+        current_year=datetime.now().year,
+        videos_dropdown_data=videos_dropdown_data,
+        navbar_dropdowns_data=navbar_dropdowns_data
+    )
 
 @app.route('/')
 def home():
@@ -540,6 +552,399 @@ def admin_reorder_slider():
     if update_slider_order(image_ids):
         return jsonify({'success': True})
     return jsonify({'success': False}), 400
+
+# Videos Dropdown Admin Routes
+@app.route('/admin/videos-dropdown')
+@login_required
+def admin_videos_dropdown():
+    """Videos dropdown management page"""
+    data = get_videos_dropdown_data()
+    return render_template('admin/videos_dropdown.html', 
+                         categories=data.get('categories', []),
+                         links=data.get('links', []),
+                         social_media=data.get('social_media', {}))
+
+@app.route('/admin/videos-dropdown/category/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_video_category():
+    """Add a new video category"""
+    if request.method == 'POST':
+        category_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'font_size': request.form.get('font_size', 'large')
+        }
+        if category_data['title'] and category_data['link']:
+            success, category_id = add_video_category(category_data)
+            if success:
+                flash('Category added successfully!', 'success')
+                return redirect(url_for('admin_videos_dropdown'))
+            else:
+                flash('Error adding category', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/video_category_form.html')
+
+@app.route('/admin/videos-dropdown/category/edit/<category_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_video_category(category_id):
+    """Edit a video category"""
+    data = get_videos_dropdown_data()
+    category = None
+    for cat in data.get('categories', []):
+        if str(cat.get('id')) == str(category_id):
+            category = cat
+            break
+    
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin_videos_dropdown'))
+    
+    if request.method == 'POST':
+        category_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'font_size': request.form.get('font_size', 'large')
+        }
+        if category_data['title'] and category_data['link']:
+            if update_video_category(category_id, category_data):
+                flash('Category updated successfully!', 'success')
+                return redirect(url_for('admin_videos_dropdown'))
+            else:
+                flash('Error updating category', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/video_category_form.html', category=category)
+
+@app.route('/admin/videos-dropdown/category/delete/<category_id>', methods=['POST'])
+@login_required
+def admin_delete_video_category(category_id):
+    """Delete a video category"""
+    if delete_video_category(category_id):
+        flash('Category deleted successfully!', 'success')
+    else:
+        flash('Error deleting category', 'error')
+    return redirect(url_for('admin_videos_dropdown'))
+
+@app.route('/admin/videos-dropdown/link/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_video_link():
+    """Add a new video link"""
+    if request.method == 'POST':
+        link_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'category': request.form.get('category', '').strip(),
+            'font_size': request.form.get('font_size', 'small')
+        }
+        if link_data['title'] and link_data['link']:
+            success, link_id = add_video_link(link_data)
+            if success:
+                flash('Link added successfully!', 'success')
+                return redirect(url_for('admin_videos_dropdown'))
+            else:
+                flash('Error adding link', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/video_link_form.html')
+
+@app.route('/admin/videos-dropdown/link/edit/<link_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_video_link(link_id):
+    """Edit a video link"""
+    data = get_videos_dropdown_data()
+    link = None
+    for l in data.get('links', []):
+        if str(l.get('id')) == str(link_id):
+            link = l
+            break
+    
+    if not link:
+        flash('Link not found', 'error')
+        return redirect(url_for('admin_videos_dropdown'))
+    
+    if request.method == 'POST':
+        link_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'category': request.form.get('category', '').strip(),
+            'font_size': request.form.get('font_size', 'small')
+        }
+        if link_data['title'] and link_data['link']:
+            if update_video_link(link_id, link_data):
+                flash('Link updated successfully!', 'success')
+                return redirect(url_for('admin_videos_dropdown'))
+            else:
+                flash('Error updating link', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/video_link_form.html', link=link)
+
+@app.route('/admin/videos-dropdown/link/delete/<link_id>', methods=['POST'])
+@login_required
+def admin_delete_video_link(link_id):
+    """Delete a video link"""
+    if delete_video_link(link_id):
+        flash('Link deleted successfully!', 'success')
+    else:
+        flash('Error deleting link', 'error')
+    return redirect(url_for('admin_videos_dropdown'))
+
+@app.route('/admin/videos-dropdown/reorder', methods=['POST'])
+@login_required
+def admin_reorder_videos():
+    """Update video dropdown item order"""
+    data = request.get_json()
+    item_type = data.get('type')  # 'category' or 'link'
+    item_ids = data.get('item_ids', [])
+    if update_video_order(item_type, item_ids):
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 400
+
+@app.route('/admin/videos-dropdown/social-media', methods=['GET', 'POST'])
+@login_required
+def admin_edit_social_media():
+    """Edit social media links"""
+    data = get_videos_dropdown_data()
+    social_media = data.get('social_media', {})
+    
+    if request.method == 'POST':
+        social_data = {
+            'youtube': request.form.get('youtube', '').strip(),
+            'instagram': request.form.get('instagram', '').strip()
+        }
+        if update_social_media(social_data):
+            flash('Social media links updated successfully!', 'success')
+            return redirect(url_for('admin_videos_dropdown'))
+        else:
+            flash('Error updating social media links', 'error')
+    
+    return render_template('admin/social_media_form.html', social_media=social_media)
+
+# Generic Navbar Dropdowns Admin Routes
+@app.route('/admin/navbar-dropdowns')
+@login_required
+def admin_navbar_dropdowns():
+    """Main navbar dropdowns management page"""
+    data = get_navbar_dropdowns_data()
+    nav_items = ['blog', 'projects', 'photos', 'videos', 'events']
+    return render_template('admin/navbar_dropdowns.html',
+                         dropdowns_data=data.get('dropdowns', {}),
+                         social_media=data.get('social_media', {}),
+                         nav_items=nav_items)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>')
+@login_required
+def admin_manage_dropdown(nav_item):
+    """Manage dropdown for a specific navbar item"""
+    if nav_item == 'home':
+        flash('Home cannot have a dropdown', 'error')
+        return redirect(url_for('admin_navbar_dropdowns'))
+    
+    dropdown_data = get_dropdown_for_nav_item(nav_item)
+    selected_column = None
+    column_id = request.args.get('column')
+    
+    # Find the selected column in Python (more reliable than template matching)
+    if column_id:
+        for col in dropdown_data.get('columns', []):
+            if str(col.get('id', '')) == str(column_id):
+                selected_column = col
+                break
+    
+    return render_template('admin/manage_dropdown.html',
+                         nav_item=nav_item,
+                         dropdown_data=dropdown_data,
+                         selected_column=selected_column,
+                         column_id=column_id)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/toggle', methods=['POST'])
+@login_required
+def admin_toggle_dropdown(nav_item):
+    """Enable or disable dropdown for a navbar item"""
+    if nav_item == 'home':
+        return jsonify({'success': False, 'error': 'Home cannot have dropdown'}), 400
+    
+    enabled = request.json.get('enabled', False)
+    if toggle_dropdown_enabled(nav_item, enabled):
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 400
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_dropdown_column(nav_item):
+    """Add a column to a dropdown"""
+    if request.method == 'POST':
+        column_data = {
+            'title': request.form.get('title', '').strip(),
+            'heading': request.form.get('heading', '').strip(),
+            'items': []
+        }
+        if column_data['title']:
+            success, column_id = add_dropdown_column(nav_item, column_data)
+            if success:
+                flash('Column added successfully!', 'success')
+                return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
+            else:
+                flash('Error adding column', 'error')
+        else:
+            flash('Title is required', 'error')
+    
+    return render_template('admin/dropdown_column_form.html', nav_item=nav_item)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/edit/<column_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_dropdown_column(nav_item, column_id):
+    """Edit a dropdown column"""
+    dropdown_data = get_dropdown_for_nav_item(nav_item)
+    column = None
+    for col in dropdown_data.get('columns', []):
+        if str(col.get('id')) == str(column_id):
+            column = col
+            break
+    
+    if not column:
+        flash('Column not found', 'error')
+        return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
+    
+    if request.method == 'POST':
+        column_data = {
+            'title': request.form.get('title', '').strip(),
+            'heading': request.form.get('heading', '').strip(),
+            'items': column.get('items', [])
+        }
+        if column_data['title']:
+            if update_dropdown_column(nav_item, column_id, column_data):
+                flash('Column updated successfully!', 'success')
+                return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
+            else:
+                flash('Error updating column', 'error')
+        else:
+            flash('Title is required', 'error')
+    
+    return render_template('admin/dropdown_column_form.html', nav_item=nav_item, column=column)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/delete/<column_id>', methods=['POST'])
+@login_required
+def admin_delete_dropdown_column(nav_item, column_id):
+    """Delete a dropdown column"""
+    if delete_dropdown_column(nav_item, column_id):
+        flash('Column deleted successfully!', 'success')
+    else:
+        flash('Error deleting column', 'error')
+    return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/<column_id>/item/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_dropdown_item(nav_item, column_id):
+    """Add an item to a dropdown column"""
+    if request.method == 'POST':
+        item_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'font_size': request.form.get('font_size', 'small')
+        }
+        if item_data['title'] and item_data['link']:
+            success, item_id = add_dropdown_item(nav_item, column_id, item_data)
+            if success:
+                flash('Item added successfully!', 'success')
+                return redirect(url_for('admin_manage_dropdown', nav_item=nav_item) + f'?column={column_id}')
+            else:
+                flash('Error adding item', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/dropdown_item_form.html', nav_item=nav_item, column_id=column_id)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/<column_id>/item/edit/<item_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_dropdown_item(nav_item, column_id, item_id):
+    """Edit an item in a dropdown column"""
+    dropdown_data = get_dropdown_for_nav_item(nav_item)
+    item = None
+    for col in dropdown_data.get('columns', []):
+        if str(col.get('id')) == str(column_id):
+            for itm in col.get('items', []):
+                if str(itm.get('id')) == str(item_id):
+                    item = itm
+                    break
+            break
+    
+    if not item:
+        flash('Item not found', 'error')
+        return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
+    
+    if request.method == 'POST':
+        item_data = {
+            'title': request.form.get('title', '').strip(),
+            'link': request.form.get('link', '').strip(),
+            'font_size': request.form.get('font_size', 'small')
+        }
+        if item_data['title'] and item_data['link']:
+            if update_dropdown_item(nav_item, column_id, item_id, item_data):
+                flash('Item updated successfully!', 'success')
+                return redirect(url_for('admin_manage_dropdown', nav_item=nav_item) + f'?column={column_id}')
+            else:
+                flash('Error updating item', 'error')
+        else:
+            flash('Title and link are required', 'error')
+    
+    return render_template('admin/dropdown_item_form.html', nav_item=nav_item, column_id=column_id, item=item)
+
+@app.route('/admin/navbar-dropdowns/<nav_item>/column/<column_id>/item/delete/<item_id>', methods=['POST'])
+@login_required
+def admin_delete_dropdown_item(nav_item, column_id, item_id):
+    """Delete an item from a dropdown column"""
+    if delete_dropdown_item(nav_item, column_id, item_id):
+        flash('Item deleted successfully!', 'success')
+    else:
+        flash('Error deleting item', 'error')
+    return redirect(url_for('admin_manage_dropdown', nav_item=nav_item) + f'?column={column_id}')
+
+@app.route('/admin/navbar-dropdowns/reorder', methods=['POST'])
+@login_required
+def admin_reorder_dropdown():
+    """Update dropdown column or item order"""
+    data = request.get_json()
+    nav_item = data.get('nav_item')
+    column_id = data.get('column_id')
+    column_ids = data.get('column_ids', [])
+    item_ids = data.get('item_ids', [])
+    
+    if column_ids:
+        # Reorder columns
+        if update_dropdown_column_order(nav_item, column_ids):
+            return jsonify({'success': True})
+    elif item_ids and column_id:
+        # Reorder items within a column
+        if update_dropdown_item_order(nav_item, column_id, item_ids):
+            return jsonify({'success': True})
+    
+    return jsonify({'success': False}), 400
+
+@app.route('/admin/navbar-dropdowns/social-media', methods=['GET', 'POST'])
+@login_required
+def admin_edit_global_social_media():
+    """Edit global social media links"""
+    data = get_navbar_dropdowns_data()
+    social_media = data.get('social_media', {})
+    
+    if request.method == 'POST':
+        social_data = {
+            'youtube': request.form.get('youtube', '').strip(),
+            'instagram': request.form.get('instagram', '').strip()
+        }
+        if update_global_social_media(social_data):
+            flash('Social media links updated successfully!', 'success')
+            return redirect(url_for('admin_navbar_dropdowns'))
+        else:
+            flash('Error updating social media links', 'error')
+    
+    return render_template('admin/global_social_media_form.html', social_media=social_media)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

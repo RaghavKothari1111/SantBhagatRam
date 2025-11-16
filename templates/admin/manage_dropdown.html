@@ -1,0 +1,229 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage {{ nav_item|title }} Dropdown{% endblock %}
+{% block page_title %}Manage {{ nav_item|title }} Dropdown{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ nav_item|title }} Dropdown Content</h2>
+    <div style="display: flex; gap: 12px;">
+        <a href="{{ url_for('admin_add_dropdown_column', nav_item=nav_item) }}" class="btn btn-primary">
+            <span>+</span> Add Column
+        </a>
+        <a href="{{ url_for('admin_navbar_dropdowns') }}" class="btn btn-secondary">
+            Back to All Dropdowns
+        </a>
+    </div>
+</div>
+
+{% if dropdown_data.get('columns') %}
+    <div class="table-container">
+        <p class="reorder-hint">💡 Drag columns by the handle (☰) to reorder</p>
+        <table class="data-table sortable-table" id="columnsTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>Column Title</th>
+                    <th>Heading</th>
+                    <th>Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="columnsTableBody">
+                {% for column in dropdown_data.get('columns', []) %}
+                <tr class="draggable-row" draggable="true" data-column-id="{{ column.get('id') }}">
+                    <td class="drag-handle">☰</td>
+                    <td>{{ column.get('title', '') }}</td>
+                    <td>{{ column.get('heading', '') or '-' }}</td>
+                    <td>{{ column.get('items', [])|length }} item(s)</td>
+                    <td class="actions-cell">
+                        {% set col_id = column.get('id') %}
+                        {% if col_id %}
+                            <a href="{{ url_for('admin_manage_dropdown', nav_item=nav_item) }}?column={{ col_id }}" class="btn btn-sm btn-edit">Manage Items</a>
+                            <a href="{{ url_for('admin_edit_dropdown_column', nav_item=nav_item, column_id=col_id) }}" class="btn btn-sm btn-edit">Edit</a>
+                            <form method="POST" action="{{ url_for('admin_delete_dropdown_column', nav_item=nav_item, column_id=col_id) }}" style="display: inline;" onsubmit="return confirm('Are you sure? This will delete all items in this column.');">
+                                <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                            </form>
+                        {% else %}
+                            <span style="color: #9ca3af; font-size: 12px;">No ID</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {# Show items for selected column if column_id is in query string #}
+    {% if column_id and selected_column %}
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <h3>Items in "{{ selected_column.get('title', '') }}"</h3>
+                    <a href="{{ url_for('admin_add_dropdown_item', nav_item=nav_item, column_id=column_id) }}" class="btn btn-primary btn-sm">
+                        <span>+</span> Add Item
+                    </a>
+                </div>
+                <div class="table-container">
+                    <table class="data-table sortable-table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>Title</th>
+                                <th>Link</th>
+                                <th>Font Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            {% for item in selected_column.get('items', []) %}
+                            <tr class="draggable-row" draggable="true" data-item-id="{{ item.get('id') }}">
+                                <td class="drag-handle">☰</td>
+                                <td>{{ item.get('title', '') }}</td>
+                                <td><a href="{{ item.get('link', '#') }}" target="_blank" style="color: #6366f1;">{{ item.get('link', '')[:40] }}{% if item.get('link', '')|length > 40 %}...{% endif %}</a></td>
+                                <td>{{ item.get('font_size', 'small')|title }}</td>
+                                <td class="actions-cell">
+                                    <a href="{{ url_for('admin_edit_dropdown_item', nav_item=nav_item, column_id=column_id, item_id=item.get('id')) }}" class="btn btn-sm btn-edit">Edit</a>
+                                    <form method="POST" action="{{ url_for('admin_delete_dropdown_item', nav_item=nav_item, column_id=column_id, item_id=item.get('id')) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                        <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    {% elif column_id %}
+        <div class="card" style="margin-top: 24px; background: #fef3c7; border: 1px solid #fbbf24;">
+            <div style="padding: 16px;">
+                <p style="color: #92400e; margin: 0; font-weight: 600;">⚠️ Column with ID "{{ column_id }}" not found.</p>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="empty-state">
+        <p>No columns yet. <a href="{{ url_for('admin_add_dropdown_column', nav_item=nav_item) }}">Add your first column</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    // Columns drag and drop
+    const columnsTableBody = document.getElementById('columnsTableBody');
+    if (columnsTableBody) {
+        setupDragAndDrop(columnsTableBody, 'column');
+    }
+    
+    // Items drag and drop
+    const itemsTableBody = document.getElementById('itemsTableBody');
+    if (itemsTableBody) {
+        setupDragAndDrop(itemsTableBody, 'item');
+    }
+    
+    function setupDragAndDrop(tableBody, type) {
+        let draggedRow = null;
+        let draggedOverRow = null;
+        
+        const rows = tableBody.querySelectorAll('.draggable-row');
+        rows.forEach(row => {
+            row.addEventListener('dragstart', function(e) {
+                draggedRow = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            row.addEventListener('dragend', function(e) {
+                this.classList.remove('dragging');
+                rows.forEach(r => r.classList.remove('drag-over'));
+            });
+            
+            row.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
+                if (this !== draggedRow && this !== draggedOverRow) {
+                    rows.forEach(r => r.classList.remove('drag-over'));
+                    this.classList.add('drag-over');
+                    draggedOverRow = this;
+                }
+            });
+            
+            row.addEventListener('dragleave', function(e) {
+                this.classList.remove('drag-over');
+            });
+            
+            row.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                if (draggedRow !== this) {
+                    const allRows = Array.from(tableBody.querySelectorAll('.draggable-row'));
+                    const draggedIndex = allRows.indexOf(draggedRow);
+                    const targetIndex = allRows.indexOf(this);
+                    
+                    if (draggedIndex < targetIndex) {
+                        this.parentNode.insertBefore(draggedRow, this.nextSibling);
+                    } else {
+                        this.parentNode.insertBefore(draggedRow, this);
+                    }
+                    
+                    saveOrder(tableBody, type);
+                }
+            });
+        });
+    }
+    
+    function saveOrder(tableBody, type) {
+        const rows = tableBody.querySelectorAll('.draggable-row');
+        const ids = Array.from(rows).map(row => {
+            if (type === 'column') {
+                return row.getAttribute('data-column-id');
+            } else {
+                return row.getAttribute('data-item-id');
+            }
+        });
+        
+        const data = {
+            nav_item: '{{ nav_item }}',
+            {% if request.args.get('column') %}
+            column_id: '{{ request.args.get('column') }}',
+            {% endif %}
+        };
+        
+        if (type === 'column') {
+            data.column_ids = ids;
+        } else {
+            data.item_ids = ids;
+        }
+        
+        fetch('{{ url_for("admin_reorder_dropdown") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const flashDiv = document.createElement('div');
+                flashDiv.className = 'flash-message flash-success';
+                flashDiv.innerHTML = '<span>Order updated successfully!</span><button class="flash-close" onclick="this.parentElement.remove()">×</button>';
+                document.querySelector('.admin-content').insertBefore(flashDiv, document.querySelector('.admin-content').firstChild);
+                
+                setTimeout(() => {
+                    flashDiv.style.opacity = '0';
+                    setTimeout(() => flashDiv.remove(), 300);
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating order:', error);
+        });
+    }
+})();
+</script>
+{% endblock %}
+

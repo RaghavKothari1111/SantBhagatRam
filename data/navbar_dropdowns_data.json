@@ -1,0 +1,184 @@
+{
+  "social_media": {
+    "youtube": "https://www.youtube.com/@Santdigvijayramji/",
+    "instagram": "https://www.instagram.com/santdigvijayramji/?hl=en"
+  },
+  "dropdowns": {
+    "projects": {
+      "enabled": true,
+      "columns": [
+        {
+          "title": "Shop",
+          "heading": "Shop the Latest",
+          "items": [
+            {
+              "id": "1",
+              "title": "Project1",
+              "link": "/project1",
+              "font_size": "small",
+              "order": 1
+            },
+            {
+              "id": "2",
+              "title": "Project2",
+              "link": "/project2",
+              "font_size": "small",
+              "order": 2
+            },
+            {
+              "id": "3",
+              "title": "Project3",
+              "link": "/project3",
+              "font_size": "small",
+              "order": 3
+            }
+          ]
+        },
+        {
+          "title": "Quick Links",
+          "heading": "",
+          "items": [
+            {
+              "id": "4",
+              "title": "Find a Store",
+              "link": "/project1",
+              "font_size": "small",
+              "order": 1
+            },
+            {
+              "id": "5",
+              "title": "Order Status",
+              "link": "/project2",
+              "font_size": "small",
+              "order": 2
+            },
+            {
+              "id": "6",
+              "title": "Ways to Buy",
+              "link": "/project3",
+              "font_size": "small",
+              "order": 3
+            }
+          ]
+        },
+        {
+          "title": "Shop Special Stores",
+          "heading": "",
+          "items": [
+            {
+              "id": "7",
+              "title": "Education",
+              "link": "/project1",
+              "font_size": "small",
+              "order": 1
+            },
+            {
+              "id": "8",
+              "title": "Business",
+              "link": "/project2",
+              "font_size": "small",
+              "order": 2
+            }
+          ]
+        }
+      ]
+    },
+    "videos": {
+      "enabled": true,
+      "columns": []
+    },
+    "blog": {
+      "enabled": false,
+      "columns": []
+    },
+    "photos": {
+      "enabled": true,
+      "columns": [
+        {
+          "title": "Japan Tour",
+          "heading": "",
+          "items": [
+            {
+              "title": "Inside asharam",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "1c9bc451",
+              "order": 1
+            },
+            {
+              "title": "Inside Ramadwara",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "57a34279",
+              "order": 2
+            },
+            {
+              "title": "Hi There Chittorgarh",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "b15179f1",
+              "order": 3
+            },
+            {
+              "title": "Rumour of nemesisid",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "0d9bcccb",
+              "order": 4
+            }
+          ],
+          "id": "0ecdd743",
+          "order": 1
+        },
+        {
+          "title": "America",
+          "heading": "",
+          "items": [
+            {
+              "title": "New York",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "83c591be",
+              "order": 1
+            },
+            {
+              "title": "Washinton",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "4dc5a03d",
+              "order": 2
+            },
+            {
+              "title": "kakjajlakjfkljakldfjak",
+              "link": "https://www.google.com",
+              "font_size": "large",
+              "id": "9802032b",
+              "order": 3
+            }
+          ],
+          "id": "d180c5bd",
+          "order": 2
+        },
+        {
+          "title": "Africa Tour",
+          "heading": "",
+          "items": [
+            {
+              "title": "Uganda",
+              "link": "https://www.google.com",
+              "font_size": "small",
+              "id": "0d1b1270",
+              "order": 1
+            }
+          ],
+          "id": "02017ee6",
+          "order": 3
+        }
+      ]
+    },
+    "events": {
+      "enabled": false,
+      "columns": []
+    }
+  }
+}

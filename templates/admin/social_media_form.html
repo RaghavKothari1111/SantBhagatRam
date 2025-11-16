@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Edit Social Media{% endblock %}
+{% block page_title %}Edit Social Media Links{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{{ url_for('admin_edit_social_media') }}" class="admin-form">
+        <div class="form-section">
+            <h3>Social Media Links</h3>
+            <p style="color: #6b7280; margin-bottom: 24px;">These links will appear in the Videos dropdown menu</p>
+            
+            <div class="form-group">
+                <label for="youtube">YouTube URL *</label>
+                <input type="url" id="youtube" name="youtube" value="{{ social_media.youtube }}" required placeholder="https://www.youtube.com/@...">
+            </div>
+
+            <div class="form-group">
+                <label for="instagram">Instagram URL *</label>
+                <input type="url" id="instagram" name="instagram" value="{{ social_media.instagram }}" required placeholder="https://www.instagram.com/...">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_videos_dropdown') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Social Media</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

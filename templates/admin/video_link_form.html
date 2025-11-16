@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if link %}Edit Link{% else %}Add Link{% endif %}{% endblock %}
+{% block page_title %}{% if link %}Edit Link{% else %}Add New Link{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if link %}{{ url_for('admin_edit_video_link', link_id=link.id) }}{% else %}{{ url_for('admin_add_video_link') }}{% endif %}" class="admin-form">
+        <div class="form-section">
+            <h3>Link Information</h3>
+            
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" id="title" name="title" value="{% if link %}{{ link.title }}{% endif %}" required placeholder="e.g., Video Title">
+                <small>This will appear in smaller text in the dropdown</small>
+            </div>
+
+            <div class="form-group">
+                <label for="link">Link *</label>
+                <input type="url" id="link" name="link" value="{% if link %}{{ link.link }}{% endif %}" required placeholder="https://...">
+                <small>Full URL to the video or page</small>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category (Optional)</label>
+                <input type="text" id="category" name="category" value="{% if link %}{{ link.category }}{% endif %}" placeholder="e.g., Sermons">
+                <small>Optional category label for organization</small>
+            </div>
+
+            <div class="form-group">
+                <label for="font_size">Font Size</label>
+                <select id="font_size" name="font_size">
+                    <option value="small" {% if link and link.font_size == 'small' %}selected{% endif %}>Small (17px, Regular)</option>
+                    <option value="large" {% if link and link.font_size == 'large' %}selected{% endif %}>Large (24px, Bold)</option>
+                </select>
+                <small>Links typically use "Small" font size</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_videos_dropdown') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if link %}Update Link{% else %}Add Link{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

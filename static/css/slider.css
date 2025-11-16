@@ -258,7 +258,7 @@
         margin: 0; /* Remove all margins */
         padding: 0; /* Remove all padding */
     }
-    
+
     .gallery-item {
         width: 100%;
         border-radius: 0;
@@ -301,7 +301,7 @@
         padding: 8px 0 0 0; /* Significantly reduced top padding */
         gap: 0; /* No gap between items */
     }
-    
+
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 300px;

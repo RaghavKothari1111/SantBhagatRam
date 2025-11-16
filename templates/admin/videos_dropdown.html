@@ -1,0 +1,224 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Videos Dropdown{% endblock %}
+{% block page_title %}Videos Dropdown Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Videos Dropdown Content</h2>
+    <div style="display: flex; gap: 12px;">
+        <a href="{{ url_for('admin_add_video_category') }}" class="btn btn-primary">
+            <span>+</span> Add Category
+        </a>
+        <a href="{{ url_for('admin_add_video_link') }}" class="btn btn-primary">
+            <span>+</span> Add Link
+        </a>
+        <a href="{{ url_for('admin_edit_social_media') }}" class="btn btn-secondary">
+            Edit Social Media
+        </a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+    <!-- Categories Section -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Categories (Large Font)</h3>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">These appear in the first column with large, bold text</p>
+        </div>
+        <div class="table-container">
+            {% if categories %}
+                <table class="data-table sortable-table" id="categoriesTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"></th>
+                            <th>Title</th>
+                            <th>Link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody">
+                        {% for category in categories %}
+                        <tr class="draggable-row" draggable="true" data-category-id="{{ category.id }}">
+                            <td class="drag-handle">☰</td>
+                            <td>{{ category.title }}</td>
+                            <td><a href="{{ category.link }}" target="_blank" style="color: #6366f1;">{{ category.link[:40] }}{% if category.link|length > 40 %}...{% endif %}</a></td>
+                            <td class="actions-cell">
+                                <a href="{{ url_for('admin_edit_video_category', category_id=category.id) }}" class="btn btn-sm btn-edit">Edit</a>
+                                <form method="POST" action="{{ url_for('admin_delete_video_category', category_id=category.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p>No categories yet. <a href="{{ url_for('admin_add_video_category') }}">Add your first category</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Links Section -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Direct Links (Small Font)</h3>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">These appear in the second column with smaller text</p>
+        </div>
+        <div class="table-container">
+            {% if links %}
+                <table class="data-table sortable-table" id="linksTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"></th>
+                            <th>Title</th>
+                            <th>Link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="linksTableBody">
+                        {% for link in links %}
+                        <tr class="draggable-row" draggable="true" data-link-id="{{ link.id }}">
+                            <td class="drag-handle">☰</td>
+                            <td>{{ link.title }}</td>
+                            <td><a href="{{ link.link }}" target="_blank" style="color: #6366f1;">{{ link.link[:40] }}{% if link.link|length > 40 %}...{% endif %}</a></td>
+                            <td class="actions-cell">
+                                <a href="{{ url_for('admin_edit_video_link', link_id=link.id) }}" class="btn btn-sm btn-edit">Edit</a>
+                                <form method="POST" action="{{ url_for('admin_delete_video_link', link_id=link.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p>No links yet. <a href="{{ url_for('admin_add_video_link') }}">Add your first link</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 24px;">
+    <div class="card-header">
+        <h3>Social Media Links</h3>
+    </div>
+    <div style="padding: 16px;">
+        <p><strong>YouTube:</strong> <a href="{{ social_media.youtube }}" target="_blank">{{ social_media.youtube }}</a></p>
+        <p><strong>Instagram:</strong> <a href="{{ social_media.instagram }}" target="_blank">{{ social_media.instagram }}</a></p>
+        <a href="{{ url_for('admin_edit_social_media') }}" class="btn btn-sm btn-edit" style="margin-top: 12px;">Edit Social Media</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    // Categories drag and drop
+    const categoriesTableBody = document.getElementById('categoriesTableBody');
+    if (categoriesTableBody) {
+        setupDragAndDrop(categoriesTableBody, 'category');
+    }
+    
+    // Links drag and drop
+    const linksTableBody = document.getElementById('linksTableBody');
+    if (linksTableBody) {
+        setupDragAndDrop(linksTableBody, 'link');
+    }
+    
+    function setupDragAndDrop(tableBody, type) {
+        let draggedRow = null;
+        let draggedOverRow = null;
+        
+        const rows = tableBody.querySelectorAll('.draggable-row');
+        rows.forEach(row => {
+            row.addEventListener('dragstart', function(e) {
+                draggedRow = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            row.addEventListener('dragend', function(e) {
+                this.classList.remove('dragging');
+                rows.forEach(r => r.classList.remove('drag-over'));
+            });
+            
+            row.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
+                if (this !== draggedRow && this !== draggedOverRow) {
+                    rows.forEach(r => r.classList.remove('drag-over'));
+                    this.classList.add('drag-over');
+                    draggedOverRow = this;
+                }
+            });
+            
+            row.addEventListener('dragleave', function(e) {
+                this.classList.remove('drag-over');
+            });
+            
+            row.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                if (draggedRow !== this) {
+                    const allRows = Array.from(tableBody.querySelectorAll('.draggable-row'));
+                    const draggedIndex = allRows.indexOf(draggedRow);
+                    const targetIndex = allRows.indexOf(this);
+                    
+                    if (draggedIndex < targetIndex) {
+                        this.parentNode.insertBefore(draggedRow, this.nextSibling);
+                    } else {
+                        this.parentNode.insertBefore(draggedRow, this);
+                    }
+                    
+                    saveOrder(tableBody, type);
+                }
+            });
+        });
+    }
+    
+    function saveOrder(tableBody, type) {
+        const rows = tableBody.querySelectorAll('.draggable-row');
+        const itemIds = Array.from(rows).map(row => {
+            if (type === 'category') {
+                return row.getAttribute('data-category-id');
+            } else {
+                return row.getAttribute('data-link-id');
+            }
+        });
+        
+        fetch('{{ url_for("admin_reorder_videos") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type: type, item_ids: itemIds })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const flashDiv = document.createElement('div');
+                flashDiv.className = 'flash-message flash-success';
+                flashDiv.innerHTML = '<span>Order updated successfully!</span><button class="flash-close" onclick="this.parentElement.remove()">×</button>';
+                document.querySelector('.admin-content').insertBefore(flashDiv, document.querySelector('.admin-content').firstChild);
+                
+                setTimeout(() => {
+                    flashDiv.style.opacity = '0';
+                    setTimeout(() => flashDiv.remove(), 300);
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating order:', error);
+        });
+    }
+})();
+</script>
+{% endblock %}
+

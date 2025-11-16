@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if item %}Edit Item{% else %}Add Item{% endif %}{% endblock %}
+{% block page_title %}{% if item %}Edit Item{% else %}Add New Item{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if item %}{{ url_for('admin_edit_dropdown_item', nav_item=nav_item, column_id=column_id, item_id=item.id) }}{% else %}{{ url_for('admin_add_dropdown_item', nav_item=nav_item, column_id=column_id) }}{% endif %}" class="admin-form">
+        <div class="form-section">
+            <h3>Item Information</h3>
+            
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" id="title" name="title" value="{% if item %}{{ item.title }}{% endif %}" required placeholder="e.g., Project1, Latest Videos">
+                <small>Text that appears in the dropdown</small>
+            </div>
+
+            <div class="form-group">
+                <label for="link">Link *</label>
+                <input type="url" id="link" name="link" value="{% if item %}{{ item.link }}{% endif %}" required placeholder="https://... or /page">
+                <small>Full URL or relative path</small>
+            </div>
+
+            <div class="form-group">
+                <label for="font_size">Font Size</label>
+                <select id="font_size" name="font_size">
+                    <option value="small" {% if item and item.font_size == 'small' %}selected{% endif %}>Small (17px, Regular)</option>
+                    <option value="large" {% if item and item.font_size == 'large' %}selected{% endif %}>Large (24px, Bold)</option>
+                </select>
+                <small>Choose font size for this item</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_manage_dropdown', nav_item=nav_item) }}?column={{ column_id }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if item %}Update Item{% else %}Add Item{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

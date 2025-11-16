@@ -29,7 +29,7 @@
     --destructive-foreground: 0 84% 98%;
     --input: 220 12% 75%;
     --ring: 217 91% 52%;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --radius: 12px;
 }
 
