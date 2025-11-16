@@ -1,0 +1,146 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Slider{% endblock %}
+{% block page_title %}Slider Image Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Slider Images</h2>
+    <a href="{{ url_for('admin_add_slider_image') }}" class="btn btn-primary">
+        <span>+</span> Add New Image
+    </a>
+</div>
+
+{% if images %}
+    <div class="table-container">
+        <p class="reorder-hint">💡 Drag rows by the handle (☰) to reorder slider images</p>
+        <table class="data-table sortable-table" id="sliderTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>Order</th>
+                    <th>Image</th>
+                    <th>Alt Text</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="sliderTableBody">
+                {% for image in images %}
+                <tr class="draggable-row" draggable="true" data-image-id="{{ image.id }}">
+                    <td class="drag-handle">☰</td>
+                    <td>{{ image.order }}</td>
+                    <td>
+                        {% if image.imageUrl %}
+                            <div class="table-image-wrapper">
+                                <img src="{{ image.imageUrl }}" alt="{{ image.alt or 'Slider Image' }}" class="table-image">
+                            </div>
+                        {% else %}
+                            <span class="no-image">No Image</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ image.alt or 'Slider Image' }}</td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('admin_edit_slider_image', image_id=image.id) }}" class="btn btn-sm btn-edit">Edit</a>
+                        <form method="POST" action="{{ url_for('admin_delete_slider_image', image_id=image.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this slider image?');">
+                            <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>No slider images found. <a href="{{ url_for('admin_add_slider_image') }}">Add your first slider image</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const tableBody = document.getElementById('sliderTableBody');
+    if (!tableBody) return;
+    
+    let draggedRow = null;
+    let draggedOverRow = null;
+    
+    // Make rows draggable
+    const rows = tableBody.querySelectorAll('.draggable-row');
+    rows.forEach(row => {
+        row.addEventListener('dragstart', function(e) {
+            draggedRow = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        });
+        
+        row.addEventListener('dragend', function(e) {
+            this.classList.remove('dragging');
+            rows.forEach(r => r.classList.remove('drag-over'));
+        });
+        
+        row.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (this !== draggedRow && this !== draggedOverRow) {
+                rows.forEach(r => r.classList.remove('drag-over'));
+                this.classList.add('drag-over');
+                draggedOverRow = this;
+            }
+        });
+        
+        row.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (draggedRow && this !== draggedRow) {
+                const tbody = tableBody;
+                const draggedIndex = Array.from(tbody.children).indexOf(draggedRow);
+                const targetIndex = Array.from(tbody.children).indexOf(this);
+                
+                if (draggedIndex < targetIndex) {
+                    tbody.insertBefore(draggedRow, this.nextSibling);
+                } else {
+                    tbody.insertBefore(draggedRow, this);
+                }
+                
+                // Update order via API
+                const imageIds = Array.from(tbody.querySelectorAll('.draggable-row')).map(row => 
+                    row.getAttribute('data-image-id')
+                );
+                
+                fetch('{{ url_for("admin_reorder_slider") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image_ids: imageIds })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update order numbers in table
+                        const rows = tbody.querySelectorAll('.draggable-row');
+                        rows.forEach((row, index) => {
+                            const orderCell = row.querySelector('td:nth-child(2)');
+                            if (orderCell) {
+                                orderCell.textContent = index + 1;
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error reordering:', error);
+                });
+            }
+            
+            rows.forEach(r => r.classList.remove('drag-over'));
+        });
+    });
+})();
+</script>
+{% endblock %}
+

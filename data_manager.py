@@ -5,6 +5,7 @@ Handles reading/writing JSON data files.
 import json
 import os
 import re
+import uuid
 from datetime import datetime
 from config import Config
 
@@ -346,4 +347,67 @@ def update_gallery_order(gallery_ids):
             gallery_dict[str(gallery_id)]['updated_at'] = datetime.now().isoformat()
     
     return save_json_data(Config.PHOTOS_DATA_FILE, galleries)
+
+# Slider Management
+def get_all_slider_images():
+    """Get all slider images, sorted by order"""
+    images = load_json_data(Config.SLIDER_DATA_FILE, default=[])
+    images.sort(key=lambda x: x.get('order', 0))
+    return images
+
+def get_slider_image_by_id(image_id):
+    """Fetch a slider image by ID"""
+    images = get_all_slider_images()
+    for image in images:
+        if str(image.get('id')) == str(image_id):
+            return image
+    return None
+
+def add_slider_image(image_data):
+    """Add a new slider image"""
+    images = get_all_slider_images()
+    
+    if 'id' not in image_data or not image_data['id']:
+        image_data['id'] = str(uuid.uuid4())[:8]
+    
+    if 'order' not in image_data:
+        max_order = max([img.get('order', 0) for img in images] + [0])
+        image_data['order'] = max_order + 1
+    
+    image_data['created_at'] = datetime.now().isoformat()
+    image_data['updated_at'] = datetime.now().isoformat()
+    
+    images.append(image_data)
+    return save_json_data(Config.SLIDER_DATA_FILE, images)
+
+def update_slider_image(image_id, image_data):
+    """Update an existing slider image"""
+    images = get_all_slider_images()
+    for i, image in enumerate(images):
+        if str(image.get('id')) == str(image_id):
+            image_data['id'] = image_id
+            image_data['order'] = image.get('order', image_data.get('order', 0))
+            image_data['created_at'] = image.get('created_at', datetime.now().isoformat())
+            image_data['updated_at'] = datetime.now().isoformat()
+            images[i] = image_data
+            return save_json_data(Config.SLIDER_DATA_FILE, images)
+    return False
+
+def delete_slider_image(image_id):
+    """Delete a slider image"""
+    images = get_all_slider_images()
+    images = [img for img in images if str(img.get('id')) != str(image_id)]
+    return save_json_data(Config.SLIDER_DATA_FILE, images)
+
+def update_slider_order(image_ids):
+    """Update slider image ordering"""
+    images = load_json_data(Config.SLIDER_DATA_FILE, default=[])
+    image_dict = {str(img.get('id')): img for img in images}
+    
+    for index, image_id in enumerate(image_ids, start=1):
+        if str(image_id) in image_dict:
+            image_dict[str(image_id)]['order'] = index
+            image_dict[str(image_id)]['updated_at'] = datetime.now().isoformat()
+    
+    return save_json_data(Config.SLIDER_DATA_FILE, images)
 

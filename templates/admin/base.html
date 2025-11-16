@@ -16,11 +16,13 @@
                 <span class="brand-subtext">Admin Control</span>
             </div>
         </div>
-        <nav class="topbar-nav">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+        <nav class="topbar-nav" id="topbarNav">
             <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
             <a href="{{ url_for('admin_blogs') }}" class="{% if 'admin_blogs' in request.endpoint or 'admin_add_blog' in request.endpoint or 'admin_edit_blog' in request.endpoint %}active{% endif %}">Blogs</a>
             <a href="{{ url_for('admin_events') }}" class="{% if 'admin_events' in request.endpoint or 'admin_add_event' in request.endpoint or 'admin_edit_event' in request.endpoint %}active{% endif %}">Events</a>
             <a href="{{ url_for('admin_photos') }}" class="{% if 'admin_photos' in request.endpoint or 'admin_add_photo_gallery' in request.endpoint or 'admin_edit_photo_gallery' in request.endpoint %}active{% endif %}">Photos</a>
+            <a href="{{ url_for('admin_slider') }}" class="{% if 'admin_slider' in request.endpoint or 'admin_add_slider_image' in request.endpoint or 'admin_edit_slider_image' in request.endpoint %}active{% endif %}">Slider</a>
         </nav>
         <div class="topbar-actions">
             <a href="/" target="_blank" class="ghost-btn">View Site</a>
@@ -58,6 +60,24 @@
     </main>
 
     <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const topbarNav = document.getElementById('topbarNav');
+        
+        if (mobileMenuToggle && topbarNav) {
+            mobileMenuToggle.addEventListener('click', function() {
+                topbarNav.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.admin-topbar')) {
+                    topbarNav.classList.remove('active');
+                }
+            });
+        }
+        
+        // Auto-hide flash messages
         setTimeout(function() {
             document.querySelectorAll('.flash-message').forEach(msg => {
                 msg.style.opacity = '0';

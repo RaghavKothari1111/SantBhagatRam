@@ -25,6 +25,7 @@ class Config:
     BLOGS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'blogs_data.json')
     EVENTS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'events_data.json')
     PHOTOS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'photos_data.json')
+    SLIDER_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'slider_data.json')
 
 # Ensure upload directory exists
 os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)

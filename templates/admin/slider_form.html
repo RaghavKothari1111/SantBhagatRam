@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if image %}Edit Slider Image{% else %}Add Slider Image{% endif %}{% endblock %}
+{% block page_title %}{% if image %}Edit Slider Image{% else %}Add New Slider Image{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if image %}{{ url_for('admin_edit_slider_image', image_id=image.id) }}{% else %}{{ url_for('admin_add_slider_image') }}{% endif %}" enctype="multipart/form-data" class="admin-form">
+        <div class="form-section">
+            <h3>Image</h3>
+            
+            {% if image and image.imageUrl %}
+                <div class="current-image">
+                    <label>Current Image:</label>
+                    <img src="{{ image.imageUrl }}" alt="Current Image" class="preview-image">
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="image">{% if image %}Upload New Image (leave empty to keep current){% else %}Image *{% endif %}</label>
+                <input type="file" id="image" name="image" accept="image/*" {% if not image %}required{% endif %}>
+                <small>Supported formats: PNG, JPG, JPEG, GIF, WEBP (Max 16MB)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="alt">Alt Text</label>
+                <input type="text" id="alt" name="alt" value="{% if image %}{{ image.alt }}{% endif %}" placeholder="Slider Image">
+                <small>Alternative text for the image (for accessibility)</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_slider') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if image %}Update{% else %}Add{% endif %} Image</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

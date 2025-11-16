@@ -1,19 +1,14 @@
-/* Main container for slider and info section */
+/* Main container for info section (below slider) */
 .home-main-container {
-    display: flex;
     width: 100%;
-    min-height: calc(100vh - 180px);
-    gap: 30px;
-    padding: 30px 80px;
-    max-width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
-    align-items: stretch;
+    padding: 60px 80px;
 }
 
 /* Information Section Styles */
 .info-section {
-    width: 40%;
-    height: calc(100vh - 180px);
+    width: 100%;
     min-height: 600px;
     max-height: 900px;
     background: #ffffff;

@@ -12,6 +12,8 @@ from data_manager import (
     get_all_blogs, get_blog_by_id, add_blog, update_blog, delete_blog,
     get_all_events, get_event_by_id, add_event, update_event, delete_event,
     get_all_galleries, get_gallery_by_id, add_gallery, update_gallery, delete_gallery,
+    get_all_slider_images, get_slider_image_by_id, add_slider_image, update_slider_image,
+    delete_slider_image, update_slider_order,
     save_json_data, migrate_blog_ids_to_slugs, update_blog_order, update_event_order,
     migrate_event_orders
 )
@@ -50,7 +52,8 @@ def home():
     migrate_blog_ids_to_slugs()
     blogs = get_all_blogs()
     home_blogs = blogs[:3]
-    return render_template('home.html', home_blogs=home_blogs)
+    slider_images = get_all_slider_images()
+    return render_template('home.html', home_blogs=home_blogs, slider_images=slider_images)
 
 @app.route('/blog')
 def blog():
@@ -458,6 +461,85 @@ def admin_delete_photo_gallery(gallery_id):
     else:
         flash('Error deleting photo category', 'error')
     return redirect(url_for('admin_photos'))
+
+# Slider Management Routes
+@app.route('/admin/slider')
+@login_required
+def admin_slider():
+    images = get_all_slider_images()
+    return render_template('admin/slider.html', images=images)
+
+@app.route('/admin/slider/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_slider_image():
+    if request.method == 'POST':
+        image_file = request.files.get('image')
+        if not image_file or not image_file.filename:
+            flash('Please select an image', 'error')
+            return render_template('admin/slider_form.html', image=None)
+        
+        image_url = save_uploaded_file(image_file)
+        if not image_url:
+            flash('Error uploading image', 'error')
+            return render_template('admin/slider_form.html', image=None)
+        
+        image_data = {
+            'imageUrl': image_url,
+            'alt': request.form.get('alt', '').strip() or 'Slider Image'
+        }
+        
+        if add_slider_image(image_data):
+            flash('Slider image added successfully!', 'success')
+            return redirect(url_for('admin_slider'))
+        flash('Error adding slider image', 'error')
+    
+    return render_template('admin/slider_form.html', image=None)
+
+@app.route('/admin/slider/edit/<image_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_slider_image(image_id):
+    image = get_slider_image_by_id(image_id)
+    if not image:
+        flash('Slider image not found', 'error')
+        return redirect(url_for('admin_slider'))
+    
+    if request.method == 'POST':
+        image_data = {
+            'imageUrl': image.get('imageUrl'),
+            'alt': request.form.get('alt', '').strip() or 'Slider Image'
+        }
+        
+        # Handle new image upload
+        image_file = request.files.get('image')
+        if image_file and image_file.filename:
+            new_image_url = save_uploaded_file(image_file)
+            if new_image_url:
+                image_data['imageUrl'] = new_image_url
+        
+        if update_slider_image(image_id, image_data):
+            flash('Slider image updated successfully!', 'success')
+            return redirect(url_for('admin_slider'))
+        flash('Error updating slider image', 'error')
+    
+    return render_template('admin/slider_form.html', image=image)
+
+@app.route('/admin/slider/delete/<image_id>', methods=['POST'])
+@login_required
+def admin_delete_slider_image(image_id):
+    if delete_slider_image(image_id):
+        flash('Slider image deleted successfully!', 'success')
+    else:
+        flash('Error deleting slider image', 'error')
+    return redirect(url_for('admin_slider'))
+
+@app.route('/admin/slider/reorder', methods=['POST'])
+@login_required
+def admin_reorder_slider():
+    data = request.get_json()
+    image_ids = data.get('image_ids', [])
+    if update_slider_order(image_ids):
+        return jsonify({'success': True})
+    return jsonify({'success': False}), 400
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

@@ -8,79 +8,63 @@
 {% endblock %}
 
 {% block content %}
-<div class="home-main-container">
-    <!-- Left Side - Image Slider -->
-    <section class="tv-plus-gallery">
-        
-        
+<!-- Full-Width Hero Slider -->
+<section class="tv-plus-gallery">
         <div class="item-container" id="itemContainer">
-            <!-- Slide 1 -->
+        {% if slider_images %}
+            {% for image in slider_images %}
+            <div class="gallery-item" data-index="{{ loop.index0 }}">
+                <img src="{{ image.imageUrl }}" alt="{{ image.alt or 'Slider Image' }}">
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Fallback to default images if no slider images are configured -->
             <div class="gallery-item" data-index="0">
                 <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
-                </div>
             </div>
-
-            <!-- Slide 2 -->
             <div class="gallery-item" data-index="1">
                 <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="discoverMore">Discover More</button>
-                </div>
             </div>
-
-            <!-- Slide 3 -->
             <div class="gallery-item" data-index="2">
                 <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="learnMore">Learn More</button>
-                </div>
             </div>
-
             <div class="gallery-item" data-index="3">
                 <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
-                </div>
             </div>
-
             <div class="gallery-item" data-index="4">
                 <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
-                </div>
             </div>
-
             <div class="gallery-item" data-index="5">
                 <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6">
-                <div class="overlay">
-                    <button class="stream-btn" data-lang-home="exploreNow">Explore Now</button>
-                </div>
             </div>
-        </div>
-
-        <!-- Navigation Arrows -->
-        <div class="nav-arrows">
-            <button class="nav-arrow prev" onclick="prevImage()">‹</button>
-            <button class="nav-arrow next" onclick="nextImage()">›</button>
-        </div>
-        <div class="slide-control">
-            <button class="play-pause-btn" onclick="toggleAutoPlay()">
-                <img id="playPauseIcon" src="{{ url_for('static', filename='images/slider/pause.png') }}" alt="Pause"/>
-            </button>
-            <div class="progress-dots" id="progressDots">
+        {% endif %}
+    </div>
+    
+    <!-- Dot Indicators -->
+    <div class="slide-control">
+        <button class="play-pause-btn" onclick="toggleAutoPlay()">
+            <img id="playPauseIcon" src="{{ url_for('static', filename='images/slider/pause.png') }}" alt="Pause"/>
+        </button>
+        <div class="progress-dots" id="progressDots">
+            {% if slider_images %}
+                {% for image in slider_images %}
+                <span class="dot {% if loop.index0 == 0 %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></span>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback dots -->
                 <span class="dot active" onclick="goToSlide(0)"></span>
                 <span class="dot" onclick="goToSlide(1)"></span>
                 <span class="dot" onclick="goToSlide(2)"></span>
                 <span class="dot" onclick="goToSlide(3)"></span>
                 <span class="dot" onclick="goToSlide(4)"></span>
                 <span class="dot" onclick="goToSlide(5)"></span>
-            </div>
+            {% endif %}
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Right Side - Information Scroller -->
+<!-- Information Section Below Slider -->
+<div class="home-main-container">
     <section class="info-section">
         <div class="info-content">
             <div class="website-title">
@@ -133,7 +117,6 @@
                             <p class="objective-text" data-lang-home="objective6">आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।</p>
                         </li>
                     </ul>
-                </div>
             </div>
         </div>
     </section>
