@@ -244,12 +244,13 @@
 @media (max-width: 768px) {
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
-        padding: 20px 0 0 0; /* Reduced top padding */
+        padding: 10px 0 0 0; /* Significantly reduced top padding */
     }
     
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 400px;
+        margin-bottom: 0; /* Remove any margin */
     }
     
     .gallery-item {
@@ -270,8 +271,9 @@
     }
     
     .slide-control {
-        padding: 8px 0; /* Reduced padding between slider and dots */
+        padding: 4px 0; /* Significantly reduced padding between slider and dots */
         gap: 10px;
+        margin-top: 0; /* Remove any margin */
     }
     
     .dot {
@@ -288,12 +290,13 @@
 @media (max-width: 480px) {
     .tv-plus-gallery {
         min-height: calc(100vw * 9 / 16);
-        padding: 15px 0 0 0; /* Reduced top padding */
+        padding: 8px 0 0 0; /* Significantly reduced top padding */
     }
     
     .item-container {
         height: calc(100vw * 9 / 16);
         min-height: 300px;
+        margin-bottom: 0; /* Remove any margin */
     }
     
     .overlay {
@@ -308,8 +311,9 @@
     }
     
     .slide-control {
-        padding: 6px 0; /* Further reduced padding between slider and dots */
+        padding: 2px 0; /* Significantly reduced padding between slider and dots */
         gap: 8px;
+        margin-top: 0; /* Remove any margin */
     }
     
     .play-pause-btn {
