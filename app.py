@@ -7,7 +7,11 @@ from werkzeug.utils import secure_filename
 
 from data.events_data import EVENTS_DATA
 from config import Config
-from auth import login_required, verify_password, init_session, logout_session
+from auth import (
+    login_required, verify_password, init_session, logout_session, 
+    update_session_activity, check_session_activity, validate_session_security,
+    get_client_fingerprint
+)
 from data_manager import (
     get_all_blogs, get_blog_by_id, add_blog, update_blog, delete_blog,
     get_all_events, get_event_by_id, add_event, update_event, delete_event,
@@ -28,6 +32,13 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = Config.SECRET_KEY
 ALLOWED_ADMIN_IPS = [ip.strip() for ip in Config.ADMIN_ALLOWED_IPS.split(',') if ip.strip()]
+
+# Configure secure session cookies
+app.config['SESSION_COOKIE_HTTPONLY'] = Config.SESSION_COOKIE_HTTPONLY
+app.config['SESSION_COOKIE_SECURE'] = Config.SESSION_COOKIE_SECURE
+app.config['SESSION_COOKIE_SAMESITE'] = Config.SESSION_COOKIE_SAMESITE
+app.config['SESSION_COOKIE_NAME'] = Config.SESSION_COOKIE_NAME
+app.config['PERMANENT_SESSION_LIFETIME'] = Config.PERMANENT_SESSION_LIFETIME
 
 # Security headers
 @app.after_request
@@ -51,12 +62,18 @@ def enforce_admin_ip_restriction():
 
 @app.context_processor
 def inject_current_year():
+    """Inject variables into all templates"""
     videos_dropdown_data = get_videos_dropdown_data()
     navbar_dropdowns_data = get_navbar_dropdowns_data()
+    
+    # Inject CSRF token for admin templates
+    csrf_token = session.get('csrf_token', '') if 'admin_logged_in' in session else ''
+    
     return dict(
         current_year=datetime.now().year,
         videos_dropdown_data=videos_dropdown_data,
-        navbar_dropdowns_data=navbar_dropdowns_data
+        navbar_dropdowns_data=navbar_dropdowns_data,
+        csrf_token=csrf_token
     )
 
 @app.route('/')
@@ -222,6 +239,42 @@ def admin_logout():
     logout_session()
     flash('Logged out successfully', 'success')
     return redirect(url_for('admin_login'))
+
+@app.route('/admin/activity-ping', methods=['POST'])
+def admin_activity_ping():
+    """Update session activity - backend enforces timeout and security (cannot be bypassed)"""
+    # Validate session security (includes timeout and fingerprint check)
+    is_valid, reason = validate_session_security()
+    
+    if not is_valid:
+        logout_session()
+        return jsonify({'success': False, 'expired': True, 'reason': reason}), 401
+    
+    # Session is valid - update activity timestamp
+    update_session_activity()
+    
+    # Calculate actual time remaining until timeout
+    from datetime import datetime
+    from config import Config
+    last_activity = datetime.fromisoformat(session['last_activity'])
+    timeout = Config.ADMIN_INACTIVITY_TIMEOUT
+    time_since_activity = datetime.now() - last_activity
+    time_remaining = (timeout - time_since_activity).total_seconds() * 1000  # Convert to milliseconds
+    
+    # Ensure non-negative
+    time_remaining = max(0, int(time_remaining))
+    
+    return jsonify({
+        'success': True, 
+        'expired': False,
+        'timeRemaining': time_remaining
+    })
+
+@app.route('/admin/csrf-token', methods=['GET'])
+@login_required
+def get_csrf_token():
+    """Get CSRF token for AJAX requests"""
+    return jsonify({'csrf_token': session.get('csrf_token', '')})
 
 @app.route('/admin')
 @login_required

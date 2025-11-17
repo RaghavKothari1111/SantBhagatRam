@@ -1,6 +1,7 @@
 // Apple TV+ Style Hero Slider - Full Page
 let currentIndex = 0;
-let totalSlides = 0; // Will be set dynamically
+let totalSlides = 0; // Total slides including clones
+let realTotalSlides = 0; // Original slide count (without clones)
 let autoPlayInterval;
 let isAutoPlaying = false; // Auto-play disabled by default
 let isDragging = false;
@@ -36,13 +37,45 @@ function getTransitionString() {
 // Initialize totalSlides dynamically
 function initializeSlider() {
     slides = document.querySelectorAll('.gallery-item');
-    totalSlides = slides.length;
+    realTotalSlides = slides.length; // Store original count
+    totalSlides = realTotalSlides; // Will be updated after cloning
     dots = document.querySelectorAll('.dot');
     
-    if (totalSlides === 0) {
+    if (realTotalSlides === 0) {
         console.warn('No slider images found');
         return false;
     }
+    
+    // Clone first and last slides for infinite loop
+    if (realTotalSlides > 1 && container) {
+        // Remove existing clones if any
+        const existingClones = container.querySelectorAll('.gallery-item[data-clone="true"]');
+        existingClones.forEach(clone => clone.remove());
+        
+        // Clone first slide and append to end
+        const firstSlide = slides[0];
+        const firstClone = firstSlide.cloneNode(true);
+        firstClone.setAttribute('data-clone', 'true');
+        firstClone.id = 'first-clone';
+        firstClone.setAttribute('data-index', realTotalSlides.toString());
+        container.appendChild(firstClone);
+        
+        // Clone last slide and insert at beginning
+        const lastSlide = slides[realTotalSlides - 1];
+        const lastClone = lastSlide.cloneNode(true);
+        lastClone.setAttribute('data-clone', 'true');
+        lastClone.id = 'last-clone';
+        lastClone.setAttribute('data-index', '-1');
+        container.insertBefore(lastClone, firstSlide);
+        
+        // Update slides reference to include clones
+        slides = document.querySelectorAll('.gallery-item');
+        totalSlides = slides.length; // Now includes clones
+        
+        // Start at index 1 (first real slide, after last clone)
+        currentIndex = 1;
+    }
+    
     return true;
 }
 
@@ -87,20 +120,29 @@ function calculateSlidePositions(instant = false) {
     const rightSlideLeftEdge = centerRightEdge + gap;
     const rightSlideCenterX = rightSlideLeftEdge + (centerSlideWidth / 2);
     
-    // Calculate relative position from current index with proper wrapping
+    // Calculate relative position from current index
+    // Account for clones: last clone is at index 0, real slides start at 1
     slides.forEach((slide, index) => {
         let relativeIndex = index - currentIndex;
         
-        // Handle wrapping for circular carousel
-        if (currentIndex === 0 && index === totalSlides - 1) {
-            relativeIndex = -1; // Last slide on left when at first
-        } else if (currentIndex === totalSlides - 1 && index === 0) {
-            relativeIndex = 1; // First slide on right when at last
+        // Handle clones and wrapping
+        const isLastClone = slide.id === 'last-clone';
+        const isFirstClone = slide.id === 'first-clone';
+        
+        if (isLastClone) {
+            // Last clone should be at position -1 when currentIndex is 1 (first real slide)
+            relativeIndex = (index === 0 && currentIndex === 1) ? -1 : relativeIndex;
+        } else if (isFirstClone) {
+            // First clone should be at position +1 when currentIndex is last real slide
+            const lastRealIndex = realTotalSlides; // Last real slide is at index realTotalSlides
+            relativeIndex = (currentIndex === lastRealIndex) ? 1 : relativeIndex;
         } else {
-            if (relativeIndex > totalSlides / 2) {
-                relativeIndex -= totalSlides;
-            } else if (relativeIndex < -totalSlides / 2) {
-                relativeIndex += totalSlides;
+            // For real slides, adjust relative index
+            // Real slides are from index 1 to realTotalSlides
+            if (relativeIndex > realTotalSlides / 2) {
+                relativeIndex -= realTotalSlides;
+            } else if (relativeIndex < -realTotalSlides / 2) {
+                relativeIndex += realTotalSlides;
             }
         }
         
@@ -178,11 +220,6 @@ function updateSlider() {
         slide.style.transition = getTransitionString();
     });
     
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentIndex);
-    });
-    
     // Animate to new positions
     calculateSlidePositions();
     
@@ -192,98 +229,116 @@ function updateSlider() {
     }, duration);
 }
 
-function nextImage() {
-    if (isTransitioning || isDragging) return;
+// Handle transition end to fix snapping
+function handleTransitionEnd(e) {
+    // Only handle transitions on gallery items
+    if (!e.target.classList.contains('gallery-item')) return;
     
-    // Check if we're at the last slide
-    if (currentIndex === totalSlides - 1) {
-        // Allow smooth transition to first slide
-        isTransitioning = true;
-        currentIndex = 0;
+    // Check if we're on the first clone (after last real slide)
+    if (currentIndex === realTotalSlides + 1) {
+        // Instantly jump to first real slide (index 1) without transition
+        slides.forEach(slide => {
+            slide.style.transition = 'none';
+        });
+        
+        currentIndex = 1;
+        calculateSlidePositions(true);
+        
+        // Force reflow
+        void container.offsetWidth;
+        
+        // Re-enable transitions
+        slides.forEach(slide => {
+            slide.style.transition = getTransitionString();
+        });
         
         // Update dots
         dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentIndex);
+            dot.classList.toggle('active', index === 0);
+        });
+    }
+    
+    // Check if we're on the last clone (index 0)
+    if (currentIndex === 0) {
+        // Instantly jump to last real slide without transition
+        slides.forEach(slide => {
+            slide.style.transition = 'none';
         });
         
-        // Allow normal transition to occur
-        updateSlider();
+        currentIndex = realTotalSlides;
+        calculateSlidePositions(true);
         
-        // After transition completes, reset position instantly (invisible to user)
-        setTimeout(() => {
-            // Disable transitions for instant reset
-            slides.forEach(slide => {
-                slide.style.transition = 'none';
-            });
-            
-            // Reset position to actual first slide position
-            calculateSlidePositions(true);
-            
-            // Force reflow
-            void container.offsetWidth;
-            
-            // Re-enable transitions for next movement
-            slides.forEach(slide => {
-                slide.style.transition = getTransitionString();
-            });
-            
-            isTransitioning = false;
-        }, getTransitionDuration()); // Match transition duration
+        // Force reflow
+        void container.offsetWidth;
+        
+        // Re-enable transitions
+        slides.forEach(slide => {
+            slide.style.transition = getTransitionString();
+        });
+        
+        // Update dots
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === realTotalSlides - 1);
+        });
+    }
+}
+
+function nextImage() {
+    if (isTransitioning || isDragging) return;
+    
+    // Check if we're at the last real slide (index = realTotalSlides)
+    if (currentIndex >= realTotalSlides) {
+        // Move to first clone (smooth transition)
+        currentIndex = realTotalSlides + 1; // First clone index
     } else {
         // Normal forward movement
         currentIndex++;
-        updateSlider();
     }
+    
+    // Update dots based on real slide index
+    const realIndex = currentIndex > realTotalSlides ? 0 : (currentIndex < 1 ? realTotalSlides - 1 : currentIndex - 1);
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === realIndex);
+    });
+    
+    updateSlider();
 }
 
 function prevImage() {
     if (isTransitioning || isDragging) return;
     
-    // Check if we're at the first slide
-    if (currentIndex === 0) {
-        // Allow smooth transition to last slide
-        isTransitioning = true;
-        currentIndex = totalSlides - 1;
-        
-        // Update dots
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentIndex);
-        });
-        
-        // Allow normal transition to occur
-        updateSlider();
-        
-        // After transition completes, reset position instantly (invisible to user)
-        setTimeout(() => {
-            // Disable transitions for instant reset
-            slides.forEach(slide => {
-                slide.style.transition = 'none';
-            });
-            
-            // Reset position to actual last slide position
-            calculateSlidePositions(true);
-            
-            // Force reflow
-            void container.offsetWidth;
-            
-            // Re-enable transitions for next movement
-            slides.forEach(slide => {
-                slide.style.transition = getTransitionString();
-            });
-            
-            isTransitioning = false;
-        }, getTransitionDuration()); // Match transition duration
+    // Check if we're at the first real slide (index = 1)
+    if (currentIndex <= 1) {
+        // Move to last clone (smooth transition)
+        currentIndex = 0; // Last clone index
     } else {
         // Normal backward movement
         currentIndex--;
-        updateSlider();
     }
+    
+    // Update dots based on real slide index
+    const realIndex = currentIndex === 0 ? realTotalSlides - 1 : (currentIndex > realTotalSlides ? 0 : currentIndex - 1);
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === realIndex);
+    });
+    
+    updateSlider();
 }
 
 function goToSlide(index) {
-    if (isTransitioning || isDragging || index === currentIndex) return;
+    if (isTransitioning || isDragging) return;
+    // Convert real slide index (0-based) to slider index (1-based, accounting for last clone)
+    const targetIndex = index + 1; // Real slides start at index 1
     
-    currentIndex = index;
+    if (targetIndex === currentIndex) return;
+    
+    currentIndex = targetIndex;
+    
+    // Update dots
+    dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('active', dotIndex === index);
+    });
+    
     updateSlider();
 }
 
@@ -371,59 +426,43 @@ function handleDragEnd(e) {
     const threshold = isMobileDevice() ? 10 : 15; // Percentage threshold to trigger slide change
     const duration = getTransitionDuration();
     
-    if (Math.abs(dragOffset) > threshold) {
+        if (Math.abs(dragOffset) > threshold) {
         if (dragOffset > 0) {
             // Moving right (showing previous)
-            if (currentIndex === 0) {
-                // At first slide, transition to last
+            if (currentIndex <= 1) {
+                // At first real slide, transition to last clone
                 isTransitioning = true;
-                currentIndex = totalSlides - 1;
+                currentIndex = 0; // Last clone
+                const realIndex = realTotalSlides - 1;
                 dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
+                    dot.classList.toggle('active', index === realIndex);
                 });
                 updateSlider();
-                
-                // Reset after transition
-                setTimeout(() => {
-                    slides.forEach(slide => {
-                        slide.style.transition = 'none';
-                    });
-                    calculateSlidePositions(true);
-                    void container.offsetWidth;
-                    slides.forEach(slide => {
-                        slide.style.transition = getTransitionString();
-                    });
-                    isTransitioning = false;
-                }, duration);
             } else {
                 currentIndex--;
+                const realIndex = currentIndex === 0 ? realTotalSlides - 1 : (currentIndex > realTotalSlides ? 0 : currentIndex - 1);
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === realIndex);
+                });
                 updateSlider();
             }
         } else {
             // Moving left (showing next)
-            if (currentIndex === totalSlides - 1) {
-                // At last slide, transition to first
+            if (currentIndex >= realTotalSlides) {
+                // At last real slide, transition to first clone
                 isTransitioning = true;
-                currentIndex = 0;
+                currentIndex = realTotalSlides + 1; // First clone
+                const realIndex = 0;
                 dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
+                    dot.classList.toggle('active', index === realIndex);
                 });
                 updateSlider();
-                
-                // Reset after transition
-                setTimeout(() => {
-                    slides.forEach(slide => {
-                        slide.style.transition = 'none';
-                    });
-                    calculateSlidePositions(true);
-                    void container.offsetWidth;
-                    slides.forEach(slide => {
-                        slide.style.transition = getTransitionString();
-                    });
-                    isTransitioning = false;
-                }, duration);
             } else {
                 currentIndex++;
+                const realIndex = currentIndex > realTotalSlides ? 0 : (currentIndex < 1 ? realTotalSlides - 1 : currentIndex - 1);
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === realIndex);
+                });
                 updateSlider();
             }
         }
@@ -449,6 +488,9 @@ if (container) {
     document.addEventListener('mousemove', handleDragMove);
     document.addEventListener('mouseup', handleDragEnd);
     document.addEventListener('mouseleave', handleDragEnd); // Handle mouse leaving window
+    
+    // Listen for transition end to handle clone jumping
+    container.addEventListener('transitionend', handleTransitionEnd);
 }
 
 // Keyboard navigation

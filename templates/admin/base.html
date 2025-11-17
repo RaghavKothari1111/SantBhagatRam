@@ -85,6 +85,218 @@
                 setTimeout(() => msg.remove(), 300);
             });
         }, 4000);
+
+        // Session timeout and activity tracking
+        // Backend enforces absolute 5-minute timeout
+        // Client-side provides failsafe redirect to /logout after 5 minutes
+        (function() {
+            const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds (failsafe)
+            const WARNING_TIME = 1 * 60 * 1000; // Show warning 1 minute before timeout (4 minutes)
+            const PING_INTERVAL = 30 * 1000; // Ping server every 30 seconds
+            
+            let lastActivity = Date.now();
+            let warningShown = false;
+            let warningTimeout;
+            let logoutTimeout; // Client-side failsafe timeout
+            let pingInterval;
+            
+            // Activity events to track (mousemove, click, keydown as specified)
+            const activityEvents = ['mousemove', 'click', 'keydown', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+            
+            function resetTimers() {
+                lastActivity = Date.now();
+                warningShown = false;
+                
+                // Clear existing timers
+                if (warningTimeout) clearTimeout(warningTimeout);
+                if (logoutTimeout) clearTimeout(logoutTimeout);
+                
+                // Set warning timer (4 minutes)
+                warningTimeout = setTimeout(showWarning, INACTIVITY_TIMEOUT - WARNING_TIME);
+                
+                // Set client-side failsafe logout timer (5 minutes) - redirects to /logout
+                logoutTimeout = setTimeout(clientSideLogout, INACTIVITY_TIMEOUT);
+            }
+            
+            function clientSideLogout() {
+                // Client-side failsafe: redirect to /logout after 5 minutes of inactivity
+                window.location.href = '{{ url_for("admin_logout") }}';
+            }
+            
+            function showWarning() {
+                if (warningShown) return;
+                warningShown = true;
+                
+                const warningDiv = document.createElement('div');
+                warningDiv.id = 'session-warning';
+                warningDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #f59e0b;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    font-family: "Inter", sans-serif;
+                    font-size: 14px;
+                    max-width: 350px;
+                    animation: slideIn 0.3s ease;
+                `;
+                warningDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 20px;">⚠️</span>
+                        <div>
+                            <strong>Session Expiring Soon</strong><br>
+                            <span style="font-size: 12px; opacity: 0.9;">Your session will expire in 1 minute due to inactivity. Move your mouse or click anywhere to stay logged in.</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(400px); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                document.body.appendChild(warningDiv);
+                
+                // Auto-hide warning if user becomes active
+                setTimeout(() => {
+                    if (warningDiv.parentNode) {
+                        warningDiv.style.animation = 'slideIn 0.3s ease reverse';
+                        setTimeout(() => warningDiv.remove(), 300);
+                    }
+                }, WARNING_TIME);
+            }
+            
+            function handleSessionExpired() {
+                // Show final message
+                const logoutDiv = document.createElement('div');
+                logoutDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 32px;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                    z-index: 10001;
+                    text-align: center;
+                    font-family: "Inter", sans-serif;
+                `;
+                logoutDiv.innerHTML = `
+                    <h2 style="margin: 0 0 16px 0; color: #dc2626;">Session Expired</h2>
+                    <p style="margin: 0 0 24px 0; color: #6b7280;">Your session has expired due to inactivity. Redirecting to login...</p>
+                    <div style="width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: #6366f1; border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
+                `;
+                
+                const spinStyle = document.createElement('style');
+                spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+                document.head.appendChild(spinStyle);
+                
+                document.body.innerHTML = '';
+                document.body.appendChild(logoutDiv);
+                
+                // Redirect to login
+                setTimeout(() => {
+                    window.location.href = '{{ url_for("admin_login") }}';
+                }, 2000);
+            }
+            
+            function pingServer() {
+                fetch('{{ url_for("admin_activity_ping") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        // Session expired - backend enforced logout
+                        handleSessionExpired();
+                        return null;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data) return; // Already handled expired session
+                    
+                    if (!data.success || data.expired) {
+                        // Session expired on server side - backend enforced
+                        handleSessionExpired();
+                    } else {
+                        // Update last ping response
+                        lastPingResponse = data;
+                        
+                        // Reset warning timer if session is still valid
+                        if (warningShown) {
+                            const warning = document.getElementById('session-warning');
+                            if (warning) {
+                                warning.style.animation = 'slideIn 0.3s ease reverse';
+                                setTimeout(() => warning.remove(), 300);
+                                warningShown = false;
+                            }
+                        }
+                        resetTimers();
+                    }
+                })
+                .catch(error => {
+                    console.error('Activity ping failed:', error);
+                    // On error, don't logout - let backend handle it on next request
+                });
+            }
+            
+            // Track user activity - reset timer on mousemove, click, or keydown
+            activityEvents.forEach(event => {
+                document.addEventListener(event, () => {
+                    const now = Date.now();
+                    // Only reset if significant time has passed (avoid spam)
+                    if (now - lastActivity > 1000) {
+                        // Reset client-side failsafe timer
+                        resetTimers();
+                        
+                        // Ping server to update activity (backend enforces timeout)
+                        pingServer();
+                        
+                        // Hide warning if shown
+                        if (warningShown) {
+                            const warning = document.getElementById('session-warning');
+                            if (warning) {
+                                warning.style.animation = 'slideIn 0.3s ease reverse';
+                                setTimeout(() => warning.remove(), 300);
+                                warningShown = false;
+                            }
+                        }
+                    }
+                }, true);
+            });
+            
+            // Initialize timers
+            resetTimers();
+            
+            // Ping server periodically to check session status
+            // Backend enforces the actual timeout - this keeps session alive
+            pingInterval = setInterval(pingServer, PING_INTERVAL);
+            
+            // Ping on page visibility change (user switches tabs)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    pingServer();
+                    resetTimers(); // Reset client-side timer when tab becomes visible
+                }
+            });
+            
+            // Initial ping on page load
+            pingServer();
+        })();
     </script>
     {% block extra_js %}{% endblock %}
 </body>

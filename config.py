@@ -11,10 +11,19 @@ class Config:
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
     ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH') or None  # Set via environment variable
     ADMIN_ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '')
+    # Secure cookie settings - production ready
     SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_HTTPONLY = True  # Prevent XSS attacks
+    SESSION_COOKIE_SAMESITE = 'Strict'  # Strict CSRF protection
+    SESSION_COOKIE_NAME = 'admin_session'
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
+    
+    # Inactivity timeout: logout after 5 minutes of inactivity
+    ADMIN_INACTIVITY_TIMEOUT = timedelta(minutes=5)
+    
+    # CSRF protection
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_TIME_LIMIT = None  # No time limit on CSRF tokens
     
     # File upload settings
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
