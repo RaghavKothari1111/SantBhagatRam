@@ -87,12 +87,12 @@
         }, 4000);
 
         // Session timeout and activity tracking
-        // Backend enforces absolute 5-minute timeout
-        // Client-side provides failsafe redirect to /logout after 5 minutes
+        // Backend enforces absolute 2-minute timeout
+        // Client-side provides failsafe redirect to /logout after 2 minutes
         (function() {
-            const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds (failsafe)
-            const WARNING_TIME = 1 * 60 * 1000; // Show warning 1 minute before timeout (4 minutes)
-            const PING_INTERVAL = 30 * 1000; // Ping server every 30 seconds
+            const INACTIVITY_TIMEOUT = 2 * 60 * 1000; // 2 minutes in milliseconds (failsafe)
+            const WARNING_TIME = 30 * 1000; // Show warning 30 seconds before timeout (1.5 minutes)
+            const PING_INTERVAL = 15 * 1000; // Ping server every 15 seconds
             
             let lastActivity = Date.now();
             let warningShown = false;
@@ -111,15 +111,15 @@
                 if (warningTimeout) clearTimeout(warningTimeout);
                 if (logoutTimeout) clearTimeout(logoutTimeout);
                 
-                // Set warning timer (4 minutes)
+                // Set warning timer (1.5 minutes)
                 warningTimeout = setTimeout(showWarning, INACTIVITY_TIMEOUT - WARNING_TIME);
                 
-                // Set client-side failsafe logout timer (5 minutes) - redirects to /logout
+                // Set client-side failsafe logout timer (2 minutes) - redirects to /logout
                 logoutTimeout = setTimeout(clientSideLogout, INACTIVITY_TIMEOUT);
             }
             
             function clientSideLogout() {
-                // Client-side failsafe: redirect to /logout after 5 minutes of inactivity
+                // Client-side failsafe: redirect to /logout after 2 minutes of inactivity
                 window.location.href = '{{ url_for("admin_logout") }}';
             }
             
@@ -149,7 +149,7 @@
                         <span style="font-size: 20px;">⚠️</span>
                         <div>
                             <strong>Session Expiring Soon</strong><br>
-                            <span style="font-size: 12px; opacity: 0.9;">Your session will expire in 1 minute due to inactivity. Move your mouse or click anywhere to stay logged in.</span>
+                            <span style="font-size: 12px; opacity: 0.9;">Your session will expire in 30 seconds due to inactivity. Move your mouse or click anywhere to stay logged in.</span>
                         </div>
                     </div>
                 `;
@@ -194,7 +194,7 @@
                 logoutDiv.innerHTML = `
                     <h2 style="margin: 0 0 16px 0; color: #dc2626;">Session Expired</h2>
                     <p style="margin: 0 0 24px 0; color: #6b7280;">Your session has expired due to inactivity. Redirecting to login...</p>
-                    <div style="width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: #6366f1; border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
+                    <div style="width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top-color: var(--bubblegum-pink); border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
                 `;
                 
                 const spinStyle = document.createElement('style');

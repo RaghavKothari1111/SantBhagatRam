@@ -7,7 +7,7 @@
 
 /* Hero Section */
 .donate-hero {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     padding: 60px 20px;
     text-align: center;
     color: white;
@@ -67,14 +67,14 @@
 }
 
 .donation-card.featured {
-    border: 2px solid #6366f1;
+    border: 2px solid var(--bubblegum-pink);
 }
 
 .featured-badge {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     padding: 6px 12px;
     border-radius: 6px;
@@ -130,9 +130,9 @@
 }
 
 .amount-btn.active {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
-    border-color: #6366f1;
+    border-color: var(--bubblegum-pink);
 }
 
 /* Custom Amount */
@@ -159,14 +159,14 @@
 }
 
 .input-group:focus-within {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: var(--bubblegum-pink);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.1);
 }
 
 .currency {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     margin-right: 8px;
 }
 
@@ -253,7 +253,7 @@
 }
 
 .copy-btn {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -266,9 +266,9 @@
 }
 
 .copy-btn:hover {
-    background: #4f46e5;
+    background: var(--rosewood);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
 }
 
 .bank-details {
@@ -290,7 +290,7 @@
 }
 
 .donate-btn-primary {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -303,9 +303,9 @@
 }
 
 .donate-btn-primary:hover {
-    background: #4f46e5;
+    background: var(--rosewood);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
 }
 
 /* Donation Form */
@@ -359,8 +359,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: var(--bubblegum-pink);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.1);
 }
 
 .checkbox-group {
@@ -382,12 +382,12 @@
     height: 18px;
     margin-top: 2px;
     cursor: pointer;
-    accent-color: #6366f1;
+    accent-color: var(--bubblegum-pink);
 }
 
 .submit-donate-btn {
     width: 100%;
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     border: none;
     padding: 16px 32px;
@@ -400,9 +400,9 @@
 }
 
 .submit-donate-btn:hover {
-    background: #4f46e5;
+    background: var(--rosewood);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
 }
 
 .gooey-effect {
@@ -468,7 +468,7 @@
 .impact-number {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     margin-bottom: 12px;
 }
 

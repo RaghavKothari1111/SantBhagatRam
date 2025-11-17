@@ -834,10 +834,12 @@ def admin_add_dropdown_column(nav_item):
     if request.method == 'POST':
         column_data = {
             'title': request.form.get('title', '').strip(),
+            'title_hi': request.form.get('title_hi', '').strip(),
             'heading': request.form.get('heading', '').strip(),
+            'heading_hi': request.form.get('heading_hi', '').strip(),
             'items': []
         }
-        if column_data['title']:
+        if column_data['title'] and column_data['title_hi']:
             success, column_id = add_dropdown_column(nav_item, column_data)
             if success:
                 flash('Column added successfully!', 'success')
@@ -845,7 +847,7 @@ def admin_add_dropdown_column(nav_item):
             else:
                 flash('Error adding column', 'error')
         else:
-            flash('Title is required', 'error')
+            flash('Both English and Hindi titles are required', 'error')
     
     return render_template('admin/dropdown_column_form.html', nav_item=nav_item)
 
@@ -867,17 +869,19 @@ def admin_edit_dropdown_column(nav_item, column_id):
     if request.method == 'POST':
         column_data = {
             'title': request.form.get('title', '').strip(),
+            'title_hi': request.form.get('title_hi', '').strip(),
             'heading': request.form.get('heading', '').strip(),
+            'heading_hi': request.form.get('heading_hi', '').strip(),
             'items': column.get('items', [])
         }
-        if column_data['title']:
+        if column_data['title'] and column_data['title_hi']:
             if update_dropdown_column(nav_item, column_id, column_data):
                 flash('Column updated successfully!', 'success')
                 return redirect(url_for('admin_manage_dropdown', nav_item=nav_item))
             else:
                 flash('Error updating column', 'error')
         else:
-            flash('Title is required', 'error')
+            flash('Both English and Hindi titles are required', 'error')
     
     return render_template('admin/dropdown_column_form.html', nav_item=nav_item, column=column)
 
@@ -898,10 +902,11 @@ def admin_add_dropdown_item(nav_item, column_id):
     if request.method == 'POST':
         item_data = {
             'title': request.form.get('title', '').strip(),
+            'title_hi': request.form.get('title_hi', '').strip(),
             'link': request.form.get('link', '').strip(),
             'font_size': request.form.get('font_size', 'small')
         }
-        if item_data['title'] and item_data['link']:
+        if item_data['title'] and item_data['title_hi'] and item_data['link']:
             success, item_id = add_dropdown_item(nav_item, column_id, item_data)
             if success:
                 flash('Item added successfully!', 'success')
@@ -909,7 +914,7 @@ def admin_add_dropdown_item(nav_item, column_id):
             else:
                 flash('Error adding item', 'error')
         else:
-            flash('Title and link are required', 'error')
+            flash('English title, Hindi title, and link are required', 'error')
     
     return render_template('admin/dropdown_item_form.html', nav_item=nav_item, column_id=column_id)
 
@@ -934,17 +939,18 @@ def admin_edit_dropdown_item(nav_item, column_id, item_id):
     if request.method == 'POST':
         item_data = {
             'title': request.form.get('title', '').strip(),
+            'title_hi': request.form.get('title_hi', '').strip(),
             'link': request.form.get('link', '').strip(),
             'font_size': request.form.get('font_size', 'small')
         }
-        if item_data['title'] and item_data['link']:
+        if item_data['title'] and item_data['title_hi'] and item_data['link']:
             if update_dropdown_item(nav_item, column_id, item_id, item_data):
                 flash('Item updated successfully!', 'success')
                 return redirect(url_for('admin_manage_dropdown', nav_item=nav_item) + f'?column={column_id}')
             else:
                 flash('Error updating item', 'error')
         else:
-            flash('Title and link are required', 'error')
+            flash('English title, Hindi title, and link are required', 'error')
     
     return render_template('admin/dropdown_item_form.html', nav_item=nav_item, column_id=column_id, item=item)
 

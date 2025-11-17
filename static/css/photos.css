@@ -99,7 +99,7 @@
 }
 
 .event-date {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 8px;
@@ -121,7 +121,7 @@
 }
 
 .view-photos-btn {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -134,9 +134,9 @@
 }
 
 .view-photos-btn:hover {
-    background: #4f46e5;
+    background: var(--rosewood);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
 }
 
 /* Photo Modal */

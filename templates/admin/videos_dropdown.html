@@ -42,7 +42,7 @@
                         <tr class="draggable-row" draggable="true" data-category-id="{{ category.id }}">
                             <td class="drag-handle">☰</td>
                             <td>{{ category.title }}</td>
-                            <td><a href="{{ category.link }}" target="_blank" style="color: #6366f1;">{{ category.link[:40] }}{% if category.link|length > 40 %}...{% endif %}</a></td>
+                            <td><a href="{{ category.link }}" target="_blank" style="color: var(--bubblegum-pink);">{{ category.link[:40] }}{% if category.link|length > 40 %}...{% endif %}</a></td>
                             <td class="actions-cell">
                                 <a href="{{ url_for('admin_edit_video_category', category_id=category.id) }}" class="btn btn-sm btn-edit">Edit</a>
                                 <form method="POST" action="{{ url_for('admin_delete_video_category', category_id=category.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
@@ -83,7 +83,7 @@
                         <tr class="draggable-row" draggable="true" data-link-id="{{ link.id }}">
                             <td class="drag-handle">☰</td>
                             <td>{{ link.title }}</td>
-                            <td><a href="{{ link.link }}" target="_blank" style="color: #6366f1;">{{ link.link[:40] }}{% if link.link|length > 40 %}...{% endif %}</a></td>
+                            <td><a href="{{ link.link }}" target="_blank" style="color: var(--bubblegum-pink);">{{ link.link[:40] }}{% if link.link|length > 40 %}...{% endif %}</a></td>
                             <td class="actions-cell">
                                 <a href="{{ url_for('admin_edit_video_link', link_id=link.id) }}" class="btn btn-sm btn-edit">Edit</a>
                                 <form method="POST" action="{{ url_for('admin_delete_video_link', link_id=link.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">

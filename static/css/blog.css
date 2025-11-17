@@ -20,7 +20,7 @@
     width: 90px;
     height: 3px;
     border-radius: 999px;
-    background: #4f46e5;
+    background: var(--rosewood);
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -130,14 +130,14 @@
 }
 
 .blog-date-value {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     font-size: 0.9rem;
     font-weight: 600;
 }
 
 .blog-category {
     background: #f3f4f6;
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     padding: 4px 12px;
     border-radius: 6px;
     font-size: 0.85rem;

@@ -39,7 +39,7 @@
     width: 110px;
     height: 3px;
     border-radius: 999px;
-    background: #4f46e5;
+    background: var(--rosewood);
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -73,12 +73,12 @@
 }
 
 .tab-btn:hover {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
 }
 
 .tab-btn.active {
-    color: #6366f1;
-    border-bottom-color: #6366f1;
+    color: var(--bubblegum-pink);
+    border-bottom-color: var(--bubblegum-pink);
 }
 
 /* Events Section */
@@ -124,7 +124,7 @@
 
 .event-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 32px rgba(255, 77, 109, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
     border-color: #e0e7ff;
 }
 
@@ -164,7 +164,7 @@
 }
 
 .event-date {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -314,7 +314,7 @@
 }
 
 .calendar-nav-btn:hover {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     transform: scale(1.1);
 }
@@ -360,7 +360,7 @@
 
 .calendar-day:hover:not(.empty) {
     background: #e0e7ff;
-    border-color: #6366f1;
+    border-color: var(--bubblegum-pink);
     transform: scale(1.05);
 }
 
@@ -370,7 +370,7 @@
 }
 
 .calendar-day.today {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     font-weight: 700;
 }
@@ -384,7 +384,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #6366f1;
+    background: var(--bubblegum-pink);
 }
 
 .calendar-day.today.has-event::after {
@@ -392,11 +392,11 @@
 }
 
 .calendar-day.selected {
-    background: #4f46e5;
+    background: var(--rosewood);
     color: white;
     font-weight: 700;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    border-color: var(--bubblegum-pink);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
 }
 
 .calendar-legend {
@@ -421,11 +421,11 @@
 }
 
 .legend-dot.has-event {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
 }
 
 .legend-dot.today {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
 }
 
 /* Selected Date Events */
@@ -466,7 +466,7 @@
     padding: 24px;
     background: #f9fafb;
     border-radius: 16px;
-    border-left: 4px solid #6366f1;
+    border-left: 4px solid var(--bubblegum-pink);
     transition: all 0.3s ease;
 }
 
@@ -479,7 +479,7 @@
 .date-event-time {
     font-size: 1rem;
     font-weight: 700;
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     min-width: 80px;
     letter-spacing: 0.01em;
 }

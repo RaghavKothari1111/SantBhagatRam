@@ -101,7 +101,7 @@
 .stream-btn {
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.8);
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     padding: 14px 32px;
     border-radius: 12px;
     font-size: 16px;
@@ -114,10 +114,10 @@
 }
 
 .stream-btn:hover {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
 }
 
 /* Remove navigation arrows - not needed */
@@ -161,7 +161,7 @@
 }
 
 .dot.active {
-    background: #6366f1;
+    background: var(--bubblegum-pink);
     width: 12px;
     height: 12px;
     box-shadow: none;
@@ -176,7 +176,7 @@
 .play-pause-btn {
     background: transparent;
     border: none;
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -195,11 +195,11 @@
 }
 
 #playPauseIcon {
-    filter: brightness(0) saturate(100%) invert(45%) sepia(93%) saturate(1352%) hue-rotate(224deg) brightness(98%) contrast(96%);
     width: 16px;
     height: 16px;
     object-fit: contain;
     pointer-events: none;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(100%) saturate(2000%) hue-rotate(330deg) brightness(110%) contrast(100%);
 }
 
 /* Responsive Design */

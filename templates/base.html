@@ -8,6 +8,19 @@
     
     <!-- Base Styles -->
     <style>
+        :root {
+            --night-bordeaux: #590d22ff;
+            --dark-amaranth: #800f2fff;
+            --cherry-rose: #a4133cff;
+            --rosewood: #c9184aff;
+            --bubblegum-pink: #ff4d6dff;
+            --bubblegum-pink-2: #ff758fff;
+            --cotton-candy: #ff8fa3ff;
+            --cherry-blossom: #ffb3c1ff;
+            --pastel-pink: #ffccd5ff;
+            --lavender-blush: #fff0f3ff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -37,7 +50,7 @@
         
         /* Selection color */
         ::selection {
-            background: #6366f1;
+            background: var(--bubblegum-pink);
             color: white;
         }
 
@@ -83,7 +96,7 @@
             right: 30px;
             width: 50px;
             height: 50px;
-            background: #6366f1;
+            background: var(--bubblegum-pink);
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -91,10 +104,14 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 2px 8px rgba(255, 77, 109, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             transform: translateY(20px);
+            min-width: 50px;
+            min-height: 50px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .scroll-to-top.visible {
@@ -104,14 +121,14 @@
         }
 
         .scroll-to-top:hover {
-            background: #5b52e8;
-            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+            background: var(--rosewood);
+            box-shadow: 0 3px 10px rgba(255, 77, 109, 0.3);
             transform: translateY(-3px);
         }
 
         .scroll-to-top:active {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 12px rgba(255, 77, 109, 0.4);
         }
 
         .scroll-to-top svg {
@@ -124,14 +141,18 @@
             .scroll-to-top {
                 bottom: 20px;
                 right: 20px;
-                width: 45px;
-                height: 45px;
-                border-radius: 10px;
+                width: 50px;
+                height: 50px;
+                border-radius: 12px;
+                min-width: 50px;
+                min-height: 50px;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
             }
 
             .scroll-to-top svg {
-                width: 20px;
-                height: 20px;
+                width: 22px;
+                height: 22px;
             }
         }
 
@@ -139,14 +160,16 @@
             .scroll-to-top {
                 bottom: 15px;
                 right: 15px;
-                width: 40px;
-                height: 40px;
-                border-radius: 8px;
+                width: 48px;
+                height: 48px;
+                border-radius: 10px;
+                min-width: 48px;
+                min-height: 48px;
             }
 
             .scroll-to-top svg {
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
             }
         }
     </style>
@@ -193,16 +216,16 @@
                                     {% for column in dropdown_data.columns %}
                                         <div class="dropdown-column">
                                             {% if column.get('title') %}
-                                                <div class="dropdown-column-title">{{ column.get('title') }}</div>
+                                                <div class="dropdown-column-title" data-column-title-en="{{ column.get('title', '') }}" data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">{{ column.get('title') }}</div>
                                             {% endif %}
                                             {% if column.get('heading') %}
-                                                <div class="dropdown-column-heading">{{ column.get('heading') }}</div>
+                                                <div class="dropdown-column-heading" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">{{ column.get('heading') }}</div>
                                             {% endif %}
                                             {% if column.get('items') %}
                                                 <ul>
                                                     {% for item in column.get('items', []) %}
                                                         <li>
-                                                            <a href="{{ item.get('link', '#') }}" class="{% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}">
+                                                            <a href="{{ item.get('link', '#') }}" class="{% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
                                                                 {{ item.get('title', '') }}
                                                             </a>
                                                         </li>
@@ -213,7 +236,7 @@
                                     {% endfor %}
                                     {# Add social media column to all dropdowns #}
                                     <div class="dropdown-column">
-                                        <div class="dropdown-column-title">Follow Us</div>
+                                        <div class="dropdown-column-title" data-lang-nav="followUs">Follow Us</div>
                                         <ul>
                                             <li>
                                                 <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="dropdown-item-small">
@@ -237,7 +260,7 @@
                 <li>
                     <button class="language-toggle" id="languageBtn" aria-label="Change language">
                         <span class="language-toggle-icon">Aa</span>
-                        <span>English</span>
+                        <span id="languageBtnText">हिंदी</span>
                     </button>
                 </li>
             </ul>
@@ -260,20 +283,31 @@
             const isActive = navLinksContainer.classList.contains('active');
             navLinksContainer.classList.toggle('active');
             mobileMenuToggle.classList.toggle('active');
-            if (mobileMenuOverlay) {
-                if (isActive) {
+            
+            // Prevent body scroll when menu is open
+            if (isActive) {
+                document.body.style.overflow = '';
+                if (mobileMenuOverlay) {
                     mobileMenuOverlay.classList.remove('active');
-                } else {
+                }
+            } else {
+                document.body.style.overflow = 'hidden';
+                if (mobileMenuOverlay) {
                     mobileMenuOverlay.classList.add('active');
                 }
             }
         }
         
         if (mobileMenuToggle && navLinksContainer) {
-            mobileMenuToggle.addEventListener('click', function(e) {
+            // Support both click and touch events
+            const handleToggle = function(e) {
+                e.preventDefault();
                 e.stopPropagation();
                 toggleMenu();
-            });
+            };
+            
+            mobileMenuToggle.addEventListener('click', handleToggle);
+            mobileMenuToggle.addEventListener('touchend', handleToggle);
             
             // Handle dropdown on mobile for all dropdowns dynamically
             const allDropdownItems = document.querySelectorAll('.nav-item-has-dropdown');
@@ -281,12 +315,16 @@
             allDropdownItems.forEach(function(dropdownItem) {
                 const dropDownLink = dropdownItem.querySelector('a');
                 if (dropDownLink) {
-                    dropDownLink.addEventListener('click', function(e) {
+                    const handleDropdownToggle = function(e) {
                         if (window.innerWidth <= 768) {
                             e.preventDefault();
+                            e.stopPropagation();
                             dropdownItem.classList.toggle('active');
                         }
-                    });
+                    };
+                    
+                    dropDownLink.addEventListener('click', handleDropdownToggle);
+                    dropDownLink.addEventListener('touchend', handleDropdownToggle);
                 }
             });
             
@@ -294,20 +332,30 @@
             const navLinks = navLinksContainer.querySelectorAll('a');
             navLinks.forEach(link => {
                 if (!link.closest('.nav-item-has-dropdown')) {
-                    link.addEventListener('click', function() {
+                    const handleLinkClick = function() {
                         navLinksContainer.classList.remove('active');
                         mobileMenuToggle.classList.remove('active');
-                    });
+                        document.body.style.overflow = '';
+                        if (mobileMenuOverlay) {
+                            mobileMenuOverlay.classList.remove('active');
+                        }
+                    };
+                    
+                    link.addEventListener('click', handleLinkClick);
+                    link.addEventListener('touchend', handleLinkClick);
                 }
             });
             
-            // Close menu when clicking on overlay
+            // Close menu when clicking/touching on overlay
             if (mobileMenuOverlay) {
-                mobileMenuOverlay.addEventListener('click', function() {
+                const handleOverlayClose = function() {
                     if (navLinksContainer.classList.contains('active')) {
                         toggleMenu();
                     }
-                });
+                };
+                
+                mobileMenuOverlay.addEventListener('click', handleOverlayClose);
+                mobileMenuOverlay.addEventListener('touchend', handleOverlayClose);
             }
             
             // Close menu when clicking outside
@@ -418,10 +466,10 @@
 <!-- Language Selection Popup -->
 <div class="language-popup" id="languagePopup">
     <div class="language-popup-content">
-        <h2>Choose Your Language</h2>
+        <h2 data-lang-popup="title">Choose Your Language</h2>
         <div class="language-options">
-            <button class="lang-option" data-lang="en">English</button>
-            <button class="lang-option" data-lang="hi">हिंदी</button>
+            <button class="lang-option" data-lang="en" data-lang-popup="english">English</button>
+            <button class="lang-option" data-lang="hi" data-lang-popup="hindi">हिंदी</button>
         </div>
     </div>
 </div>
@@ -460,7 +508,15 @@
 
         // Event listeners
         window.addEventListener('scroll', toggleScrollButton, { passive: true });
-        scrollToTopBtn.addEventListener('click', scrollToTop);
+        
+        // Support both click and touch
+        const handleScrollToTop = function(e) {
+            e.preventDefault();
+            scrollToTop();
+        };
+        
+        scrollToTopBtn.addEventListener('click', handleScrollToTop);
+        scrollToTopBtn.addEventListener('touchend', handleScrollToTop);
 
         // Initial check
         toggleScrollButton();

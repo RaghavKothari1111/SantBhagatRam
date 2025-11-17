@@ -10,15 +10,27 @@
             <h3>Column Information</h3>
             
             <div class="form-group">
-                <label for="title">Column Title *</label>
-                <input type="text" id="title" name="title" value="{% if column %}{{ column.title }}{% endif %}" required placeholder="e.g., Shop, Quick Links">
+                <label for="title">Column Title (English) *</label>
+                <input type="text" id="title" name="title" value="{% if column %}{{ column.get('title', '') }}{% endif %}" required placeholder="e.g., Shop, Quick Links">
                 <small>This appears as a small uppercase label above the column</small>
             </div>
 
             <div class="form-group">
-                <label for="heading">Column Heading (Optional)</label>
-                <input type="text" id="heading" name="heading" value="{% if column %}{{ column.heading }}{% endif %}" placeholder="e.g., Shop the Latest">
+                <label for="title_hi">Column Title (Hindi) *</label>
+                <input type="text" id="title_hi" name="title_hi" value="{% if column %}{{ column.get('title_hi', '') }}{% endif %}" required placeholder="e.g., दुकान, त्वरित लिंक">
+                <small>Hindi version of the column title</small>
+            </div>
+
+            <div class="form-group">
+                <label for="heading">Column Heading (English - Optional)</label>
+                <input type="text" id="heading" name="heading" value="{% if column %}{{ column.get('heading', '') }}{% endif %}" placeholder="e.g., Shop the Latest">
                 <small>Optional large heading that appears below the title</small>
+            </div>
+
+            <div class="form-group">
+                <label for="heading_hi">Column Heading (Hindi - Optional)</label>
+                <input type="text" id="heading_hi" name="heading_hi" value="{% if column %}{{ column.get('heading_hi', '') }}{% endif %}" placeholder="e.g., नवीनतम खरीदारी">
+                <small>Hindi version of the column heading</small>
             </div>
         </div>
 

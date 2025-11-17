@@ -79,7 +79,7 @@
 }
 
 .footer-right a:hover {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
 }
 
 @media (max-width: 768px) {

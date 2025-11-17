@@ -13,12 +13,12 @@
     --card-border: 220 6% 90%;
     --sidebar: 220 6% 94%;
     --sidebar-foreground: 220 10% 12%;
-    --sidebar-primary: 217 91% 52%;
-    --sidebar-primary-foreground: 217 91% 98%;
+    --sidebar-primary: 348 100% 65%;
+    --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 220 8% 88%;
     --sidebar-accent-foreground: 220 12% 18%;
-    --primary: 217 91% 52%;
-    --primary-foreground: 217 91% 98%;
+    --primary: 348 100% 65%;
+    --primary-foreground: 0 0% 98%;
     --secondary: 220 8% 86%;
     --secondary-foreground: 220 12% 18%;
     --muted: 220 8% 88%;
@@ -28,7 +28,7 @@
     --destructive: 0 84% 48%;
     --destructive-foreground: 0 84% 98%;
     --input: 220 12% 75%;
-    --ring: 217 91% 52%;
+    --ring: 348 100% 65%;
     --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --radius: 12px;
 }
@@ -152,12 +152,12 @@ a:hover {
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     border-color: hsl(var(--primary));
-    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+    box-shadow: 0 10px 20px rgba(255, 77, 109, 0.15);
 }
 
 .primary-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 12px 24px rgba(255, 77, 109, 0.2);
 }
 
 .ghost-btn {
@@ -284,7 +284,7 @@ a:hover {
 .auth-form input:focus {
     outline: none;
     border-color: hsl(var(--ring));
-    box-shadow: 0 0 0 3px hsla(217, 91%, 52%, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.15);
 }
 
 .primary-btn.block {
@@ -455,7 +455,7 @@ a:hover {
 .btn-primary:hover {
     filter: brightness(1.05);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 8px 20px rgba(255, 77, 109, 0.25);
 }
 
 .btn-secondary {
@@ -585,7 +585,7 @@ a:hover {
 }
 
 .draggable-row.drag-over {
-    border-top: 3px solid #6366f1;
+    border-top: 3px solid var(--bubblegum-pink);
     background: #eef2ff !important;
 }
 
@@ -678,7 +678,7 @@ a:hover {
 }
 
 .gallery-card-date {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -767,7 +767,7 @@ a:hover {
 }
 
 .existing-photo-card:hover {
-    border-color: #6366f1;
+    border-color: var(--bubblegum-pink);
 }
 
 .existing-photo-card input {
@@ -857,7 +857,7 @@ a:hover {
 .form-group textarea:focus {
     outline: none;
     border-color: hsl(var(--ring));
-    box-shadow: 0 0 0 3px hsla(217, 91%, 52%, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.15);
 }
 
 .form-group textarea {
@@ -913,7 +913,7 @@ a:hover {
 }
 
 .empty-state a {
-    color: #6366f1;
+    color: var(--bubblegum-pink);
     text-decoration: none;
     font-weight: 600;
 }

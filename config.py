@@ -18,8 +18,8 @@ class Config:
     SESSION_COOKIE_NAME = 'admin_session'
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
     
-    # Inactivity timeout: logout after 5 minutes of inactivity
-    ADMIN_INACTIVITY_TIMEOUT = timedelta(minutes=5)
+    # Inactivity timeout: logout after 2 minutes of inactivity
+    ADMIN_INACTIVITY_TIMEOUT = timedelta(minutes=2)
     
     # CSRF protection
     WTF_CSRF_ENABLED = True

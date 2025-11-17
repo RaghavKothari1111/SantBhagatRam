@@ -79,7 +79,7 @@
                             <tr class="draggable-row" draggable="true" data-item-id="{{ item.get('id') }}">
                                 <td class="drag-handle">☰</td>
                                 <td>{{ item.get('title', '') }}</td>
-                                <td><a href="{{ item.get('link', '#') }}" target="_blank" style="color: #6366f1;">{{ item.get('link', '')[:40] }}{% if item.get('link', '')|length > 40 %}...{% endif %}</a></td>
+                                <td><a href="{{ item.get('link', '#') }}" target="_blank" style="color: var(--bubblegum-pink);">{{ item.get('link', '')[:40] }}{% if item.get('link', '')|length > 40 %}...{% endif %}</a></td>
                                 <td>{{ item.get('font_size', 'small')|title }}</td>
                                 <td class="actions-cell">
                                     <a href="{{ url_for('admin_edit_dropdown_item', nav_item=nav_item, column_id=column_id, item_id=item.get('id')) }}" class="btn btn-sm btn-edit">Edit</a>

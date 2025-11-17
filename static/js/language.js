@@ -12,7 +12,8 @@ const translations = {
             photos: "Photos",
             videos: "Videos",
             events: "Events",
-            donate: "Donate"
+            donate: "Donate",
+            followUs: "Follow Us"
         },
         // Home Page
         home: {
@@ -30,7 +31,24 @@ const translations = {
             learnMore: "Learn More",
             blogSectionTitle: "Latest From Blog",
             blogSectionSubtitle: "Stay updated with our latest activities and events",
-            viewAllBlogs: "View All Blogs →"
+            viewAllBlogs: "View All Blogs →",
+            objectivesBannerTitle: "Our Objectives",
+            objectiveBanner1Title: "Spreading Love & Compassion",
+            objectiveBanner1Desc: "Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.",
+            objectiveBanner2Title: "Building Spiritual Community",
+            objectiveBanner2Desc: "Creating sacred spaces where souls connect and grow together. Our community serves as a foundation for collective spiritual evolution, fostering deep bonds through shared practices and divine experiences.",
+            objectiveBanner3Title: "Sharing Ancient Wisdom",
+            objectiveBanner3Desc: "Preserving and teaching timeless spiritual knowledge for modern seekers. Through sacred texts, meditation practices, and enlightened guidance, we illuminate the path to inner awakening and self-realization.",
+            objectiveBanner4Title: "Promoting Global Harmony",
+            objectiveBanner4Desc: "Working towards universal peace and understanding across all cultures. We embrace diversity as a divine gift and strive to unite humanity through the shared values of love, respect, and spiritual consciousness.",
+            objectiveBanner5Title: "Facilitating Spiritual Growth",
+            objectiveBanner5Desc: "Guiding individuals on their personal journey of spiritual awakening. Through dedicated practices, divine teachings, and transformative experiences, we help seekers discover their true essence and divine purpose.",
+            objectiveBanner6Title: "Nurturing Inner Peace",
+            objectiveBanner6Desc: "Teaching practices for achieving lasting tranquility and balance. In a world of chaos, we provide tools and wisdom to cultivate inner stillness, enabling profound peace that radiates outward to touch all aspects of life.",
+            objectiveBanner7Title: "Inspiring Divine Service",
+            objectiveBanner7Desc: "Encouraging selfless service as a path to spiritual elevation. Through acts of compassion and seva, we demonstrate that serving others is serving the divine, creating ripples of positive change throughout the world.",
+            objectiveBanner8Title: "Empowering Transformation",
+            objectiveBanner8Desc: "Supporting profound personal and collective transformation. We believe every soul has the potential for divine awakening, and we provide the sacred space, guidance, and community needed for this beautiful metamorphosis."
         },
         // Footer
         footer: {
@@ -178,7 +196,8 @@ const translations = {
             photos: "फोटो",
             videos: "वीडियो",
             events: "कार्यक्रम",
-            donate: "दान करें"
+            donate: "दान करें",
+            followUs: "हमें फॉलो करें"
         },
         // Home Page
         home: {
@@ -196,7 +215,24 @@ const translations = {
             learnMore: "अधिक जानें",
             blogSectionTitle: "ब्लॉग से नवीनतम",
             blogSectionSubtitle: "हमारी नवीनतम गतिविधियों और कार्यक्रमों के साथ अपडेट रहें",
-            viewAllBlogs: "सभी ब्लॉग देखें →"
+            viewAllBlogs: "सभी ब्लॉग देखें →",
+            objectivesBannerTitle: "हमारे उद्देश्य",
+            objectiveBanner1Title: "प्रेम और करुणा का प्रसार",
+            objectiveBanner1Desc: "हर हृदय में बिना शर्त प्रेम और करुणा का विकास करना। हम मानते हैं कि वास्तविक देखभाल और सहानुभूति के माध्यम से, हम जीवन को बदल सकते हैं और सभी प्राणियों के लिए एक अधिक सामंजस्यपूर्ण दुनिया बना सकते हैं।",
+            objectiveBanner2Title: "आध्यात्मिक समुदाय का निर्माण",
+            objectiveBanner2Desc: "पवित्र स्थान बनाना जहां आत्माएं जुड़ती हैं और एक साथ बढ़ती हैं। हमारा समुदाय सामूहिक आध्यात्मिक विकास के लिए एक आधार के रूप में कार्य करता है, साझा प्रथाओं और दिव्य अनुभवों के माध्यम से गहरे बंधन को बढ़ावा देता है।",
+            objectiveBanner3Title: "प्राचीन ज्ञान साझा करना",
+            objectiveBanner3Desc: "आधुनिक साधकों के लिए कालातीत आध्यात्मिक ज्ञान को संरक्षित और सिखाना। पवित्र ग्रंथों, ध्यान प्रथाओं और प्रबुद्ध मार्गदर्शन के माध्यम से, हम आंतरिक जागृति और आत्म-साक्षात्कार के मार्ग को प्रकाशित करते हैं।",
+            objectiveBanner4Title: "वैश्विक सामंजस्य को बढ़ावा देना",
+            objectiveBanner4Desc: "सभी संस्कृतियों में सार्वभौमिक शांति और समझ की दिशा में काम करना। हम विविधता को एक दिव्य उपहार के रूप में अपनाते हैं और प्रेम, सम्मान और आध्यात्मिक चेतना के साझा मूल्यों के माध्यम से मानवता को एकजुट करने का प्रयास करते हैं।",
+            objectiveBanner5Title: "आध्यात्मिक विकास को सुविधाजनक बनाना",
+            objectiveBanner5Desc: "व्यक्तियों को उनकी व्यक्तिगत आध्यात्मिक जागृति यात्रा पर मार्गदर्शन करना। समर्पित प्रथाओं, दिव्य शिक्षाओं और परिवर्तनकारी अनुभवों के माध्यम से, हम साधकों को उनके सच्चे सार और दिव्य उद्देश्य की खोज करने में मदद करते हैं।",
+            objectiveBanner6Title: "आंतरिक शांति का पोषण",
+            objectiveBanner6Desc: "स्थायी शांति और संतुलन प्राप्त करने के लिए प्रथाओं को सिखाना। अराजकता की दुनिया में, हम आंतरिक शांति को विकसित करने के लिए उपकरण और ज्ञान प्रदान करते हैं, जो जीवन के सभी पहलुओं को छूने के लिए बाहर की ओर विकीर्ण होने वाली गहरी शांति को सक्षम बनाता है।",
+            objectiveBanner7Title: "दिव्य सेवा को प्रेरित करना",
+            objectiveBanner7Desc: "आध्यात्मिक उत्थान के मार्ग के रूप में निःस्वार्थ सेवा को प्रोत्साहित करना। करुणा और सेवा के कार्यों के माध्यम से, हम प्रदर्शित करते हैं कि दूसरों की सेवा करना दिव्य की सेवा करना है, जो पूरी दुनिया में सकारात्मक परिवर्तन की लहरें पैदा करता है।",
+            objectiveBanner8Title: "परिवर्तन को सशक्त बनाना",
+            objectiveBanner8Desc: "गहरे व्यक्तिगत और सामूहिक परिवर्तन का समर्थन करना। हम मानते हैं कि हर आत्मा में दिव्य जागृति की क्षमता है, और हम इस सुंदर रूपांतरण के लिए आवश्यक पवित्र स्थान, मार्गदर्शन और समुदाय प्रदान करते हैं।"
         },
         // Footer
         footer: {
@@ -334,9 +370,9 @@ const translations = {
     }
 };
 
-// Get current language from localStorage or default to 'hi'
+// Get current language from localStorage or default to 'en'
 function getCurrentLanguage() {
-    return localStorage.getItem('selectedLanguage') || 'hi';
+    return localStorage.getItem('selectedLanguage') || 'en';
 }
 
 // Set language in localStorage
@@ -363,6 +399,38 @@ function applyLanguage(lang) {
         const key = el.getAttribute('data-lang-nav');
         if (t.nav[key]) {
             el.textContent = t.nav[key];
+        }
+    });
+    
+    // Update dropdown column titles and headings
+    document.querySelectorAll('.dropdown-column-title[data-column-title-en]').forEach(el => {
+        const enText = el.getAttribute('data-column-title-en');
+        const hiText = el.getAttribute('data-column-title-hi');
+        if (lang === 'hi' && hiText) {
+            el.textContent = hiText;
+        } else if (lang === 'en' && enText) {
+            el.textContent = enText;
+        }
+    });
+    
+    document.querySelectorAll('.dropdown-column-heading[data-column-heading-en]').forEach(el => {
+        const enText = el.getAttribute('data-column-heading-en');
+        const hiText = el.getAttribute('data-column-heading-hi');
+        if (lang === 'hi' && hiText) {
+            el.textContent = hiText;
+        } else if (lang === 'en' && enText) {
+            el.textContent = enText;
+        }
+    });
+    
+    // Update dropdown item titles
+    document.querySelectorAll('[data-item-title-en]').forEach(el => {
+        const enText = el.getAttribute('data-item-title-en');
+        const hiText = el.getAttribute('data-item-title-hi');
+        if (lang === 'hi' && hiText) {
+            el.textContent = hiText;
+        } else if (lang === 'en' && enText) {
+            el.textContent = enText;
         }
     });
     
@@ -550,29 +618,41 @@ function applyLanguage(lang) {
     
     // Update language button
     const langBtn = document.getElementById('languageBtn');
+    const langBtnText = document.getElementById('languageBtnText');
     if (langBtn) {
-        const langText = langBtn.querySelector('span:not(.language-toggle-icon)');
-        if (langText) {
-            langText.textContent = lang === 'en' ? 'हिंदी' : 'English';
+        // Update button text to show the language that will be switched TO
+        if (langBtnText) {
+            langBtnText.textContent = lang === 'en' ? 'हिंदी' : 'English';
+        } else {
+            // Fallback: find span that's not the icon
+            const langText = langBtn.querySelector('span:not(.language-toggle-icon)');
+            if (langText) {
+                langText.textContent = lang === 'en' ? 'हिंदी' : 'English';
+            }
         }
-        langBtn.setAttribute('data-lang', lang === 'en' ? 'hi' : 'en');
+        langBtn.setAttribute('aria-label', lang === 'en' ? 'Switch to Hindi' : 'Switch to English');
     }
     
     // Dispatch language change event
     const languageChangedEvent = new CustomEvent('languageChanged', { detail: { lang } });
     window.dispatchEvent(languageChangedEvent);
     
+    // Update popup language elements
+    document.querySelectorAll('[data-lang-popup]').forEach(el => {
+        const key = el.getAttribute('data-lang-popup');
+        if (t.popup && t.popup[key]) {
+            el.textContent = t.popup[key];
+        }
+    });
+    
     // Update popup if visible
     updatePopupLanguage(lang);
 }
 
-// Update popup language
+// Update popup language (kept for backward compatibility, but now handled in applyLanguage)
 function updatePopupLanguage(lang) {
-    const t = translations[lang];
-    const popupTitle = document.querySelector('.language-popup h2');
-    if (popupTitle) {
-        popupTitle.textContent = t.popup.title;
-    }
+    // This is now handled in applyLanguage via data-lang-popup attributes
+    // Keeping for backward compatibility
 }
 
 // Show language popup
