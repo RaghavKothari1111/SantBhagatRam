@@ -149,11 +149,32 @@
                 <span class="selected-label" data-lang-donate="selectedAmount">Selected Amount:</span>
                 <span class="selected-value" id="selectedAmount">₹0</span>
             </div>
+            <div class="donate-button-wrapper">
+                <button class="donate-secure-btn" id="donateSecureBtn" onclick="initiatePayment()">
+                    <div class="btn-content">
+                        <svg class="lock-icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span data-lang-donate="donateSecurely">Donate Securely</span>
+                    </div>
+                    <div class="btn-shine"></div>
+                </button>
+                <p class="security-note" data-lang-donate="securityNote">Your payment is secured with 256-bit SSL encryption</p>
+            </div>
         </div>
     </section>
 
     <!-- UPI Scan & Pay Section -->
     <section class="upi-section">
+        <!-- Floating Spiritual Vectors for UPI Section -->
+        <div class="upi-floating-vectors">
+            <div class="upi-vector upi-vector-diya">🪔</div>
+            <div class="upi-vector upi-vector-lotus">🪷</div>
+            <div class="upi-vector upi-vector-om">ॐ</div>
+            <div class="upi-vector upi-vector-mandala">🕉️</div>
+            <div class="upi-vector upi-vector-peacock">🪶</div>
+        </div>
         <div class="upi-container">
             <div class="upi-content">
                 <h2 class="section-title" data-lang-donate="scanPay">Scan & Pay via UPI</h2>
@@ -253,23 +274,6 @@
         </div>
     </section>
 
-    <!-- Payment Gateway Button -->
-    <section class="payment-gateway-section">
-        <div class="gateway-container">
-            <button class="donate-secure-btn" id="donateSecureBtn" onclick="initiatePayment()">
-                <div class="btn-content">
-                    <svg class="lock-icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    <span data-lang-donate="donateSecurely">Donate Securely</span>
-                </div>
-                <div class="btn-shine"></div>
-            </button>
-            <p class="security-note" data-lang-donate="securityNote">Your payment is secured with 256-bit SSL encryption</p>
-        </div>
-    </section>
-
     <!-- What Your Contribution Supports -->
     <section class="contribution-supports-section">
         <div class="supports-container">
@@ -341,7 +345,20 @@
     <section class="blessings-section">
         <div class="blessings-container">
             <div class="blessings-card">
-                <div class="blessings-icon">🙏</div>
+                <div class="blessings-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Left Hand -->
+                        <path d="M5 2v5M3 3v4M7 3v4M5 7v15M3 7v13M7 7v13"/>
+                        <path d="M2 2c0-1 1-1 2-1v2M8 2c0-1-1-1-2-1v2"/>
+                        <circle cx="3" cy="20" r="1.2" fill="currentColor"/>
+                        <circle cx="7" cy="20" r="1.2" fill="currentColor"/>
+                        <!-- Right Hand -->
+                        <path d="M19 2v5M17 3v4M21 3v4M19 7v15M17 7v13M21 7v13"/>
+                        <path d="M16 2c0-1 1-1 2-1v2M22 2c0-1-1-1-2-1v2"/>
+                        <circle cx="17" cy="20" r="1.2" fill="currentColor"/>
+                        <circle cx="21" cy="20" r="1.2" fill="currentColor"/>
+                    </svg>
+                </div>
                 <h3 class="blessings-title" data-lang-donate="blessingsTitle">Divine Blessings</h3>
                 <p class="blessings-message" data-lang-donate="blessingsMessage">With your kind contribution, may divine blessings flow into your life. Thank you for supporting this sacred mission of serving humanity and spreading spiritual wisdom.</p>
                 <div class="signature-section">

@@ -1,11 +1,18 @@
 /* APPLE-STYLE MOBILE NAVIGATION MENU */
 
+/* Mobile nav actions container (donate button + hamburger) */
+.mobile-nav-actions {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    order: 3;
+}
+
 /* Hide hamburger on desktop by default */
 .mobile-nav-toggle {
     display: none;
     cursor: pointer;
-    order: 3;
-    margin-left: auto;
     flex-shrink: 0;
     z-index: 1001;
     position: relative;
@@ -13,6 +20,40 @@
     min-width: 44px;
     min-height: 44px;
     box-sizing: border-box;
+}
+
+/* Mobile donate button */
+.mobile-donate-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--bubblegum-pink), var(--rosewood));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    min-width: 70px;
+    min-height: 36px;
+    box-shadow: 0 2px 8px rgba(255, 77, 109, 0.3);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.mobile-donate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.4);
+}
+
+.mobile-donate-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(255, 77, 109, 0.3);
 }
 
 /* SVG hamburger icon */
@@ -354,8 +395,17 @@ body.menu-open {
 
 /* Only show on mobile */
 @media (max-width: 767px) {
+    /* Show mobile nav actions (donate button + hamburger) */
+    .mobile-nav-actions {
+        display: flex !important;
+    }
+    
+    .mobile-donate-btn {
+        display: flex !important;
+    }
+    
     .mobile-nav-toggle {
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
     }
@@ -369,6 +419,14 @@ body.menu-open {
 /* Hide on desktop */
 @media (min-width: 768px) {
     .mobile-nav-overlay {
+        display: none !important;
+    }
+    
+    .mobile-nav-actions {
+        display: none !important;
+    }
+    
+    .mobile-donate-btn {
         display: none !important;
     }
 }

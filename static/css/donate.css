@@ -342,26 +342,29 @@
 }
 
 .amount-buttons {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 16px;
     justify-content: center;
     margin: 40px 0 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .amount-btn {
     background: #ffffff;
     border: 2px solid #e5e7eb;
     color: #374151;
-    padding: 16px 32px;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    min-width: 120px;
+    min-width: 90px;
 }
 
 .amount-btn::before {
@@ -457,17 +460,165 @@
     color: var(--bubblegum-pink);
 }
 
+.donate-button-wrapper {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.donate-button-wrapper .donate-secure-btn {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--bubblegum-pink), var(--rosewood));
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(255, 77, 109, 0.3);
+}
+
+.donate-button-wrapper .donate-secure-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(255, 77, 109, 0.4);
+}
+
+.donate-button-wrapper .donate-secure-btn:active {
+    transform: translateY(-1px);
+}
+
+.donate-button-wrapper .btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.donate-button-wrapper .lock-icon-btn {
+    width: 20px;
+    height: 20px;
+}
+
+.donate-button-wrapper .btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.donate-button-wrapper .donate-secure-btn:hover .btn-shine {
+    left: 100%;
+}
+
+.donate-button-wrapper .security-note {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.donate-button-wrapper .security-note::before {
+    content: '🔒';
+    font-size: 0.9rem;
+}
+
 /* UPI Section */
 .upi-section {
     padding: 80px 20px;
     position: relative;
     z-index: 2;
-    background: #ffffff;
+    background: linear-gradient(135deg, #fff0f3ff 0%, #fafafa 50%, #fff0f3ff 100%);
+    overflow: hidden;
+}
+
+/* Floating Spiritual Vectors for UPI Section */
+.upi-floating-vectors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.upi-vector {
+    position: absolute;
+    opacity: 0.1;
+    font-size: 5rem;
+    animation: upiFloat 25s infinite ease-in-out;
+    color: var(--bubblegum-pink);
+}
+
+.upi-vector-diya {
+    top: 15%;
+    left: 8%;
+    animation-delay: 0s;
+    font-size: 4rem;
+}
+
+.upi-vector-lotus {
+    top: 25%;
+    right: 10%;
+    animation-delay: 4s;
+    font-size: 6rem;
+}
+
+.upi-vector-om {
+    bottom: 25%;
+    right: 12%;
+    animation-delay: 8s;
+    font-size: 5.5rem;
+}
+
+.upi-vector-mandala {
+    top: 50%;
+    left: 5%;
+    animation-delay: 12s;
+    font-size: 7rem;
+}
+
+.upi-vector-peacock {
+    bottom: 15%;
+    left: 15%;
+    animation-delay: 16s;
+    font-size: 5rem;
+}
+
+@keyframes upiFloat {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(25px, -35px) rotate(8deg) scale(1.05);
+    }
+    50% {
+        transform: translate(-20px, -60px) rotate(-8deg) scale(0.95);
+    }
+    75% {
+        transform: translate(35px, -25px) rotate(5deg) scale(1.02);
+    }
 }
 
 .upi-container {
     max-width: 1000px;
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
 .upi-content {
@@ -989,11 +1140,25 @@
 }
 
 .blessings-icon {
-    font-size: 4rem;
-    margin-bottom: 24px;
-    animation: float 3s infinite ease-in-out;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, var(--bubblegum-pink), var(--rosewood));
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     z-index: 1;
+    box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3);
+    transform: rotate(-5deg);
+}
+
+.blessings-icon svg {
+    width: 60px;
+    height: 60px;
+    color: white;
+    stroke-width: 2.5;
 }
 
 .blessings-title {
@@ -1081,16 +1246,105 @@
     }
 
     .amount-buttons {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 
     .amount-btn {
-        min-width: auto;
+        min-width: 0;
         flex: 1;
+        padding: 8px 6px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        text-align: center;
     }
 
     .bank-details-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .bank-transfer-section {
+        padding: 50px 15px;
+    }
+    
+    .upi-section {
+        padding: 50px 15px;
+    }
+    
+    .upi-content {
+        gap: 30px;
+    }
+    
+    .bank-container {
+        max-width: 100%;
+    }
+    
+    .bank-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+    
+    .bank-header {
+        margin-bottom: 20px;
+        gap: 12px;
+    }
+    
+    .bank-icon-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .bank-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .bank-title {
+        font-size: 1.3rem;
+    }
+    
+    .bank-detail-item {
+        padding: 14px 16px;
+    }
+    
+    .bank-detail-item label {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+        padding: 8px 0;
+    }
+    
+    .upi-details {
+        padding: 20px 16px;
+    }
+    
+    .upi-id-box {
+        padding: 16px 12px;
+    }
+    
+    .upi-id-box label {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .upi-id-value {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+    }
+    
+    .copy-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .copy-btn svg {
+        width: 16px;
+        height: 16px;
     }
 
     .supports-grid {
@@ -1120,7 +1374,72 @@
     }
 
     .amount-buttons {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .amount-btn {
+        padding: 8px 4px;
+        font-size: 0.75rem;
+        min-width: 0;
+    }
+    
+    .bank-card {
+        padding: 20px 16px;
+    }
+    
+    .bank-title {
+        font-size: 1.2rem;
+    }
+    
+    .detail-value {
+        font-size: 0.85rem;
+        padding: 6px 0;
+    }
+    
+    .bank-detail-item {
+        padding: 12px 14px;
+    }
+    
+    .bank-detail-item label {
+        font-size: 0.75rem;
+    }
+    
+    .upi-section {
+        padding: 40px 12px;
+    }
+    
+    .upi-content {
+        gap: 24px;
+    }
+    
+    .upi-details {
+        padding: 16px 12px;
+    }
+    
+    .upi-id-box {
+        padding: 12px 10px;
+    }
+    
+    .upi-id-box label {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+    
+    .upi-id-value {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .copy-btn {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .copy-btn svg {
+        width: 14px;
+        height: 14px;
     }
 
     .qr-code-image,
@@ -1131,6 +1450,11 @@
 
     .bank-card {
         padding: 30px 20px;
+    }
+
+    .donate-button-wrapper .donate-secure-btn {
+        padding: 14px 28px;
+        font-size: 1rem;
     }
 
     .donate-secure-btn {
