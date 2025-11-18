@@ -623,9 +623,10 @@ body.lang-hindi [class*="drop-down-menu-"] a {
 /* Responsive Header */
 @media (max-width: 768px) {
     .navbar {
-        padding: 16px 20px;
+        padding: 10px 20px;
         width: 100%;
         max-width: 100%;
+        --navbar-height: 60px;
     }
 
     .logo {
@@ -635,11 +636,11 @@ body.lang-hindi [class*="drop-down-menu-"] a {
     }
 
     .logo a {
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .logo-img {
-        height: 40px;
+        height: 36px;
     }
 
     .nav-content {
