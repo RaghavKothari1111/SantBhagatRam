@@ -1,9 +1,10 @@
 """
-Cloudinary integration for file uploads
+Cloudinary integration for file uploads and JSON data storage
 Falls back to local filesystem if Cloudinary is not configured
 """
 import os
 import uuid
+import json
 from werkzeug.utils import secure_filename
 from config import Config
 
@@ -136,6 +137,140 @@ class StorageManager:
                     print(f"✓ Deleted local file: {filepath}")
             except Exception as e:
                 print(f"Error deleting local file: {e}")
+    
+    def save_json_data(self, filename, data, folder='data'):
+        """
+        Save JSON data to Cloudinary or local filesystem
+        Args:
+            filename: Name of the JSON file (e.g., 'slider_data.json')
+            data: Data to save (dict/list)
+            folder: Folder name in Cloudinary (default: 'data')
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            json_string = json.dumps(data, ensure_ascii=False, indent=2)
+            
+            if self.use_cloudinary:
+                try:
+                    import io
+                    # Create a file-like object from JSON string
+                    json_file = io.BytesIO(json_string.encode('utf-8'))
+                    
+                    # Upload to Cloudinary as raw file
+                    result = self.cloudinary_uploader.upload(
+                        json_file,
+                        folder=folder,
+                        resource_type="raw",
+                        public_id=filename.replace('.json', ''),  # Remove .json extension
+                        overwrite=True
+                    )
+                    print(f"✓ Saved JSON to Cloudinary: {folder}/{filename}")
+                    return True
+                except Exception as e:
+                    print(f"Error saving JSON to Cloudinary: {e}")
+                    # Fallback to local
+                    return self._save_json_local(filename, data)
+            else:
+                return self._save_json_local(filename, data)
+        except Exception as e:
+            print(f"Error saving JSON data: {e}")
+            return False
+    
+    def _save_json_local(self, filename, data):
+        """Save JSON to local filesystem"""
+        try:
+            # Determine file path based on filename
+            if 'slider' in filename.lower():
+                file_path = Config.SLIDER_DATA_FILE
+            elif 'blog' in filename.lower():
+                file_path = Config.BLOGS_DATA_FILE
+            elif 'event' in filename.lower():
+                file_path = Config.EVENTS_DATA_FILE
+            elif 'photo' in filename.lower():
+                file_path = Config.PHOTOS_DATA_FILE
+            elif 'navbar' in filename.lower():
+                file_path = Config.NAVBAR_DROPDOWNS_DATA_FILE
+            elif 'videos_dropdown' in filename.lower():
+                file_path = Config.VIDEOS_DROPDOWN_DATA_FILE
+            elif 'admin_session' in filename.lower():
+                file_path = Config.ADMIN_SESSION_DATA_FILE
+            else:
+                # Default to data directory
+                file_path = os.path.join(os.path.dirname(__file__), 'data', filename)
+            
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            return True
+        except Exception as e:
+            print(f"Error saving JSON locally: {e}")
+            return False
+    
+    def load_json_data(self, filename, default=[], folder='data'):
+        """
+        Load JSON data from Cloudinary or local filesystem
+        Args:
+            filename: Name of the JSON file (e.g., 'slider_data.json')
+            default: Default value if file doesn't exist
+            folder: Folder name in Cloudinary (default: 'data')
+        Returns:
+            Loaded data or default value
+        """
+        if self.use_cloudinary:
+            try:
+                import cloudinary.api
+                # Get public_id (filename without extension)
+                public_id = f"{folder}/{filename.replace('.json', '')}"
+                
+                # Try to get the file from Cloudinary
+                result = cloudinary.api.resource(public_id, resource_type="raw")
+                if result and 'secure_url' in result:
+                    import urllib.request
+                    # Download and parse JSON
+                    with urllib.request.urlopen(result['secure_url']) as response:
+                        data = json.loads(response.read().decode('utf-8'))
+                    print(f"✓ Loaded JSON from Cloudinary: {folder}/{filename}")
+                    return data
+            except Exception as e:
+                # File doesn't exist in Cloudinary or other error, try local fallback
+                error_msg = str(e).lower()
+                if 'not found' in error_msg or '404' in error_msg:
+                    print(f"⚠ JSON not found in Cloudinary, trying local fallback")
+                else:
+                    print(f"⚠ Could not load from Cloudinary ({e}), trying local fallback")
+                return self._load_json_local(filename, default)
+        else:
+            return self._load_json_local(filename, default)
+    
+    def _load_json_local(self, filename, default):
+        """Load JSON from local filesystem"""
+        try:
+            # Determine file path based on filename
+            if 'slider' in filename.lower():
+                file_path = Config.SLIDER_DATA_FILE
+            elif 'blog' in filename.lower():
+                file_path = Config.BLOGS_DATA_FILE
+            elif 'event' in filename.lower():
+                file_path = Config.EVENTS_DATA_FILE
+            elif 'photo' in filename.lower():
+                file_path = Config.PHOTOS_DATA_FILE
+            elif 'navbar' in filename.lower():
+                file_path = Config.NAVBAR_DROPDOWNS_DATA_FILE
+            elif 'videos_dropdown' in filename.lower():
+                file_path = Config.VIDEOS_DROPDOWN_DATA_FILE
+            elif 'admin_session' in filename.lower():
+                file_path = Config.ADMIN_SESSION_DATA_FILE
+            else:
+                # Default to data directory
+                file_path = os.path.join(os.path.dirname(__file__), 'data', filename)
+            
+            if os.path.exists(file_path):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Error loading JSON locally: {e}")
+        return default
 
 # Create global instance
 storage_manager = StorageManager()

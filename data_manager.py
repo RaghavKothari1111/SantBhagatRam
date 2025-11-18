@@ -1,6 +1,7 @@
 """
 Data management utilities for blogs, events, and photo galleries.
 Handles reading/writing JSON data files.
+Uses Cloudinary for persistent storage if configured, otherwise uses local filesystem.
 """
 import json
 import os
@@ -9,26 +10,52 @@ import uuid
 from datetime import datetime
 from config import Config
 
+# Import storage manager for Cloudinary support
+try:
+    from storage import storage_manager
+    USE_STORAGE_MANAGER = True
+except ImportError:
+    USE_STORAGE_MANAGER = False
+    storage_manager = None
+
+def _get_filename_from_path(file_path):
+    """Extract filename from full path"""
+    return os.path.basename(file_path)
+
 def load_json_data(file_path, default=[]):
-    """Load data from JSON file"""
-    try:
-        if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-    except Exception as e:
-        print(f"Error loading {file_path}: {e}")
-    return default
+    """Load data from JSON file (Cloudinary or local)"""
+    filename = _get_filename_from_path(file_path)
+    
+    if USE_STORAGE_MANAGER and storage_manager:
+        # Use storage manager (supports Cloudinary)
+        return storage_manager.load_json_data(filename, default=default)
+    else:
+        # Fallback to local filesystem
+        try:
+            if os.path.exists(file_path):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Error loading {file_path}: {e}")
+        return default
 
 def save_json_data(file_path, data):
-    """Save data to JSON file"""
-    try:
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        return True
-    except Exception as e:
-        print(f"Error saving {file_path}: {e}")
-        return False
+    """Save data to JSON file (Cloudinary or local)"""
+    filename = _get_filename_from_path(file_path)
+    
+    if USE_STORAGE_MANAGER and storage_manager:
+        # Use storage manager (supports Cloudinary)
+        return storage_manager.save_json_data(filename, data)
+    else:
+        # Fallback to local filesystem
+        try:
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            return True
+        except Exception as e:
+            print(f"Error saving {file_path}: {e}")
+            return False
 
 # Blog Management
 def generate_slug(title):
