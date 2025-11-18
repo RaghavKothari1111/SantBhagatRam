@@ -5,7 +5,6 @@ class PhotoGallery {
         this.currentPhotoIndex = 0;
         this.currentPhotos = [];
         this.eventsData = Array.isArray(window.galleryData) ? window.galleryData : [];
-        this.masonryInstance = null;
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initialize());
@@ -77,18 +76,10 @@ class PhotoGallery {
             } else {
                 // URL doesn't have gallery ID, close modal if open
                 if (isModalOpen) {
-                    // Temporarily disable URL update to avoid recursion
                     const modal = document.getElementById('photoModal');
                     if (modal) {
-                        // Clean up masonry instance
-                        if (this.masonryInstance) {
-                            this.masonryInstance.destroy();
-                            this.masonryInstance = null;
-                        }
-                        
                         const photosGrid = document.querySelector('.photos-grid');
                         if (photosGrid) {
-                            photosGrid.classList.remove('masonry-container');
                             photosGrid.style.display = '';
                             photosGrid.style.gridTemplateColumns = '';
                             photosGrid.style.gap = '';
@@ -144,12 +135,6 @@ class PhotoGallery {
         modalDate.textContent = date || '';
 
         photosGrid.innerHTML = '';
-        
-        // Clean up previous masonry instance
-        if (this.masonryInstance) {
-            this.masonryInstance.destroy();
-            this.masonryInstance = null;
-        }
 
         if (!this.currentPhotos.length) {
             const noPhotos = document.createElement('p');
@@ -160,146 +145,22 @@ class PhotoGallery {
         } else {
             console.log('Loading photos:', this.currentPhotos.length, 'photos');
             
-            // Prepare items for masonry
-            const masonryItems = this.currentPhotos.map((photo, index) => {
+            // Prepare items for grid
+            const gridItems = this.currentPhotos.map((photo, index) => {
                 const captionText = lang === 'en'
                     ? (photo.captionEn || photo.caption || '')
                     : (photo.caption || photo.captionEn || '');
                 
-                // Estimate height based on image aspect ratio (default to 400)
-                const height = photo.height || 400;
-                
                 return {
                     id: `photo-${index}`,
-                    img: photo.url,
                     url: photo.url,
-                    height: height,
                     index: index,
                     onClick: () => this.openLightbox(index)
                 };
             });
 
-            // Check if mobile - use simple grid on mobile, masonry on desktop
-            const isMobile = window.innerWidth <= 768;
-            
-            if (isMobile) {
-                // Mobile: Use simple grid layout (more reliable)
-                this.fallbackToRegularGrid(photosGrid, masonryItems);
-            } else {
-                // Desktop: Show photos immediately with regular grid first
-                this.fallbackToRegularGrid(photosGrid, masonryItems);
-
-                // Then try to upgrade to masonry if available (desktop only)
-                // Use a longer delay to ensure container is ready
-                const masonryTimeout = setTimeout(() => {
-                    // Safety fallback: if masonry hasn't rendered in 3 seconds, keep regular grid
-                    console.warn('Masonry timeout - keeping regular grid');
-                }, 3000);
-
-                setTimeout(() => {
-                    // Check if MasonryGrid is available and container has width
-                    if (typeof MasonryGrid !== 'undefined' && photosGrid && photosGrid.offsetWidth > 0) {
-                        try {
-                            // Store reference to check if masonry rendered successfully
-                            let masonryRendered = false;
-                            
-                            // Initialize masonry grid (desktop only)
-                            this.masonryInstance = new MasonryGrid(photosGrid, {
-                                ease: 'power3.out',
-                                duration: 0.6,
-                                stagger: 0.05,
-                                animateFrom: 'bottom',
-                                scaleOnHover: true,
-                                hoverScale: 0.95,
-                                blurToFocus: true,
-                                colorShiftOnHover: false
-                            });
-
-                            // Add masonry container class before rendering
-                            photosGrid.classList.add('masonry-container');
-                            
-                            // Set items and render with success check
-                            this.masonryInstance.setItems(masonryItems)
-                                .then(() => {
-                                    // Check if masonry actually rendered items
-                                    setTimeout(() => {
-                                        const renderedMasonryItems = photosGrid.querySelectorAll('.masonry-item');
-                                        const hasVisibleMasonryItems = renderedMasonryItems.length > 0 && 
-                                            Array.from(renderedMasonryItems).some(item => {
-                                                const rect = item.getBoundingClientRect();
-                                                return rect.width > 0 && rect.height > 0;
-                                            });
-                                        
-                                        if (hasVisibleMasonryItems) {
-                                            masonryRendered = true;
-                                            clearTimeout(masonryTimeout);
-                                            // Remove regular grid items (they were already cleared by masonry, but check anyway)
-                                            const regularItems = photosGrid.querySelectorAll('.photo-item');
-                                            regularItems.forEach(item => item.remove());
-                                        } else {
-                                            // Masonry didn't render properly, restore regular grid
-                                            console.warn('Masonry did not render items properly, restoring regular grid');
-                                            clearTimeout(masonryTimeout);
-                                            
-                                            // Clean up masonry instance first
-                                            if (this.masonryInstance) {
-                                                this.masonryInstance.destroy();
-                                                this.masonryInstance = null;
-                                            }
-                                            
-                                            // Clear masonry and restore regular grid
-                                            photosGrid.innerHTML = '';
-                                            photosGrid.classList.remove('masonry-container');
-                                            
-                                            // Always recreate regular grid (backup won't work after DOM detachment)
-                                            this.fallbackToRegularGrid(photosGrid, masonryItems);
-                                        }
-                                    }, 1000); // Give more time for masonry to render and become visible
-                                })
-                                .catch(err => {
-                                    console.error('Masonry error:', err);
-                                    clearTimeout(masonryTimeout);
-                                    
-                                    // Clean up masonry instance
-                                    if (this.masonryInstance) {
-                                        this.masonryInstance.destroy();
-                                        this.masonryInstance = null;
-                                    }
-                                    
-                                    // Clear and restore regular grid
-                                    photosGrid.innerHTML = '';
-                                    photosGrid.classList.remove('masonry-container');
-                                    this.fallbackToRegularGrid(photosGrid, masonryItems);
-                                });
-                        } catch (error) {
-                            console.error('Masonry initialization error:', error);
-                            clearTimeout(masonryTimeout);
-                            
-                            // Clean up masonry instance
-                            if (this.masonryInstance) {
-                                this.masonryInstance.destroy();
-                                this.masonryInstance = null;
-                            }
-                            
-                            // Ensure regular grid is visible
-                            photosGrid.classList.remove('masonry-container');
-                            // Regular grid should already be visible, but ensure it's there
-                            const existingItems = photosGrid.querySelectorAll('.photo-item');
-                            if (existingItems.length === 0) {
-                                this.fallbackToRegularGrid(photosGrid, masonryItems);
-                            }
-                        }
-                    } else {
-                        clearTimeout(masonryTimeout);
-                        // Masonry not available or container not ready, keep regular grid
-                        if (typeof MasonryGrid === 'undefined') {
-                            console.warn('MasonryGrid not available');
-                        } else {
-                            console.warn('Container not ready for masonry');
-                        }
-                    }
-                }, 300);
-            }
+            // Use simple grid layout for all devices
+            this.fallbackToRegularGrid(photosGrid, gridItems);
         }
 
         modal.classList.add('active');
@@ -307,8 +168,6 @@ class PhotoGallery {
     }
 
     fallbackToRegularGrid(photosGrid, items) {
-        console.log('Using fallback regular grid');
-        photosGrid.classList.remove('masonry-container');
         photosGrid.style.display = 'grid';
         photosGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
         photosGrid.style.gap = '20px';
@@ -331,15 +190,8 @@ class PhotoGallery {
     closePhotoModal() {
         const modal = document.getElementById('photoModal');
         if (modal) {
-            // Clean up masonry instance
-            if (this.masonryInstance) {
-                this.masonryInstance.destroy();
-                this.masonryInstance = null;
-            }
-            
             const photosGrid = document.querySelector('.photos-grid');
             if (photosGrid) {
-                photosGrid.classList.remove('masonry-container');
                 photosGrid.style.display = '';
                 photosGrid.style.gridTemplateColumns = '';
                 photosGrid.style.gap = '';
