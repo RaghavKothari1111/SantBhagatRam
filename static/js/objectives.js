@@ -1,9 +1,10 @@
 /**
- * Auto-Scrolling Objectives Carousel
+ * Auto-Scrolling Objectives Carousel (Mobile)
  * 
  * Features:
- * - Auto-scrolls continuously on mobile (<768px) using requestAnimationFrame
- * - Swipe left/right to drag the carousel
+ * - Auto-scrolls continuously left-to-right on mobile (<768px) using requestAnimationFrame
+ * - Horizontal swipe: items move in same direction as finger (natural feel)
+ * - Vertical page scrolling works normally even when finger is over objectives
  * - Tap anywhere to pause/resume auto-scroll
  * - Desktop remains static (CSS animation only)
  * - Smooth, conflict-free scrolling
@@ -40,39 +41,17 @@
         // State management
         let isPaused = false;
         let isDragging = false;
+        let isHorizontalDrag = false; // Track if gesture is confirmed horizontal
+        
         let startX = 0;
         let startY = 0;
-        let scrollLeft = 0;
-        let currentScrollPosition = 0;
+        let scrollLeftStart = 0;
+        
         let animationFrameId = null;
         let lastTapTime = 0;
-        let tapTimeout = null;
         
-        // Get current transform value from CSS
-        function getCurrentTransform() {
-            const transform = window.getComputedStyle(scrollTrack).transform;
-            if (transform === 'none') return 0;
-            const matrix = transform.match(/matrix\(([^)]+)\)/);
-            return matrix ? parseFloat(matrix[1].split(',')[4]) : 0;
-        }
-        
-        // Set transform value
-        function setTransform(value, disableTransition = false) {
-            if (disableTransition) {
-                scrollTrack.style.transition = 'none';
-            } else {
-                scrollTrack.style.transition = '';
-            }
-            scrollTrack.style.transform = `translateX(${value}px)`;
-            currentScrollPosition = value;
-        }
-        
-        // Calculate total scroll width (one set of cards)
-        function getScrollWidth() {
-            const cardWidth = window.innerWidth < 768 ? 320 : 450;
-            const gap = window.innerWidth < 768 ? 16 : 24;
-            return (cardWidth + gap) * 8; // 8 cards per set
-        }
+        // Threshold for determining horizontal vs vertical gesture
+        const HORIZONTAL_THRESHOLD = 8; // pixels
         
         // -------------------------
         // AUTO SCROLL ANIMATION (requestAnimationFrame)
@@ -82,8 +61,9 @@
                 cancelAnimationFrame(animationFrameId);
             }
             
+            if (!isMobileDevice()) return;
+            
             const speed = 0.6; // pixels per frame (adjust for speed)
-            const scrollWidth = getScrollWidth();
             
             function animate() {
                 // Only run if mobile, not paused, and not dragging
@@ -92,16 +72,21 @@
                     return;
                 }
                 
-                // Increment scroll position
-                currentScrollPosition -= speed;
+                // Get the scroll container (we'll use scrollLeft for better compatibility)
+                // Since we're using transform, we need to track position manually
+                const currentPos = getCurrentScrollPosition();
+                const scrollWidth = getScrollWidth();
+                
+                // Decrement scroll position (move right-to-left, negative direction)
+                let newPos = currentPos - speed;
                 
                 // Loop back for infinite scroll effect
-                if (Math.abs(currentScrollPosition) >= scrollWidth) {
-                    currentScrollPosition = 0;
+                if (newPos <= -scrollWidth) {
+                    newPos = 0;
                 }
                 
                 // Apply transform
-                setTransform(currentScrollPosition);
+                setTransform(newPos);
                 
                 // Continue animation
                 animationFrameId = requestAnimationFrame(animate);
@@ -119,17 +104,47 @@
             }
         }
         
+        // Get current scroll position from transform
+        function getCurrentScrollPosition() {
+            const transform = window.getComputedStyle(scrollTrack).transform;
+            if (transform === 'none') return 0;
+            const matrix = transform.match(/matrix\(([^)]+)\)/);
+            return matrix ? parseFloat(matrix[1].split(',')[4]) : 0;
+        }
+        
+        // Set transform value
+        function setTransform(value, disableTransition = false) {
+            if (disableTransition) {
+                scrollTrack.style.transition = 'none';
+            } else {
+                scrollTrack.style.transition = '';
+            }
+            scrollTrack.style.transform = `translateX(${value}px)`;
+        }
+        
+        // Calculate total scroll width (one set of cards)
+        function getScrollWidth() {
+            const cardWidth = window.innerWidth < 768 ? 320 : 450;
+            const gap = window.innerWidth < 768 ? 16 : 24;
+            return (cardWidth + gap) * 8; // 8 cards per set
+        }
+        
         // -------------------------
-        // TOUCH DRAG HANDLING
+        // TOUCH HANDLERS
         // -------------------------
         function handleTouchStart(e) {
             if (!isMobileDevice()) return;
             
             const touch = e.touches[0];
+            const rect = scrollWrapper.getBoundingClientRect();
+            
             isDragging = true;
-            startX = touch.pageX;
+            isHorizontalDrag = false; // We don't know yet if it's horizontal or vertical
+            
+            // Calculate relative position
+            startX = touch.pageX - rect.left;
             startY = touch.pageY;
-            scrollLeft = getCurrentTransform();
+            scrollLeftStart = getCurrentScrollPosition();
             
             // Stop auto-scroll during drag
             stopAutoScroll();
@@ -139,37 +154,69 @@
             if (!isMobileDevice() || !isDragging) return;
             
             const touch = e.touches[0];
-            const currentX = touch.pageX;
-            const currentY = touch.pageY;
-            const diffX = currentX - startX;
-            const diffY = Math.abs(currentY - startY);
+            const rect = scrollWrapper.getBoundingClientRect();
             
-            // Only handle horizontal scrolling if horizontal movement is greater
-            if (Math.abs(diffX) > diffY) {
-                e.preventDefault();
-                
-                // Calculate new scroll position with sensitivity
-                const walk = diffX * 1.5; // scroll sensitivity multiplier
-                const newScrollLeft = scrollLeft - walk;
-                
-                // Apply manual scroll (disable transition during drag for smoothness)
-                setTransform(newScrollLeft, true);
+            const x = touch.pageX - rect.left;
+            const y = touch.pageY;
+            
+            const dx = x - startX;
+            const dy = y - startY;
+            
+            const absDx = Math.abs(dx);
+            const absDy = Math.abs(dy);
+            
+            // Decide if this gesture is horizontal or vertical
+            if (!isHorizontalDrag) {
+                // Check if horizontal movement is significantly greater than vertical
+                if (absDx > absDy + HORIZONTAL_THRESHOLD) {
+                    // Confirmed horizontal swipe
+                    isHorizontalDrag = true;
+                } else if (absDy >= absDx) {
+                    // More vertical than horizontal -> let page scroll
+                    isDragging = false;
+                    isHorizontalDrag = false;
+                    // Resume auto-scroll if not paused
+                    if (!isPaused) {
+                        startAutoScroll();
+                    }
+                    return; // Don't prevent default, allow vertical scroll
+                } else {
+                    // Not enough movement yet, wait for more input
+                    return;
+                }
             }
+            
+            // If we are here, it's a confirmed horizontal drag -> prevent default to stop vertical scroll
+            e.preventDefault();
+            
+            // FIX: Make direction feel natural
+            // dx > 0 -> finger moved right -> content moves right (positive direction)
+            // dx < 0 -> finger moved left -> content moves left (negative direction)
+            const walk = dx * 1.5; // sensitivity multiplier
+            const newScrollLeft = scrollLeftStart + walk; // Add (not subtract) for natural direction
+            
+            // Apply manual scroll (disable transition during drag for smoothness)
+            setTransform(newScrollLeft, true);
         }
         
         function handleTouchEnd(e) {
             if (!isMobileDevice() || !isDragging) return;
-            
-            isDragging = false;
             
             // Re-enable transitions after drag
             scrollTrack.style.transition = '';
             
             // Check if this was a tap (minimal movement)
             const touch = e.changedTouches[0];
-            const diffX = Math.abs(touch.pageX - startX);
-            const diffY = Math.abs(touch.pageY - startY);
-            const isTap = diffX < 10 && diffY < 10;
+            const rect = scrollWrapper.getBoundingClientRect();
+            const endX = touch.pageX - rect.left;
+            const endY = touch.pageY;
+            
+            const diffX = Math.abs(endX - startX);
+            const diffY = Math.abs(endY - startY);
+            const isTap = diffX < 10 && diffY < 10 && !isHorizontalDrag;
+            
+            isDragging = false;
+            isHorizontalDrag = false;
             
             if (isTap) {
                 // Handle tap to pause/resume
@@ -177,9 +224,6 @@
             } else {
                 // Resume auto-scroll after drag (if not paused)
                 if (!isPaused) {
-                    // Update scrollLeft to current position for next drag
-                    scrollLeft = getCurrentTransform();
-                    currentScrollPosition = scrollLeft;
                     startAutoScroll();
                 }
             }
@@ -189,14 +233,13 @@
             if (!isMobileDevice()) return;
             
             isDragging = false;
+            isHorizontalDrag = false;
             
             // Re-enable transitions after drag
             scrollTrack.style.transition = '';
             
             // Resume auto-scroll if not paused
             if (!isPaused) {
-                scrollLeft = getCurrentTransform();
-                currentScrollPosition = scrollLeft;
                 startAutoScroll();
             }
         }
@@ -222,7 +265,6 @@
                 stopAutoScroll();
             } else {
                 // Resume: start auto-scroll from current position
-                scrollLeft = getCurrentTransform();
                 startAutoScroll();
             }
         }
@@ -243,7 +285,6 @@
         scrollTrack.style.animationPlayState = 'paused';
         
         // Initialize scroll position
-        currentScrollPosition = 0;
         setTransform(0);
         
         // Add event listeners for touch
@@ -252,9 +293,9 @@
         scrollWrapper.addEventListener('touchend', handleTouchEnd, { passive: true });
         scrollWrapper.addEventListener('touchcancel', handleTouchCancel, { passive: true });
         
-        // Enable smooth touch scrolling
+        // FIX: Set touchAction to "pan-y" to allow vertical page scrolling by default
+        scrollWrapper.style.touchAction = 'pan-y';
         scrollWrapper.style.webkitOverflowScrolling = 'touch';
-        scrollWrapper.style.touchAction = 'pan-x';
         
         // Start auto-scroll on mobile
         startAutoScroll();
@@ -271,7 +312,6 @@
                     // Switch to mobile mode
                     scrollTrack.style.animation = 'none';
                     scrollTrack.style.animationPlayState = 'paused';
-                    currentScrollPosition = getCurrentTransform();
                     if (!isPaused) {
                         startAutoScroll();
                     }
@@ -280,7 +320,6 @@
                     scrollTrack.style.animation = '';
                     scrollTrack.style.animationPlayState = 'running';
                     scrollTrack.style.transform = '';
-                    // Remove touch listeners (they'll be re-added if needed)
                 }
             }, 250);
         });

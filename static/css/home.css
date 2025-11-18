@@ -111,7 +111,8 @@
     position: relative;
     width: 100%;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    /* Allow vertical page scrolling by default, JavaScript handles horizontal */
+    touch-action: pan-y;
 }
 
 .objectives-scroll-track {
