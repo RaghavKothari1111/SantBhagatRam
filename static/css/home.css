@@ -110,6 +110,8 @@
     overflow: hidden;
     position: relative;
     width: 100%;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
 }
 
 .objectives-scroll-track {
@@ -117,11 +119,22 @@
     gap: 24px;
     padding-left: 24px;
     animation: scroll-horizontal 50s linear infinite;
+    animation-play-state: running;
     will-change: transform;
+    /* Smooth transitions for manual scrolling */
+    transition: transform 0.1s linear;
 }
 
 .objectives-scroll-track:hover {
     animation-play-state: paused;
+}
+
+/* On mobile, disable CSS animation (JavaScript handles it) */
+@media (max-width: 768px) {
+    .objectives-scroll-track {
+        /* Animation will be disabled by JavaScript on mobile */
+        transition: none; /* No transition during drag for better performance */
+    }
 }
 
 /* Objective Card */

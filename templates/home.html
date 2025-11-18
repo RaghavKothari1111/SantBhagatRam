@@ -70,7 +70,7 @@
             <h2 class="objectives-banner-title" data-lang-home="objectivesBannerTitle">Our Objectives</h2>
         </div>
         <div class="objectives-scroll-wrapper">
-            <div class="objectives-scroll-track">
+            <div class="objectives-scroll-track" id="objectives-scroll-track">
                 <!-- First set of objectives -->
                 <div class="objective-card">
                     <div class="objective-icon">
@@ -286,4 +286,5 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
+<script src="{{ url_for('static', filename='js/objectives.js') }}"></script>
 {% endblock %}
