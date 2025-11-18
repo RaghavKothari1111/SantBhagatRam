@@ -473,14 +473,14 @@ body.menu-open {
     font-size: 2.5rem;
 }
 
-.mobile-nav-vector-mandala {
+.mobile-nav-vector-lotus-4 {
     top: 60%;
     right: 5%;
     animation-delay: 9s;
     font-size: 4rem;
 }
 
-.mobile-nav-vector-om {
+.mobile-nav-vector-lotus-3 {
     bottom: 10%;
     right: 15%;
     animation-delay: 12s;
@@ -495,18 +495,27 @@ body.menu-open {
     font-size: 1.8rem;
 }
 
-.mobile-nav-vector-om-2 {
-    top: 15%;
-    right: 25%;
-    animation-delay: 8s;
-    font-size: 2.5rem;
-}
+
 
 .mobile-nav-vector-lotus-2 {
     bottom: 35%;
     right: 30%;
     animation-delay: 15s;
     font-size: 2.2rem;
+}
+
+.mobile-nav-vector-om-new-1 {
+    bottom: 15%;
+    left: 25%;
+    animation-delay: 7s;
+    font-size: 3rem;
+}
+
+.mobile-nav-vector-om-new-2 {
+    top: 20%;
+    right: 40%;
+    animation-delay: 10s;
+    font-size: 2.8rem;
 }
 
 @keyframes mobileNavFloat {
