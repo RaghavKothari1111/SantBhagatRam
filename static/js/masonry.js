@@ -201,23 +201,38 @@ class MasonryGrid {
             
             if (!items || items.length === 0) {
                 console.warn('No items to display');
-                return;
+                throw new Error('No items to display');
             }
 
-            // Preload images
+            // Check container is ready
+            if (!this.container || this.container.offsetWidth === 0) {
+                console.warn('Container not ready');
+                throw new Error('Container not ready');
+            }
+
+            // Preload images with timeout
             const imageUrls = items.map(item => item.img || item.url);
-            await this.preloadImages(imageUrls);
+            await Promise.race([
+                this.preloadImages(imageUrls),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Image preload timeout')), 5000))
+            ]).catch(err => {
+                console.warn('Image preload timeout or error, continuing anyway:', err);
+                // Continue even if preload fails
+            });
 
             // Calculate grid
             this.grid = this.calculateGrid(items);
             
             if (!this.grid || this.grid.length === 0) {
                 console.warn('Grid calculation returned empty');
-                return;
+                throw new Error('Grid calculation returned empty');
             }
             
             // Render items
             this.render();
+            
+            // Return success
+            return Promise.resolve();
         } catch (error) {
             console.error('Error in setItems:', error);
             throw error;
@@ -225,6 +240,18 @@ class MasonryGrid {
     }
 
     render() {
+        // Clear container only if it exists
+        if (!this.container) {
+            console.error('Container not found for rendering');
+            return;
+        }
+        
+        // Validate grid before clearing
+        if (!this.grid || this.grid.length === 0) {
+            console.error('Cannot render: grid is empty');
+            return;
+        }
+        
         // Clear container
         this.container.innerHTML = '';
 
