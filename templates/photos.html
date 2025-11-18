@@ -4,6 +4,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/photos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/masonry.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -81,6 +82,7 @@
     window.galleryData = {{ galleries_json|safe }};
     window.initialGalleryId = {{ gallery_id|tojson if gallery_id else 'null' }};
 </script>
+<script src="{{ url_for('static', filename='js/masonry.js') }}"></script>
 <script src="{{ url_for('static', filename='js/photos.js') }}"></script>
 <script>
     // Ensure translations are applied after page loads

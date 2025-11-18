@@ -310,96 +310,110 @@ class MasonryGrid {
             }
         });
 
-        // Animate items
+        // Position items (with or without animation)
         this.animateItems();
     }
 
     animateItems() {
+        // If duration is 0, skip animations and set positions directly
+        const skipAnimations = this.options.duration === 0;
+        
         this.grid.forEach((item, index) => {
             const element = this.container.querySelector(`[data-key="${item.id || item.index}"]`);
             if (!element) return;
 
-            const animationProps = {
-                x: item.x,
-                y: item.y,
-                width: item.w,
-                height: item.h
-            };
-
-            if (!this.hasMounted) {
-                // Initial animation
-                const initialPos = this.getInitialPosition(item);
-                const initialState = {
-                    opacity: 0,
-                    x: initialPos.x,
-                    y: initialPos.y,
+            if (skipAnimations) {
+                // No animations - set final position directly
+                element.style.transform = `translate(${item.x}px, ${item.y}px)`;
+                element.style.width = item.w + 'px';
+                element.style.height = item.h + 'px';
+                element.style.opacity = '1';
+                element.style.transition = 'none';
+                element.style.filter = 'blur(0px)';
+            } else {
+                // Use animations
+                const animationProps = {
+                    x: item.x,
+                    y: item.y,
                     width: item.w,
                     height: item.h
                 };
 
-                if (this.options.blurToFocus) {
-                    element.style.filter = 'blur(10px)';
-                }
+                if (!this.hasMounted) {
+                    // Initial animation
+                    const initialPos = this.getInitialPosition(item);
+                    const initialState = {
+                        opacity: 0,
+                        x: initialPos.x,
+                        y: initialPos.y,
+                        width: item.w,
+                        height: item.h
+                    };
 
-                // Use GSAP if available, otherwise use CSS transitions
-                if (window.gsap) {
-                    gsap.fromTo(element, initialState, {
-                        opacity: 1,
-                        x: animationProps.x,
-                        y: animationProps.y,
-                        width: animationProps.width,
-                        height: animationProps.height,
-                        filter: 'blur(0px)',
-                        duration: 0.8,
-                        ease: this.options.ease,
-                        delay: index * this.options.stagger
-                    });
+                    if (this.options.blurToFocus) {
+                        element.style.filter = 'blur(10px)';
+                    }
+
+                    // Use GSAP if available, otherwise use CSS transitions
+                    if (window.gsap) {
+                        gsap.fromTo(element, initialState, {
+                            opacity: 1,
+                            x: animationProps.x,
+                            y: animationProps.y,
+                            width: animationProps.width,
+                            height: animationProps.height,
+                            filter: 'blur(0px)',
+                            duration: 0.8,
+                            ease: this.options.ease,
+                            delay: index * this.options.stagger
+                        });
+                    } else {
+                        // Fallback to CSS animations - set initial state
+                        element.style.opacity = '0';
+                        element.style.transform = `translate(${initialPos.x}px, ${initialPos.y}px)`;
+                        element.style.width = item.w + 'px';
+                        element.style.height = item.h + 'px';
+                        element.style.transition = 'none';
+
+                        // Force reflow
+                        element.offsetHeight;
+
+                        // Animate to final position
+                        // Faster animations on mobile
+                        const isMobile = window.innerWidth <= 768;
+                        const staggerDelay = isMobile ? index * this.options.stagger * 300 : index * this.options.stagger * 1000;
+                        const duration = isMobile ? '0.5s' : '0.8s';
+                        
+                        setTimeout(() => {
+                            element.style.transition = `opacity ${duration} ease, transform ${duration} ease, filter ${duration} ease`;
+                            element.style.opacity = '1';
+                            element.style.transform = `translate(${item.x}px, ${item.y}px)`;
+                            if (this.options.blurToFocus && !isMobile) {
+                                element.style.filter = 'blur(0px)';
+                            } else {
+                                element.style.filter = 'blur(0px)';
+                            }
+                        }, staggerDelay);
+                    }
                 } else {
-                    // Fallback to CSS animations - set initial state
-                    element.style.opacity = '0';
-                    element.style.transform = `translate(${initialPos.x}px, ${initialPos.y}px)`;
-                    element.style.width = item.w + 'px';
-                    element.style.height = item.h + 'px';
-                    element.style.transition = 'none';
-
-                    // Force reflow
-                    element.offsetHeight;
-
-                    // Animate to final position
-                    // Faster animations on mobile
-                    const isMobile = window.innerWidth <= 768;
-                    const staggerDelay = isMobile ? index * this.options.stagger * 300 : index * this.options.stagger * 1000;
-                    const duration = isMobile ? '0.5s' : '0.8s';
-                    
-                    setTimeout(() => {
-                        element.style.transition = `opacity ${duration} ease, transform ${duration} ease, filter ${duration} ease`;
-                        element.style.opacity = '1';
+                    // Update existing items
+                    if (window.gsap) {
+                        gsap.to(element, {
+                            x: animationProps.x,
+                            y: animationProps.y,
+                            width: animationProps.width,
+                            height: animationProps.height,
+                            duration: this.options.duration,
+                            ease: this.options.ease,
+                            overwrite: 'auto'
+                        });
+                    } else {
+                        element.style.transition = `transform ${this.options.duration}s ease, width ${this.options.duration}s ease, height ${this.options.duration}s ease`;
                         element.style.transform = `translate(${item.x}px, ${item.y}px)`;
-                        if (this.options.blurToFocus && !isMobile) {
-                            element.style.filter = 'blur(0px)';
-                        } else {
-                            element.style.filter = 'blur(0px)';
-                        }
-                    }, staggerDelay);
-                }
-            } else {
-                // Update existing items
-                if (window.gsap) {
-                    gsap.to(element, {
-                        x: animationProps.x,
-                        y: animationProps.y,
-                        width: animationProps.width,
-                        height: animationProps.height,
-                        duration: this.options.duration,
-                        ease: this.options.ease,
-                        overwrite: 'auto'
-                    });
-                } else {
-                    element.style.transition = `transform ${this.options.duration}s ease, width ${this.options.duration}s ease, height ${this.options.duration}s ease`;
-                    element.style.transform = `translate(${item.x}px, ${item.y}px)`;
-                    element.style.width = item.w + 'px';
-                    element.style.height = item.h + 'px';
-                    element.style.opacity = '1'; // Ensure visible
+                        element.style.width = item.w + 'px';
+                        element.style.height = item.h + 'px';
+                        element.style.opacity = '1'; // Ensure visible
+                    }
                 }
             }
         });

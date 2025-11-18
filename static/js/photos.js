@@ -5,6 +5,7 @@ class PhotoGallery {
         this.currentPhotoIndex = 0;
         this.currentPhotos = [];
         this.eventsData = Array.isArray(window.galleryData) ? window.galleryData : [];
+        this.masonryInstance = null;
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initialize());
@@ -78,8 +79,15 @@ class PhotoGallery {
                 if (isModalOpen) {
                     const modal = document.getElementById('photoModal');
                     if (modal) {
+                        // Clean up masonry instance
+                        if (this.masonryInstance) {
+                            this.masonryInstance.destroy();
+                            this.masonryInstance = null;
+                        }
+                        
                         const photosGrid = document.querySelector('.photos-grid');
                         if (photosGrid) {
+                            photosGrid.classList.remove('masonry-container');
                             photosGrid.style.display = '';
                             photosGrid.style.gridTemplateColumns = '';
                             photosGrid.style.gap = '';
@@ -135,6 +143,12 @@ class PhotoGallery {
         modalDate.textContent = date || '';
 
         photosGrid.innerHTML = '';
+        
+        // Clean up previous masonry instance
+        if (this.masonryInstance) {
+            this.masonryInstance.destroy();
+            this.masonryInstance = null;
+        }
 
         if (!this.currentPhotos.length) {
             const noPhotos = document.createElement('p');
@@ -145,22 +159,100 @@ class PhotoGallery {
         } else {
             console.log('Loading photos:', this.currentPhotos.length, 'photos');
             
-            // Prepare items for grid
-            const gridItems = this.currentPhotos.map((photo, index) => {
+            // Prepare items for masonry
+            const masonryItems = this.currentPhotos.map((photo, index) => {
                 const captionText = lang === 'en'
                     ? (photo.captionEn || photo.caption || '')
                     : (photo.caption || photo.captionEn || '');
                 
+                // Estimate height based on image aspect ratio (default to 400)
+                const height = photo.height || 400;
+                
                 return {
                     id: `photo-${index}`,
+                    img: photo.url,
                     url: photo.url,
+                    height: height,
                     index: index,
                     onClick: () => this.openLightbox(index)
                 };
             });
 
-            // Use simple grid layout for all devices
-            this.fallbackToRegularGrid(photosGrid, gridItems);
+            // Check if mobile - use simple grid on mobile, masonry on desktop
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Mobile: Use simple grid layout (more reliable)
+                this.fallbackToRegularGrid(photosGrid, masonryItems);
+            } else {
+                // Desktop: Try masonry grid for better spacing (no animations)
+                setTimeout(() => {
+                    if (typeof MasonryGrid !== 'undefined' && photosGrid && photosGrid.offsetWidth > 0) {
+                        try {
+                            // Initialize masonry grid without animations
+                            this.masonryInstance = new MasonryGrid(photosGrid, {
+                                ease: 'none', // No easing
+                                duration: 0, // Instant, no animation
+                                stagger: 0, // No stagger
+                                animateFrom: 'none', // No entrance animation
+                                scaleOnHover: false, // No hover effects
+                                blurToFocus: false, // No blur effects
+                                colorShiftOnHover: false // No color effects
+                            });
+
+                            // Add masonry container class
+                            photosGrid.classList.add('masonry-container');
+                            
+                            // Set items and render (instant, no animations)
+                            this.masonryInstance.setItems(masonryItems)
+                                .then(() => {
+                                    // Check if masonry rendered successfully
+                                    setTimeout(() => {
+                                        const renderedMasonryItems = photosGrid.querySelectorAll('.masonry-item');
+                                        if (renderedMasonryItems.length === 0) {
+                                            // Masonry didn't render, fallback to regular grid
+                                            if (this.masonryInstance) {
+                                                this.masonryInstance.destroy();
+                                                this.masonryInstance = null;
+                                            }
+                                            photosGrid.classList.remove('masonry-container');
+                                            this.fallbackToRegularGrid(photosGrid, masonryItems);
+                                        } else {
+                                            // Remove any regular grid items if they exist
+                                            const regularItems = photosGrid.querySelectorAll('.photo-item');
+                                            regularItems.forEach(item => item.remove());
+                                        }
+                                    }, 100);
+                                })
+                                .catch(err => {
+                                    console.error('Masonry error:', err);
+                                    // Fallback to regular grid
+                                    if (this.masonryInstance) {
+                                        this.masonryInstance.destroy();
+                                        this.masonryInstance = null;
+                                    }
+                                    photosGrid.classList.remove('masonry-container');
+                                    this.fallbackToRegularGrid(photosGrid, masonryItems);
+                                });
+                        } catch (error) {
+                            console.error('Masonry initialization error:', error);
+                            // Fallback to regular grid
+                            if (this.masonryInstance) {
+                                this.masonryInstance.destroy();
+                                this.masonryInstance = null;
+                            }
+                            photosGrid.classList.remove('masonry-container');
+                            this.fallbackToRegularGrid(photosGrid, masonryItems);
+                        }
+                    } else {
+                        // Masonry not available, use regular grid
+                        this.fallbackToRegularGrid(photosGrid, masonryItems);
+                    }
+                }, 100);
+                
+                // Show regular grid immediately while masonry loads
+                this.fallbackToRegularGrid(photosGrid, masonryItems);
+            }
         }
 
         modal.classList.add('active');
@@ -168,6 +260,7 @@ class PhotoGallery {
     }
 
     fallbackToRegularGrid(photosGrid, items) {
+        photosGrid.classList.remove('masonry-container');
         photosGrid.style.display = 'grid';
         photosGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
         photosGrid.style.gap = '20px';
@@ -190,8 +283,15 @@ class PhotoGallery {
     closePhotoModal() {
         const modal = document.getElementById('photoModal');
         if (modal) {
+            // Clean up masonry instance
+            if (this.masonryInstance) {
+                this.masonryInstance.destroy();
+                this.masonryInstance = null;
+            }
+            
             const photosGrid = document.querySelector('.photos-grid');
             if (photosGrid) {
+                photosGrid.classList.remove('masonry-container');
                 photosGrid.style.display = '';
                 photosGrid.style.gridTemplateColumns = '';
                 photosGrid.style.gap = '';
