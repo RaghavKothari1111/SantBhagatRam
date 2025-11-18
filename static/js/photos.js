@@ -98,42 +98,51 @@ class PhotoGallery {
                 };
             });
 
-            // Show photos immediately with regular grid first
-            this.fallbackToRegularGrid(photosGrid, masonryItems);
+            // Check if mobile - use simple grid on mobile, masonry on desktop
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Mobile: Use simple grid layout (more reliable)
+                this.fallbackToRegularGrid(photosGrid, masonryItems);
+            } else {
+                // Desktop: Show photos immediately with regular grid first
+                this.fallbackToRegularGrid(photosGrid, masonryItems);
 
-            // Then try to upgrade to masonry if available
-            setTimeout(() => {
-                // Check if MasonryGrid is available and container has width
-                if (typeof MasonryGrid !== 'undefined' && photosGrid.offsetWidth > 0) {
-                    try {
-                        // Clear regular grid
-                        photosGrid.innerHTML = '';
-                        photosGrid.classList.add('masonry-container');
-                        
-                        // Initialize masonry grid with mobile optimizations
-                        const isMobile = window.innerWidth <= 768;
-                        this.masonryInstance = new MasonryGrid(photosGrid, {
-                            ease: 'power3.out',
-                            duration: isMobile ? 0.4 : 0.6,
-                            stagger: isMobile ? 0.03 : 0.05,
-                            animateFrom: 'bottom',
-                            scaleOnHover: !isMobile, // Disable hover scale on mobile
-                            hoverScale: 0.95,
-                            blurToFocus: !isMobile, // Disable blur on mobile for performance
-                            colorShiftOnHover: false
-                        });
+                // Then try to upgrade to masonry if available (desktop only)
+                setTimeout(() => {
+                    // Check if MasonryGrid is available and container has width
+                    if (typeof MasonryGrid !== 'undefined' && photosGrid.offsetWidth > 0) {
+                        try {
+                            // Clear regular grid
+                            photosGrid.innerHTML = '';
+                            photosGrid.classList.add('masonry-container');
+                            
+                            // Initialize masonry grid (desktop only)
+                            this.masonryInstance = new MasonryGrid(photosGrid, {
+                                ease: 'power3.out',
+                                duration: 0.6,
+                                stagger: 0.05,
+                                animateFrom: 'bottom',
+                                scaleOnHover: true,
+                                hoverScale: 0.95,
+                                blurToFocus: true,
+                                colorShiftOnHover: false
+                            });
 
-                        // Set items and render
-                        this.masonryInstance.setItems(masonryItems).catch(err => {
-                            console.error('Masonry error:', err);
-                            // Keep regular grid if masonry fails
-                        });
-                    } catch (error) {
-                        console.error('Masonry initialization error:', error);
-                        // Keep regular grid if masonry fails
+                            // Set items and render
+                            this.masonryInstance.setItems(masonryItems).catch(err => {
+                                console.error('Masonry error:', err);
+                                // Fallback to regular grid if masonry fails
+                                this.fallbackToRegularGrid(photosGrid, masonryItems);
+                            });
+                        } catch (error) {
+                            console.error('Masonry initialization error:', error);
+                            // Fallback to regular grid if masonry fails
+                            this.fallbackToRegularGrid(photosGrid, masonryItems);
+                        }
                     }
-                }
-            }, 200);
+                }, 200);
+            }
         }
 
         modal.classList.add('active');
