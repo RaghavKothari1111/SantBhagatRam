@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <title>{% block title %}My Website{% endblock %}</title>
-    
+
     <!-- Base Styles -->
     <style>
         :root {
@@ -42,12 +45,12 @@
             min-height: calc(100vh - 120px);
             background: transparent;
         }
-        
+
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
-        
+
         /* Selection color */
         ::selection {
             background: var(--bubblegum-pink);
@@ -56,6 +59,7 @@
 
         /* Disable accidental text selection on touch devices */
         @media (hover: none) and (pointer: coarse) {
+
             body,
             body * {
                 -webkit-user-select: none;
@@ -68,7 +72,7 @@
                 user-select: text;
             }
         }
-        
+
         /* Hide all social media icons */
         .social-icons,
         .social-media-links-container,
@@ -173,514 +177,569 @@
             }
         }
     </style>
-    
-    
+
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/language.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-nav.css') }}">
-    
 
-    
+
+
     <!-- Extra CSS for specific pages -->
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-<!-- Navigation Bar -->
-<header class="navbar">
-    <div class="nav-content">
-        <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SantBhagatRam" class="logo-img"></a></div>
-        <!-- Mobile donate button and hamburger (visible only on mobile via CSS) -->
-        <div class="mobile-nav-actions">
-            <a href="/donate" class="mobile-donate-btn" data-lang-nav="donate">Donate</a>
-            <div id="mobileNavToggle" class="mobile-nav-toggle">
-                <svg class="hamburger-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <polyline class="hamburger-line hamburger-line-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"></polyline>
-                    <polyline class="hamburger-line hamburger-line-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"></polyline>
-                </svg>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-content">
+            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}"
+                        alt="SantBhagatRam" class="logo-img"></a></div>
+            <!-- Mobile donate button and hamburger (visible only on mobile via CSS) -->
+            <div class="mobile-nav-actions">
+                <a href="/donate" class="mobile-donate-btn" data-lang-nav="donate">Donate</a>
+                <div id="mobileNavToggle" class="mobile-nav-toggle">
+                    <svg class="hamburger-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <polyline class="hamburger-line hamburger-line-top" fill="none" stroke="currentColor"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5">
+                        </polyline>
+                        <polyline class="hamburger-line hamburger-line-bottom" fill="none" stroke="currentColor"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12">
+                        </polyline>
+                    </svg>
+                </div>
             </div>
-        </div>
-        <nav class="nav-links-container" id="navLinksContainer">
-            <ul class="nav-links">
-                <li><a href="/" data-lang-nav="home">Home</a></li>
-                {% set nav_items_map = {
+            <nav class="nav-links-container" id="navLinksContainer">
+                <ul class="nav-links">
+                    <li><a href="/" data-lang-nav="home">Home</a></li>
+                    {% set nav_items_map = {
                     'blog': {'url': '/blog', 'lang': 'blog'},
                     'projects': {'url': '/projects', 'lang': 'projects'},
                     'photos': {'url': '/photos', 'lang': 'photos'},
                     'videos': {'url': '/videos', 'lang': 'videos'},
                     'events': {'url': '/events', 'lang': 'events'},
                     'donate': {'url': '/donate', 'lang': 'donate'}
-                } %}
-                {% for nav_item, nav_info in nav_items_map.items() %}
+                    } %}
+                    {% for nav_item, nav_info in nav_items_map.items() %}
                     {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
                     {% if dropdown_data.enabled %}
-                        <li class="drop-down_{{ nav_item }} nav-item-has-dropdown">
-                            <a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}▼</a>
-                            <div class="drop-down-menu-{{ nav_item }} nav-dropdown">
-                                <div class="dropdown-content">
-                                    {% for column in dropdown_data.columns %}
-                                        <div class="dropdown-column">
-                                            {% if column.get('title') %}
-                                                <div class="dropdown-column-title" data-column-title-en="{{ column.get('title', '') }}" data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">{{ column.get('title') }}</div>
-                                            {% endif %}
-                                            {% if column.get('heading') %}
-                                                <div class="dropdown-column-heading" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">{{ column.get('heading') }}</div>
-                                            {% endif %}
-                                            {% if column.get('items') %}
-                                                <ul>
-                                                    {% for item in column.get('items', []) %}
-                                                        <li>
-                                                            <a href="{{ item.get('link', '#') }}" class="{% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
-                                                                {{ item.get('title', '') }}
-                                                            </a>
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                    {# Add social media column to all dropdowns #}
-                                    <div class="dropdown-column">
-                                        <div class="dropdown-column-title" data-lang-nav="followUs">Follow Us</div>
-                                        <div class="dropdown-social-icons">
-                                            <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="dropdown-social-link youtube" aria-label="YouTube" rel="noopener noreferrer">
-                                                <span class="sr-only">YouTube</span>
-                                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                    <path d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z"/>
-                                                </svg>
+                    <li class="drop-down_{{ nav_item }} nav-item-has-dropdown">
+                        <a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}▼</a>
+                        <div class="drop-down-menu-{{ nav_item }} nav-dropdown">
+                            <div class="dropdown-content">
+                                {% for column in dropdown_data.columns %}
+                                <div class="dropdown-column">
+                                    {% if column.get('title') %}
+                                    <div class="dropdown-column-title"
+                                        data-column-title-en="{{ column.get('title', '') }}"
+                                        data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">{{
+                                        column.get('title') }}</div>
+                                    {% endif %}
+                                    {% if column.get('heading') %}
+                                    <div class="dropdown-column-heading"
+                                        data-column-heading-en="{{ column.get('heading', '') }}"
+                                        data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
+                                        {{ column.get('heading') }}</div>
+                                    {% endif %}
+                                    {% if column.get('items') %}
+                                    <ul>
+                                        {% for item in column.get('items', []) %}
+                                        <li>
+                                            <a href="{{ item.get('link', '#') }}"
+                                                class="{% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}"
+                                                data-item-title-en="{{ item.get('title', '') }}"
+                                                data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
+                                                {{ item.get('title', '') }}
                                             </a>
-                                            <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank" class="dropdown-social-link instagram" aria-label="Instagram" rel="noopener noreferrer">
-                                                <span class="sr-only">Instagram</span>
-                                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                                    <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z"/>
-                                                </svg>
-                                            </a>
-                                        </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                {# Add social media column to all dropdowns #}
+                                <div class="dropdown-column">
+                                    <div class="dropdown-column-title" data-lang-nav="followUs">Follow Us</div>
+                                    <div class="dropdown-social-icons">
+                                        <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank"
+                                            class="dropdown-social-link youtube" aria-label="YouTube"
+                                            rel="noopener noreferrer">
+                                            <span class="sr-only">YouTube</span>
+                                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path
+                                                    d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z" />
+                                            </svg>
+                                        </a>
+                                        <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank"
+                                            class="dropdown-social-link instagram" aria-label="Instagram"
+                                            rel="noopener noreferrer">
+                                            <span class="sr-only">Instagram</span>
+                                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                                <path
+                                                    d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z" />
+                                            </svg>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
                     {% else %}
-                        <li><a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</a></li>
+                    <li><a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</a>
+                    </li>
                     {% endif %}
-                {% endfor %}
-                <li>
-                    <button class="language-toggle" id="languageBtn" aria-label="Change language">
-                        <span class="language-toggle-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="2" y1="12" x2="22" y2="12"></line>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                            </svg>
-                        </span>
-                        <span id="languageBtnText">हिंदी</span>
-                    </button>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</header>
+                    {% endfor %}
+                    <li>
+                        <button class="language-toggle" id="languageBtn" aria-label="Change language">
+                            <span class="language-toggle-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path
+                                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                                    </path>
+                                </svg>
+                            </span>
+                            <span id="languageBtnText">हिंदी</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<!-- Fullscreen mobile nav overlay -->
-<div id="mobileNavOverlay" class="mobile-nav-overlay">
-    <div class="mobile-nav-inner">
-        <!-- Close (X) -->
-        <button id="mobileNavClose" class="mobile-nav-close">×</button>
-        
-        <!-- MAIN PANEL -->
-        <div class="mobile-nav-panel is-active" data-panel="root">
-            <a href="/" class="mobile-nav-item" data-lang-nav="home">Home</a>
-            {% set nav_items_map = {
+    <!-- Fullscreen mobile nav overlay -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay">
+        <!-- Floating Spiritual Vectors Background -->
+        <div class="mobile-nav-vectors">
+            <div class="mobile-nav-vector mobile-nav-vector-diya">🪔</div>
+            <div class="mobile-nav-vector mobile-nav-vector-lotus">🪷</div>
+            <div class="mobile-nav-vector mobile-nav-vector-peacock">🪶</div>
+            <div class="mobile-nav-vector mobile-nav-vector-mandala">🕉️</div>
+            <div class="mobile-nav-vector mobile-nav-vector-om">ॐ</div>
+            <!-- Added more icons -->
+            <div class="mobile-nav-vector mobile-nav-vector-diya-2">🪔</div>
+            <div class="mobile-nav-vector mobile-nav-vector-om-2">ॐ</div>
+            <div class="mobile-nav-vector mobile-nav-vector-lotus-2">🪷</div>
+        </div>
+        <div class="mobile-nav-inner">
+            <!-- Close (X) -->
+            <button id="mobileNavClose" class="mobile-nav-close">×</button>
+
+            <!-- MAIN PANEL -->
+            <div class="mobile-nav-panel is-active" data-panel="root">
+                <a href="/" class="mobile-nav-item" data-lang-nav="home">Home</a>
+                {% set nav_items_map = {
                 'blog': {'url': '/blog', 'lang': 'blog'},
                 'projects': {'url': '/projects', 'lang': 'projects'},
                 'photos': {'url': '/photos', 'lang': 'photos'},
                 'videos': {'url': '/videos', 'lang': 'videos'},
                 'events': {'url': '/events', 'lang': 'events'},
                 'donate': {'url': '/donate', 'lang': 'donate'}
-            } %}
-            {% for nav_item, nav_info in nav_items_map.items() %}
+                } %}
+                {% for nav_item, nav_info in nav_items_map.items() %}
                 {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
                 {% if dropdown_data.enabled %}
-                    <button
-                        type="button"
-                        class="mobile-nav-item has-children"
-                        data-panel-target="panel-{{ nav_item }}"
-                        data-lang-nav="{{ nav_info.lang }}"
-                    >
-                        {{ nav_info.lang|title }}
-                    </button>
+                <button type="button" class="mobile-nav-item has-children" data-panel-target="panel-{{ nav_item }}"
+                    data-lang-nav="{{ nav_info.lang }}">
+                    {{ nav_info.lang|title }}
+                </button>
                 {% else %}
-                    <a href="{{ nav_info.url }}" class="mobile-nav-item" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</a>
+                <a href="{{ nav_info.url }}" class="mobile-nav-item" data-lang-nav="{{ nav_info.lang }}">{{
+                    nav_info.lang|title }}</a>
                 {% endif %}
-            {% endfor %}
-            <button type="button" class="mobile-nav-item" id="languageBtnMobile">
-                <span class="language-toggle-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                </span>
-                <span id="languageBtnTextMobile">हिंदी</span>
-            </button>
-        </div>
-        
-        <!-- SUBMENUS -->
-        {% for nav_item, nav_info in nav_items_map.items() %}
+                {% endfor %}
+                <button type="button" class="mobile-nav-item" id="languageBtnMobile">
+                    <span class="language-toggle-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                    </span>
+                    <span id="languageBtnTextMobile">हिंदी</span>
+                </button>
+            </div>
+
+            <!-- SUBMENUS -->
+            {% for nav_item, nav_info in nav_items_map.items() %}
             {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
             {% if dropdown_data.enabled %}
-                <div class="mobile-nav-panel" data-panel="panel-{{ nav_item }}">
-                    <div class="mobile-nav-subheader">
-                        <button class="back-button" type="button" data-back="root" aria-label="Back"></button>
-                        <span class="sub-title" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</span>
+            <div class="mobile-nav-panel" data-panel="panel-{{ nav_item }}">
+                <div class="mobile-nav-subheader">
+                    <button class="back-button" type="button" data-back="root" aria-label="Back"></button>
+                    <span class="sub-title" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</span>
+                </div>
+                {# Add "All [Item]" link to access main page #}
+                <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-all-link dropdown-item-large"
+                    data-lang-nav="all{{ nav_info.lang }}">
+                    All {{ nav_info.lang|title }}
+                </a>
+                {% for column in dropdown_data.columns %}
+                <div class="mobile-nav-column">
+                    {% if column.get('title') %}
+                    <div class="mobile-nav-column-title" data-column-title-en="{{ column.get('title', '') }}"
+                        data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">
+                        {{ column.get('title') }}
                     </div>
-                    {# Add "All [Item]" link to access main page #}
-                    <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-all-link dropdown-item-large" data-lang-nav="all{{ nav_info.lang }}">
-                        All {{ nav_info.lang|title }}
+                    {% endif %}
+                    {% if column.get('heading') %}
+                    <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-heading dropdown-item-large"
+                        data-column-heading-en="{{ column.get('heading', '') }}"
+                        data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
+                        {{ column.get('heading') }}
                     </a>
-                    {% for column in dropdown_data.columns %}
-                        <div class="mobile-nav-column">
-                            {% if column.get('title') %}
-                                <div class="mobile-nav-column-title" data-column-title-en="{{ column.get('title', '') }}" data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">
-                                    {{ column.get('title') }}
-                                </div>
-                            {% endif %}
-                            {% if column.get('heading') %}
-                                <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-heading dropdown-item-large" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
-                                    {{ column.get('heading') }}
-                                </a>
-                            {% endif %}
-                            {% if column.get('items') %}
-                                {% for item in column.get('items', []) %}
-                                    <a href="{{ item.get('link', '#') }}" class="mobile-nav-item mobile-nav-subitem {% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
-                                        {{ item.get('title', '') }}
-                                    </a>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                    {% endif %}
+                    {% if column.get('items') %}
+                    {% for item in column.get('items', []) %}
+                    <a href="{{ item.get('link', '#') }}"
+                        class="mobile-nav-item mobile-nav-subitem {% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}"
+                        data-item-title-en="{{ item.get('title', '') }}"
+                        data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
+                        {{ item.get('title', '') }}
+                    </a>
                     {% endfor %}
-                    {# Add social media section #}
-                    <div class="mobile-nav-section">
-                        <div class="mobile-nav-section-title" data-lang-nav="followUs">Follow Us</div>
-                        <div class="mobile-nav-social-icons">
-                            <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="mobile-nav-social-link youtube" aria-label="YouTube">
-                                <span class="sr-only">YouTube</span>
-                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z"/>
-                                </svg>
-                            </a>
-                            <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank" class="mobile-nav-social-link instagram" aria-label="Instagram">
-                                <span class="sr-only">Instagram</span>
-                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z"/>
-                                </svg>
-                            </a>
-                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {# Add social media section #}
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-section-title" data-lang-nav="followUs">Follow Us</div>
+                    <div class="mobile-nav-social-icons">
+                        <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank"
+                            class="mobile-nav-social-link youtube" aria-label="YouTube">
+                            <span class="sr-only">YouTube</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path
+                                    d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z" />
+                            </svg>
+                        </a>
+                        <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank"
+                            class="mobile-nav-social-link instagram" aria-label="Instagram">
+                            <span class="sr-only">Instagram</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path
+                                    d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
+            </div>
             {% endif %}
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
 
-<!-- Blur overlay for dropdown (below dropdown content) -->
-<div class="blur-overlay" id="blur-area"></div>
+    <!-- Blur overlay for dropdown (below dropdown content) -->
+    <div class="blur-overlay" id="blur-area"></div>
 
-<script>
-    // Mobile menu toggle
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navLinksContainer = document.getElementById('navLinksContainer');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const dropDownProjects = document.querySelector('.drop-down_projects');
-        
-        function toggleMenu() {
-            const isActive = navLinksContainer.classList.contains('active');
-            navLinksContainer.classList.toggle('active');
-            mobileMenuToggle.classList.toggle('active');
-            
-            // Prevent body scroll when menu is open
-            if (isActive) {
-                document.body.style.overflow = '';
-                if (mobileMenuOverlay) {
-                    mobileMenuOverlay.classList.remove('active');
-                }
-            } else {
-                document.body.style.overflow = 'hidden';
-                if (mobileMenuOverlay) {
-                    mobileMenuOverlay.classList.add('active');
-                }
-            }
-        }
-        
-        if (mobileMenuToggle && navLinksContainer) {
-            // Support both click and touch events
-            const handleToggle = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMenu();
-            };
-            
-            mobileMenuToggle.addEventListener('click', handleToggle);
-            mobileMenuToggle.addEventListener('touchend', handleToggle);
-            
-            // Handle dropdown on mobile for all dropdowns dynamically
-            const allDropdownItems = document.querySelectorAll('.nav-item-has-dropdown');
-            
-            allDropdownItems.forEach(function(dropdownItem) {
-                const dropDownLink = dropdownItem.querySelector('a');
-                if (dropDownLink) {
-                    const handleDropdownToggle = function(e) {
-                        if (window.innerWidth <= 768) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            dropdownItem.classList.toggle('active');
-                        }
-                    };
-                    
-                    dropDownLink.addEventListener('click', handleDropdownToggle);
-                    dropDownLink.addEventListener('touchend', handleDropdownToggle);
-                }
-            });
-            
-            // Close menu when clicking on a link (except dropdowns)
-            const navLinks = navLinksContainer.querySelectorAll('a');
-            navLinks.forEach(link => {
-                if (!link.closest('.nav-item-has-dropdown')) {
-                    const handleLinkClick = function() {
-                        navLinksContainer.classList.remove('active');
-                        mobileMenuToggle.classList.remove('active');
-                        document.body.style.overflow = '';
-                        if (mobileMenuOverlay) {
-                            mobileMenuOverlay.classList.remove('active');
-                        }
-                    };
-                    
-                    link.addEventListener('click', handleLinkClick);
-                    link.addEventListener('touchend', handleLinkClick);
-                }
-            });
-            
-            // Close menu when clicking/touching on overlay
-            if (mobileMenuOverlay) {
-                const handleOverlayClose = function() {
-                    if (navLinksContainer.classList.contains('active')) {
-                        toggleMenu();
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navLinksContainer = document.getElementById('navLinksContainer');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const dropDownProjects = document.querySelector('.drop-down_projects');
+
+            function toggleMenu() {
+                const isActive = navLinksContainer.classList.contains('active');
+                navLinksContainer.classList.toggle('active');
+                mobileMenuToggle.classList.toggle('active');
+
+                // Prevent body scroll when menu is open
+                if (isActive) {
+                    document.body.style.overflow = '';
+                    if (mobileMenuOverlay) {
+                        mobileMenuOverlay.classList.remove('active');
                     }
-                };
-                
-                mobileMenuOverlay.addEventListener('click', handleOverlayClose);
-                mobileMenuOverlay.addEventListener('touchend', handleOverlayClose);
-            }
-            
-            // Close menu when clicking outside
-            document.addEventListener('click', function(event) {
-                const isClickInside = navLinksContainer.contains(event.target) || 
-                                     mobileMenuToggle.contains(event.target) ||
-                                     (mobileMenuOverlay && mobileMenuOverlay.contains(event.target));
-                if (!isClickInside && navLinksContainer.classList.contains('active')) {
-                    toggleMenu();
+                } else {
+                    document.body.style.overflow = 'hidden';
+                    if (mobileMenuOverlay) {
+                        mobileMenuOverlay.classList.add('active');
+                    }
                 }
-            });
-        }
+            }
 
-        // Clean dropdown implementation for multiple dropdowns
-        const blurArea = document.querySelector('.blur-overlay');
-        const navbar = document.querySelector('.navbar');
-        
-        // Handle all dropdowns
-        const dropdownItems = document.querySelectorAll('.nav-item-has-dropdown');
-        
-        dropdownItems.forEach(function(navItem) {
-            const dropdown = navItem.querySelector('.nav-dropdown');
-            if (!dropdown || !blurArea) return;
-            
-            function openDropdown() {
-                dropdown.classList.add('open');
-                blurArea.classList.add('active');
-                navbar.style.borderBottom = 'none';
-            }
-            
-            function closeDropdown() {
-                dropdown.classList.remove('open');
-                blurArea.classList.remove('active');
-                navbar.style.borderBottom = '1px solid #e5e7eb';
-            }
-            
-            // Open when hovering the nav item
-            navItem.addEventListener('mouseenter', openDropdown);
-            
-            // If you leave the nav item and you're NOT going into dropdown, close it
-            navItem.addEventListener('mouseleave', function(e) {
-                const to = e.relatedTarget;
-                if (!dropdown.contains(to)) {
-                    closeDropdown();
-                }
-            });
-            
-            // If you leave the dropdown and you're not going back to the nav item, close it
-            dropdown.addEventListener('mouseleave', function(e) {
-                const to = e.relatedTarget;
-                if (!navItem.contains(to)) {
-                    closeDropdown();
-                }
-            });
-        });
-        
-        // Moving into the blurred area below should always close all dropdowns
-        if (blurArea) {
-            blurArea.addEventListener('mouseenter', function() {
-                dropdownItems.forEach(function(navItem) {
-                    const dropdown = navItem.querySelector('.nav-dropdown');
-                    if (dropdown) {
-                        dropdown.classList.remove('open');
+            if (mobileMenuToggle && navLinksContainer) {
+                // Support both click and touch events
+                const handleToggle = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMenu();
+                };
+
+                mobileMenuToggle.addEventListener('click', handleToggle);
+                mobileMenuToggle.addEventListener('touchend', handleToggle);
+
+                // Handle dropdown on mobile for all dropdowns dynamically
+                const allDropdownItems = document.querySelectorAll('.nav-item-has-dropdown');
+
+                allDropdownItems.forEach(function (dropdownItem) {
+                    const dropDownLink = dropdownItem.querySelector('a');
+                    if (dropDownLink) {
+                        const handleDropdownToggle = function (e) {
+                            if (window.innerWidth <= 768) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                dropdownItem.classList.toggle('active');
+                            }
+                        };
+
+                        dropDownLink.addEventListener('click', handleDropdownToggle);
+                        dropDownLink.addEventListener('touchend', handleDropdownToggle);
                     }
                 });
-                blurArea.classList.remove('active');
-                navbar.style.borderBottom = '1px solid #e5e7eb';
-            });
-        }
-    });
-</script>
 
+                // Close menu when clicking on a link (except dropdowns)
+                const navLinks = navLinksContainer.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    if (!link.closest('.nav-item-has-dropdown')) {
+                        const handleLinkClick = function () {
+                            navLinksContainer.classList.remove('active');
+                            mobileMenuToggle.classList.remove('active');
+                            document.body.style.overflow = '';
+                            if (mobileMenuOverlay) {
+                                mobileMenuOverlay.classList.remove('active');
+                            }
+                        };
 
-<!-- Main Content -->
-<main class="content">
-    {% block content %}
-    {% endblock %}
-</main>
+                        link.addEventListener('click', handleLinkClick);
+                        link.addEventListener('touchend', handleLinkClick);
+                    }
+                });
 
+                // Close menu when clicking/touching on overlay
+                if (mobileMenuOverlay) {
+                    const handleOverlayClose = function () {
+                        if (navLinksContainer.classList.contains('active')) {
+                            toggleMenu();
+                        }
+                    };
 
-<footer class="site-footer">
-    <div class="footer-container">
-        <div class="footer-left">
-            <p>&copy; {{ current_year }} SantBhagatRam. <span data-lang-footer="rights">All rights reserved.</span></p>
-        </div>
-        <div class="footer-social" aria-label="SantBhagatRam social media">
-            <a href="https://www.youtube.com/@Santdigvijayramji/" class="footer-social-link youtube" target="_blank" rel="noopener noreferrer" aria-label="SantDigvijayram Ji Maharaj on YouTube">
-                <span class="sr-only">YouTube</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z"/>
-                </svg>
-            </a>
-            <a href="https://www.instagram.com/santdigvijayramji/?hl=en" class="footer-social-link instagram" target="_blank" rel="noopener noreferrer" aria-label="SantDigvijayram Ji Maharaj on Instagram">
-                <span class="sr-only">Instagram</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z"/>
-                </svg>
-            </a>
-        </div>
-        <div class="footer-right">
-            <a href="/privacy" data-lang-footer="privacy">Privacy</a>
-            <a href="/terms" data-lang-footer="terms">Terms</a>
-            <a href="/contact" data-lang-footer="contact">Contact</a>
-        </div>
-    </div>
-</footer>
+                    mobileMenuOverlay.addEventListener('click', handleOverlayClose);
+                    mobileMenuOverlay.addEventListener('touchend', handleOverlayClose);
+                }
 
-<!-- Language Selection Popup -->
-<div class="language-popup" id="languagePopup">
-    <div class="language-popup-content">
-        <h2 data-lang-popup="title">Choose Your Language</h2>
-        <div class="language-options">
-            <button class="lang-option" data-lang="en" data-lang-popup="english">English</button>
-            <button class="lang-option" data-lang="hi" data-lang-popup="hindi">हिंदी</button>
-        </div>
-    </div>
-</div>
-
-<!-- Scroll to Top Button -->
-<button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 8l-6 6h12z"/>
-    </svg>
-</button>
-
-<!-- Load extra JS at the bottom -->
-<script src="{{ url_for('static', filename='js/language.js') }}"></script>
-<script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
-<script>
-    // Scroll to Top functionality
-    (function() {
-        const scrollToTopBtn = document.getElementById('scrollToTop');
-        if (!scrollToTopBtn) return;
-
-        // Show/hide button based on scroll position
-        function toggleScrollButton() {
-            if (window.pageYOffset > 300) {
-                scrollToTopBtn.classList.add('visible');
-            } else {
-                scrollToTopBtn.classList.remove('visible');
+                // Close menu when clicking outside
+                document.addEventListener('click', function (event) {
+                    const isClickInside = navLinksContainer.contains(event.target) ||
+                        mobileMenuToggle.contains(event.target) ||
+                        (mobileMenuOverlay && mobileMenuOverlay.contains(event.target));
+                    if (!isClickInside && navLinksContainer.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
             }
-        }
 
-        // Scroll to top smoothly
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+            // Clean dropdown implementation for multiple dropdowns
+            const blurArea = document.querySelector('.blur-overlay');
+            const navbar = document.querySelector('.navbar');
+
+            // Handle all dropdowns
+            const dropdownItems = document.querySelectorAll('.nav-item-has-dropdown');
+
+            dropdownItems.forEach(function (navItem) {
+                const dropdown = navItem.querySelector('.nav-dropdown');
+                if (!dropdown || !blurArea) return;
+
+                function openDropdown() {
+                    dropdown.classList.add('open');
+                    blurArea.classList.add('active');
+                    navbar.style.borderBottom = 'none';
+                }
+
+                function closeDropdown() {
+                    dropdown.classList.remove('open');
+                    blurArea.classList.remove('active');
+                    navbar.style.borderBottom = '1px solid #e5e7eb';
+                }
+
+                // Open when hovering the nav item
+                navItem.addEventListener('mouseenter', openDropdown);
+
+                // If you leave the nav item and you're NOT going into dropdown, close it
+                navItem.addEventListener('mouseleave', function (e) {
+                    const to = e.relatedTarget;
+                    if (!dropdown.contains(to)) {
+                        closeDropdown();
+                    }
+                });
+
+                // If you leave the dropdown and you're not going back to the nav item, close it
+                dropdown.addEventListener('mouseleave', function (e) {
+                    const to = e.relatedTarget;
+                    if (!navItem.contains(to)) {
+                        closeDropdown();
+                    }
+                });
             });
-        }
 
-        // Event listeners
-        window.addEventListener('scroll', toggleScrollButton, { passive: true });
-        
-        // Support both click and touch
-        const handleScrollToTop = function(e) {
-            e.preventDefault();
-            scrollToTop();
-        };
-        
-        scrollToTopBtn.addEventListener('click', handleScrollToTop);
-        scrollToTopBtn.addEventListener('touchend', handleScrollToTop);
-
-        // Initial check
-        toggleScrollButton();
-    })();
-</script>
-<script>
-    (function() {
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        if (!isTouchDevice) return;
-
-        const longPressDuration = 1500; // ms
-        const selectionResetDelay = 3000; // ms
-        let pressTimer = null;
-        let resetTimer = null;
-        const body = document.body;
-
-        const enableSelection = () => {
-            body.classList.add('text-selectable');
-            clearTimeout(resetTimer);
-            resetTimer = setTimeout(() => {
-                body.classList.remove('text-selectable');
-            }, selectionResetDelay);
-        };
-
-        const clearPressTimer = () => {
-            if (pressTimer) {
-                clearTimeout(pressTimer);
-                pressTimer = null;
+            // Moving into the blurred area below should always close all dropdowns
+            if (blurArea) {
+                blurArea.addEventListener('mouseenter', function () {
+                    dropdownItems.forEach(function (navItem) {
+                        const dropdown = navItem.querySelector('.nav-dropdown');
+                        if (dropdown) {
+                            dropdown.classList.remove('open');
+                        }
+                    });
+                    blurArea.classList.remove('active');
+                    navbar.style.borderBottom = '1px solid #e5e7eb';
+                });
             }
-        };
-
-        const handleTouchStart = () => {
-            if (pressTimer || body.classList.contains('text-selectable')) return;
-            pressTimer = setTimeout(() => {
-                enableSelection();
-                pressTimer = null;
-            }, longPressDuration);
-        };
-
-        body.addEventListener('touchstart', handleTouchStart, { passive: true });
-        ['touchend', 'touchcancel', 'touchmove'].forEach(evt => {
-            body.addEventListener(evt, clearPressTimer, { passive: true });
         });
-    })();
-</script>
-{% block extra_js %}
-{% endblock %}
+    </script>
+
+
+    <!-- Main Content -->
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <p>&copy; {{ current_year }} SantBhagatRam. <span data-lang-footer="rights">All rights reserved.</span>
+                </p>
+            </div>
+            <div class="footer-social" aria-label="SantBhagatRam social media">
+                <a href="https://www.youtube.com/@Santdigvijayramji/" class="footer-social-link youtube" target="_blank"
+                    rel="noopener noreferrer" aria-label="SantDigvijayram Ji Maharaj on YouTube">
+                    <span class="sr-only">YouTube</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path
+                            d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z" />
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/santdigvijayramji/?hl=en" class="footer-social-link instagram"
+                    target="_blank" rel="noopener noreferrer" aria-label="SantDigvijayram Ji Maharaj on Instagram">
+                    <span class="sr-only">Instagram</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path
+                            d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z" />
+                    </svg>
+                </a>
+            </div>
+            <div class="footer-right">
+                <a href="/privacy" data-lang-footer="privacy">Privacy</a>
+                <a href="/terms" data-lang-footer="terms">Terms</a>
+                <a href="/contact" data-lang-footer="contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Language Selection Popup -->
+    <div class="language-popup" id="languagePopup">
+        <div class="language-popup-content">
+            <h2 data-lang-popup="title">Choose Your Language</h2>
+            <div class="language-options">
+                <button class="lang-option" data-lang="en" data-lang-popup="english">English</button>
+                <button class="lang-option" data-lang="hi" data-lang-popup="hindi">हिंदी</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8l-6 6h12z" />
+        </svg>
+    </button>
+
+    <!-- Load extra JS at the bottom -->
+    <script src="{{ url_for('static', filename='js/language.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
+    <script>
+        // Scroll to Top functionality
+        (function () {
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            if (!scrollToTopBtn) return;
+
+            // Show/hide button based on scroll position
+            function toggleScrollButton() {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            }
+
+            // Scroll to top smoothly
+            function scrollToTop() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Event listeners
+            window.addEventListener('scroll', toggleScrollButton, { passive: true });
+
+            // Support both click and touch
+            const handleScrollToTop = function (e) {
+                e.preventDefault();
+                scrollToTop();
+            };
+
+            scrollToTopBtn.addEventListener('click', handleScrollToTop);
+            scrollToTopBtn.addEventListener('touchend', handleScrollToTop);
+
+            // Initial check
+            toggleScrollButton();
+        })();
+    </script>
+    <script>
+        (function () {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (!isTouchDevice) return;
+
+            const longPressDuration = 1500; // ms
+            const selectionResetDelay = 3000; // ms
+            let pressTimer = null;
+            let resetTimer = null;
+            const body = document.body;
+
+            const enableSelection = () => {
+                body.classList.add('text-selectable');
+                clearTimeout(resetTimer);
+                resetTimer = setTimeout(() => {
+                    body.classList.remove('text-selectable');
+                }, selectionResetDelay);
+            };
+
+            const clearPressTimer = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            const handleTouchStart = () => {
+                if (pressTimer || body.classList.contains('text-selectable')) return;
+                pressTimer = setTimeout(() => {
+                    enableSelection();
+                    pressTimer = null;
+                }, longPressDuration);
+            };
+
+            body.addEventListener('touchstart', handleTouchStart, { passive: true });
+            ['touchend', 'touchcancel', 'touchmove'].forEach(evt => {
+                body.addEventListener(evt, clearPressTimer, { passive: true });
+            });
+        })();
+    </script>
+    {% block extra_js %}
+    {% endblock %}
 
 </body>
+
 </html>
