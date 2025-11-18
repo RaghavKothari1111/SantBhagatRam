@@ -87,18 +87,17 @@
         }, 4000);
 
         // Session timeout and activity tracking
-        // Backend enforces absolute 2-minute timeout
-        // Client-side provides failsafe redirect to /logout after 2 minutes
+        // Backend enforces absolute 5-minute timeout
+        // Client-side provides failsafe redirect to /logout after 5 minutes
         (function() {
-            const INACTIVITY_TIMEOUT = 2 * 60 * 1000; // 2 minutes in milliseconds (failsafe)
-            const WARNING_TIME = 30 * 1000; // Show warning 30 seconds before timeout (1.5 minutes)
-            const PING_INTERVAL = 15 * 1000; // Ping server every 15 seconds
+            const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds (failsafe)
+            const WARNING_TIME = 30 * 1000; // Show warning 30 seconds before timeout (4.5 minutes)
+            // Removed automatic ping interval - only ping on actual user activity
             
             let lastActivity = Date.now();
             let warningShown = false;
             let warningTimeout;
             let logoutTimeout; // Client-side failsafe timeout
-            let pingInterval;
             
             // Activity events to track (mousemove, click, keydown as specified)
             const activityEvents = ['mousemove', 'click', 'keydown', 'mousedown', 'keypress', 'scroll', 'touchstart'];
@@ -282,19 +281,19 @@
             // Initialize timers
             resetTimers();
             
-            // Ping server periodically to check session status
-            // Backend enforces the actual timeout - this keeps session alive
-            pingInterval = setInterval(pingServer, PING_INTERVAL);
+            // NO automatic ping interval - only ping on actual user activity
+            // This allows the backend to properly enforce 5-minute inactivity timeout
             
-            // Ping on page visibility change (user switches tabs)
+            // Ping on page visibility change (user switches tabs) - only if tab becomes visible
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
+                    // Only ping if user actually switches back to the tab (indicates activity)
                     pingServer();
                     resetTimers(); // Reset client-side timer when tab becomes visible
                 }
             });
             
-            // Initial ping on page load
+            // Initial ping on page load (to establish session)
             pingServer();
         })();
     </script>

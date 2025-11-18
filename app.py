@@ -52,13 +52,50 @@ def set_security_headers(response):
     return response
 
 @app.before_request
-def enforce_admin_ip_restriction():
-    """Optional IP allow-list for /admin routes"""
-    if ALLOWED_ADMIN_IPS and request.path.startswith('/admin'):
+def enforce_admin_security():
+    """Enforce admin security: IP restriction, session validation, and inactivity timeout"""
+    # Only check admin routes
+    if not request.path.startswith('/admin'):
+        return
+    
+    # Optional IP allow-list for /admin routes
+    if ALLOWED_ADMIN_IPS:
         forwarded_for = request.headers.get('X-Forwarded-For', '')
         candidate_ip = forwarded_for.split(',')[0].strip() if forwarded_for else (request.remote_addr or '')
         if candidate_ip not in ALLOWED_ADMIN_IPS:
             abort(403)
+    
+    # Skip security checks for login and logout routes
+    if request.path in ['/admin/login', '/admin/logout']:
+        return
+    
+    # Check if logged in
+    if 'admin_logged_in' not in session or not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+    
+    # Import here to avoid circular imports
+    from auth import validate_session_security, logout_session, update_session_activity
+    from datetime import datetime
+    from config import Config
+    
+    # Validate session security (includes inactivity timeout and single-session check)
+    is_valid, reason = validate_session_security()
+    
+    if not is_valid:
+        logout_session()
+        if reason == 'timeout':
+            flash('Your session has expired due to inactivity. Please login again.', 'error')
+        elif reason == 'session_token_mismatch':
+            flash('You have been logged out because you logged in from another device/browser.', 'error')
+        elif reason == 'fingerprint_mismatch':
+            flash('Security validation failed. Please login again.', 'error')
+        else:
+            flash('Please login to access this page.', 'error')
+        return redirect(url_for('admin_login'))
+    
+    # Only update last activity if session is valid (after all checks pass)
+    # This ensures inactivity timeout is checked BEFORE updating the timestamp
+    update_session_activity()
 
 @app.context_processor
 def inject_current_year():
