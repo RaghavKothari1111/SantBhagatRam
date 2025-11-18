@@ -204,31 +204,35 @@
 /* Photo Grid in Modal */
 .photos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    align-items: start;
 }
 
 .photo-item {
-    aspect-ratio: 3 / 4;
+    width: 100%;
     overflow: hidden;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .photo-item:hover {
     transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
 
 .photo-item img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
+    object-fit: contain;
     transition: transform 0.3s ease;
 }
 
 .photo-item:hover img {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .no-photos-message {
@@ -334,8 +338,15 @@
     }
 
     .photos-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 15px;
+        align-items: start;
+    }
+    
+    .photo-item img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
     }
 
     .modal-content {
