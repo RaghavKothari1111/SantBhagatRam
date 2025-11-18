@@ -9,27 +9,21 @@
     flex-shrink: 0;
     z-index: 1001;
     position: relative;
-}
-
-/* Two-line hamburger */
-.hamburger-two-line {
-    width: 24px;
-    height: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     padding: 8px;
     min-width: 44px;
     min-height: 44px;
     box-sizing: border-box;
 }
 
-.hamburger-two-line span {
+/* SVG hamburger icon */
+.hamburger-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--bubblegum-pink, #ff4d6d);
     display: block;
-    height: 2.5px;
-    width: 100%;
-    background: #1d1d1f;
-    border-radius: 999px;
+}
+
+.hamburger-line {
     transition: all 0.3s ease;
 }
 
@@ -105,14 +99,14 @@
     transform: translateX(-100%);
 }
 
-/* Items – BOLD text like Apple */
+/* Items – BOLD text like Apple (smaller size) */
 .mobile-nav-item {
     display: block;
     width: 100%;
     text-align: left;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
-    padding: 16px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #e5e7eb;
     color: #1d1d1f;
     background: none;
@@ -125,6 +119,50 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     touch-action: manipulation;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+}
+
+/* Column container */
+.mobile-nav-column {
+    margin-bottom: 0;
+}
+
+.mobile-nav-column:not(:last-child) {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* Column title */
+.mobile-nav-column-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    padding-bottom: 2px;
+    margin-top: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Submenu items - no border between items in same column */
+.mobile-nav-subitem {
+    border-bottom: none !important;
+    padding: 2px 0 !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+/* Ensure submenu items in columns have minimal spacing */
+.mobile-nav-column .mobile-nav-subitem {
+    padding: 2px 0 !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+/* Heading items in submenu */
+.mobile-nav-heading {
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .mobile-nav-item:hover,
@@ -154,13 +192,13 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .back-button {
-    font-size: 20px;
+    font-size: 0;
     font-weight: 600;
     background: none;
     border: none;
@@ -171,10 +209,23 @@
     min-height: 44px;
     display: flex;
     align-items: center;
+    justify-content: center;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     touch-action: manipulation;
     transition: opacity 0.2s ease;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    position: relative;
+}
+
+/* Chevron arrow icon for back button */
+.back-button::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid #1d1d1f;
+    border-bottom: 2px solid #1d1d1f;
+    transform: rotate(45deg);
+    display: block;
 }
 
 .back-button:hover,
@@ -189,14 +240,14 @@
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Submenu items */
+/* Submenu items (smaller sizes) */
 .mobile-nav-item.dropdown-item-large {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
 }
 
 .mobile-nav-item.dropdown-item-small {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 500;
 }
 
@@ -213,8 +264,54 @@
     color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Social media icons container */
+.mobile-nav-social-icons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+/* Social media icon links */
+.mobile-nav-social-link {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #374151;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.mobile-nav-social-link svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.mobile-nav-social-link.youtube:hover,
+.mobile-nav-social-link.youtube:active {
+    color: #dc2626;
+    border-color: #fecaca;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
+}
+
+.mobile-nav-social-link.instagram:hover,
+.mobile-nav-social-link.instagram:active {
+    color: #d946ef;
+    border-color: #f5d0fe;
+    box-shadow: 0 6px 16px rgba(217, 70, 239, 0.25);
 }
 
 /* Language toggle in menu */

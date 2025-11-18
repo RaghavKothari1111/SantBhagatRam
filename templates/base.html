@@ -193,10 +193,10 @@
         <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SantBhagatRam" class="logo-img"></a></div>
         <!-- Mobile hamburger (visible only on mobile via CSS) -->
         <div id="mobileNavToggle" class="mobile-nav-toggle">
-            <div class="hamburger-two-line">
-                <span></span>
-                <span></span>
-            </div>
+            <svg class="hamburger-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline class="hamburger-line hamburger-line-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5"></polyline>
+                <polyline class="hamburger-line hamburger-line-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12"></polyline>
+            </svg>
         </div>
         <nav class="nav-links-container" id="navLinksContainer">
             <ul class="nav-links">
@@ -313,32 +313,47 @@
             {% if dropdown_data.enabled %}
                 <div class="mobile-nav-panel" data-panel="panel-{{ nav_item }}">
                     <div class="mobile-nav-subheader">
-                        <button class="back-button" type="button" data-back="root">← Back</button>
+                        <button class="back-button" type="button" data-back="root" aria-label="Back"></button>
                         <span class="sub-title" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</span>
                     </div>
                     {% for column in dropdown_data.columns %}
-                        {% if column.get('heading') %}
-                            <a href="{{ nav_info.url }}" class="mobile-nav-item dropdown-item-large" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
-                                {{ column.get('heading') }}
-                            </a>
-                        {% endif %}
-                        {% if column.get('items') %}
-                            {% for item in column.get('items', []) %}
-                                <a href="{{ item.get('link', '#') }}" class="mobile-nav-item {% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
-                                    {{ item.get('title', '') }}
+                        <div class="mobile-nav-column">
+                            {% if column.get('title') %}
+                                <div class="mobile-nav-column-title" data-column-title-en="{{ column.get('title', '') }}" data-column-title-hi="{{ column.get('title_hi', column.get('title', '')) }}">
+                                    {{ column.get('title') }}
+                                </div>
+                            {% endif %}
+                            {% if column.get('heading') %}
+                                <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-heading dropdown-item-large" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
+                                    {{ column.get('heading') }}
                                 </a>
-                            {% endfor %}
-                        {% endif %}
+                            {% endif %}
+                            {% if column.get('items') %}
+                                {% for item in column.get('items', []) %}
+                                    <a href="{{ item.get('link', '#') }}" class="mobile-nav-item mobile-nav-subitem {% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
+                                        {{ item.get('title', '') }}
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     {% endfor %}
                     {# Add social media section #}
                     <div class="mobile-nav-section">
                         <div class="mobile-nav-section-title" data-lang-nav="followUs">Follow Us</div>
-                        <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="mobile-nav-item">
-                            YouTube
-                        </a>
-                        <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank" class="mobile-nav-item">
-                            Instagram
-                        </a>
+                        <div class="mobile-nav-social-icons">
+                            <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="mobile-nav-social-link youtube" aria-label="YouTube">
+                                <span class="sr-only">YouTube</span>
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M22.54 6.42a2.78 2.78 0 00-1.95-2 58.7 58.7 0 00-17.18 0 2.78 2.78 0 00-1.95 2A29.94 29.94 0 001 12a29.94 29.94 0 00.46 5.58 2.78 2.78 0 001.95 2 58.7 58.7 0 0017.18 0 2.78 2.78 0 001.95-2A29.94 29.94 0 0023 12a29.94 29.94 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12z"/>
+                                </svg>
+                            </a>
+                            <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank" class="mobile-nav-social-link instagram" aria-label="Instagram">
+                                <span class="sr-only">Instagram</span>
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm0 2h10c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3zm9 2a1 1 0 100 2 1 1 0 000-2zm-4 1.5A5.5 5.5 0 006.5 13 5.5 5.5 0 0012 18.5 5.5 5.5 0 0017.5 13 5.5 5.5 0 0012 7.5zm0 2A3.5 3.5 0 0115.5 13 3.5 3.5 0 0112 16.5 3.5 3.5 0 018.5 13 3.5 3.5 0 0112 9.5z"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% endif %}

@@ -371,35 +371,95 @@ function toggleAutoPlay() {
 }
 
 // Drag functionality
+let startY = 0;
+let isHorizontal = false;
+let startPageX = 0;
+let startPageY = 0;
+
 function handleDragStart(e) {
     if (isTransitioning) return;
     
-    isDragging = true;
-    stopAutoPlay();
-    
     if (e.type === 'touchstart') {
-        startX = e.touches[0].clientX;
+        const t = e.touches[0];
+        // Don't set isDragging yet - wait to determine direction
+        isDragging = false;
+        isHorizontal = false;
+        // Store pageX/pageY for direction detection (accounts for scroll)
+        startPageX = t.pageX;
+        startPageY = t.pageY;
+        // Store clientX for calculations (will be set when horizontal is confirmed)
+        startX = t.clientX;
+        startY = t.clientY;
     } else {
+        isDragging = true;
+        isHorizontal = true; // Mouse events are always horizontal
         startX = e.clientX;
+        startY = e.clientY;
         e.preventDefault();
     }
     
-    // Disable transitions during drag
-    slides.forEach(slide => {
-        slide.style.transition = 'none';
-    });
+    stopAutoPlay();
+    
+    // Don't disable transitions yet - wait to see if it's horizontal
 }
 
 function handleDragMove(e) {
-    if (!isDragging) return;
+    // For mouse events, check isDragging first
+    if (e.type !== 'touchmove' && !isDragging) return;
     
-    let clientX;
+    let clientX, clientY;
+    
     if (e.type === 'touchmove') {
-        clientX = e.touches[0].clientX;
-        e.preventDefault(); // Prevent scrolling while dragging
+        const t = e.touches[0];
+        
+        // Use pageX/pageY for direction detection (accounts for scroll)
+        const pageX = t.pageX;
+        const pageY = t.pageY;
+        const dx = pageX - startPageX;
+        const dy = pageY - startPageY;
+        
+        // Detect the gesture direction (only if we haven't determined it yet)
+        if (!isHorizontal && !isDragging) {
+            if (Math.abs(dx) > Math.abs(dy) + 6) {
+                // Clear horizontal swipe - now we can start dragging
+                isHorizontal = true;
+                isDragging = true;
+                // Update startX to current clientX for accurate calculations
+                startX = t.clientX;
+                // Now disable transitions and prevent default
+                slides.forEach(slide => {
+                    slide.style.transition = 'none';
+                });
+            } else if (Math.abs(dy) > Math.abs(dx)) {
+                // Vertical scroll -> let page move normally
+                isDragging = false;
+                isHorizontal = false;
+                return; // Don't prevent default, allow vertical scroll
+            } else {
+                // Not sure yet - wait for more input
+                return; // Don't prevent default yet
+            }
+        }
+        
+        // Only proceed if we've confirmed it's a horizontal drag
+        if (!isDragging || !isHorizontal) {
+            return;
+        }
+        
+        // From here on → horizontal ONLY
+        e.preventDefault(); // prevent page scroll
+        clientX = t.clientX; // Use clientX for calculations
     } else {
+        // Mouse events - always horizontal
         clientX = e.clientX;
         e.preventDefault();
+        
+        if (!isHorizontal) {
+            isHorizontal = true;
+            slides.forEach(slide => {
+                slide.style.transition = 'none';
+            });
+        }
     }
     
     currentX = clientX;
@@ -413,9 +473,14 @@ function handleDragMove(e) {
 }
 
 function handleDragEnd(e) {
-    if (!isDragging) return;
+    if (!isDragging) {
+        isDragging = false;
+        isHorizontal = false;
+        return;
+    }
     
     isDragging = false;
+    isHorizontal = false;
     
     // Re-enable transitions
     slides.forEach(slide => {

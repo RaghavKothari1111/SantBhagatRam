@@ -27,7 +27,7 @@
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
     overflow: hidden;
-    touch-action: pan-x;
+    touch-action: pan-y pan-x;
     -webkit-overflow-scrolling: touch;
     margin: 0; /* No margins */
     padding: 0; /* No padding */
