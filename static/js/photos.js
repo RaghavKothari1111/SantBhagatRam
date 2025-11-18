@@ -26,8 +26,16 @@ class PhotoGallery {
     }
 
     openEventPhotos(eventId) {
+        if (!eventId) {
+            console.warn('No event ID provided');
+            return;
+        }
+        
         const event = this.findEvent(eventId);
-        if (!event) return;
+        if (!event) {
+            console.warn('Gallery not found for ID:', eventId, 'Available IDs:', this.eventsData.map(g => g.id));
+            return;
+        }
 
         this.currentEvent = event;
         this.currentPhotos = Array.isArray(event.photos) ? event.photos : [];
@@ -125,13 +133,21 @@ class PhotoGallery {
     }
 
     setupEventListeners() {
+        // Use event delegation for view photos buttons
         document.addEventListener('click', (e) => {
+            // Check if click is on or inside a view-photos-btn
             const viewBtn = e.target.closest('.view-photos-btn');
             if (viewBtn) {
+                e.preventDefault();
+                e.stopPropagation();
                 const eventId = viewBtn.getAttribute('data-event-id');
-                this.openEventPhotos(eventId);
+                if (eventId) {
+                    this.openEventPhotos(eventId);
+                }
+                return;
             }
             
+            // Close modals when clicking outside
             if (e.target.classList.contains('photo-modal')) {
                 this.closePhotoModal();
             }
@@ -139,6 +155,21 @@ class PhotoGallery {
                 this.closeLightbox();
             }
         });
+        
+        // Also attach direct event listeners to buttons as fallback
+        setTimeout(() => {
+            const viewButtons = document.querySelectorAll('.view-photos-btn');
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const eventId = btn.getAttribute('data-event-id');
+                    if (eventId) {
+                        this.openEventPhotos(eventId);
+                    }
+                });
+            });
+        }, 100);
 
         document.addEventListener('keydown', (e) => {
             const lightbox = document.getElementById('lightbox');
@@ -174,105 +205,3 @@ class PhotoGallery {
 
 // Initialize gallery
 window.gallery = new PhotoGallery();
-            const photoItem = document.createElement('div');
-            photoItem.className = 'photo-item';
-            photoItem.innerHTML = `<img src="${photo}" alt="Photo ${index + 1}">`;
-            photoItem.addEventListener('click', () => this.openLightbox(index));
-            photosGrid.appendChild(photoItem);
-        });
-
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    closePhotoModal() {
-        const modal = document.getElementById('photoModal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-    }
-
-    openLightbox(photoIndex) {
-        this.currentPhotoIndex = photoIndex;
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightboxImg');
-        
-        if (lightbox && lightboxImg) {
-            lightboxImg.src = this.currentPhotos[photoIndex];
-            lightbox.classList.add('active');
-        }
-    }
-
-    closeLightbox() {
-        const lightbox = document.getElementById('lightbox');
-        if (lightbox) {
-            lightbox.classList.remove('active');
-        }
-    }
-
-    nextPhoto() {
-        if (this.currentPhotos.length > 0) {
-            this.currentPhotoIndex = (this.currentPhotoIndex + 1) % this.currentPhotos.length;
-            const lightboxImg = document.getElementById('lightboxImg');
-            if (lightboxImg) {
-                lightboxImg.src = this.currentPhotos[this.currentPhotoIndex];
-            }
-        }
-    }
-
-    prevPhoto() {
-        if (this.currentPhotos.length > 0) {
-            this.currentPhotoIndex = (this.currentPhotoIndex - 1 + this.currentPhotos.length) % this.currentPhotos.length;
-            const lightboxImg = document.getElementById('lightboxImg');
-            if (lightboxImg) {
-                lightboxImg.src = this.currentPhotos[this.currentPhotoIndex];
-            }
-        }
-    }
-
-    setupEventListeners() {
-        // Event delegation for view photos buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('view-photos-btn')) {
-                const eventId = e.target.getAttribute('data-event-id');
-                this.openEventPhotos(eventId);
-            }
-            
-            // Close modals when clicking outside
-            if (e.target.classList.contains('photo-modal')) {
-                this.closePhotoModal();
-            }
-            if (e.target.classList.contains('lightbox')) {
-                this.closeLightbox();
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            const lightbox = document.getElementById('lightbox');
-            const modal = document.getElementById('photoModal');
-            
-            if (lightbox && lightbox.classList.contains('active')) {
-                switch(e.key) {
-                    case 'Escape':
-                        this.closeLightbox();
-                        break;
-                    case 'ArrowLeft':
-                        this.prevPhoto();
-                        break;
-                    case 'ArrowRight':
-                        this.nextPhoto();
-                        break;
-                }
-            } else if (modal && modal.classList.contains('active')) {
-                if (e.key === 'Escape') {
-                    this.closePhotoModal();
-                }
-            }
-        });
-    }
-}
-
-// Initialize gallery
-const gallery = new PhotoGallery();

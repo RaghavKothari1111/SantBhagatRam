@@ -35,7 +35,7 @@
                     <div class="event-date" data-gallery-date-hi="{{ gallery.date|default('', true) }}" data-gallery-date-en="{{ gallery.dateEn|default('', true) }}">{{ gallery.date or gallery.dateEn }}</div>
                     <h3 class="event-title" data-gallery-title-hi="{{ gallery.title|default('', true) }}" data-gallery-title-en="{{ gallery.titleEn|default('', true) }}">{{ gallery.title or gallery.titleEn }}</h3>
                     <p class="event-description" data-gallery-description-hi="{{ gallery.description|default('', true) }}" data-gallery-description-en="{{ gallery.descriptionEn|default('', true) }}">{{ gallery.description or gallery.descriptionEn }}</p>
-                <button class="view-photos-btn" data-event-id="{{ gallery.id }}" data-lang-photos="viewPhotos">तस्वीरें देखें</button>
+                <button type="button" class="view-photos-btn" data-event-id="{{ gallery.id }}" data-lang-photos="viewPhotos">तस्वीरें देखें</button>
             </div>
         </article>
         {% endfor %}
