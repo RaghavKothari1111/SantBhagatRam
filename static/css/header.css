@@ -580,6 +580,50 @@ body.lang-hindi [class*="drop-down-menu-"] a {
     box-shadow: none !important;
 }
 
+/* Dropdown Social Media Icons */
+.dropdown-social-icons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.dropdown-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #4b5563;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    padding: 0;
+}
+
+.dropdown-social-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+    color: #111827;
+}
+
+.dropdown-social-link svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.dropdown-social-link.youtube:hover {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+}
+
+.dropdown-social-link.instagram:hover {
+    background: rgba(225, 48, 108, 0.1);
+    color: #e1306c;
+}
+
 /* Mobile Menu Toggle (Three Dots) */
 .mobile-menu-toggle {
     display: none;

@@ -133,7 +133,7 @@ class PhotoGallery {
     }
 
     setupEventListeners() {
-        // Use event delegation for view photos buttons
+        // Use event delegation for view photos buttons and cover images
         document.addEventListener('click', (e) => {
             // Check if click is on or inside a view-photos-btn
             const viewBtn = e.target.closest('.view-photos-btn');
@@ -145,6 +145,24 @@ class PhotoGallery {
                     this.openEventPhotos(eventId);
                 }
                 return;
+            }
+            
+            // Check if click is on the cover image (event-card-image) or image inside it
+            const eventCardImage = e.target.closest('.event-card-image');
+            if (eventCardImage) {
+                // Don't trigger if clicking on the button inside the card
+                if (!e.target.closest('.view-photos-btn')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const eventCard = eventCardImage.closest('.event-card');
+                    if (eventCard) {
+                        const eventId = eventCard.getAttribute('data-gallery-id');
+                        if (eventId) {
+                            this.openEventPhotos(eventId);
+                        }
+                    }
+                    return;
+                }
             }
             
             // Close modals when clicking outside
