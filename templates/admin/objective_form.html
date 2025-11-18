@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if objective %}Edit Objective{% else %}Add Objective{% endif %}{% endblock %}
+{% block page_title %}{% if objective %}Edit Objective{% else %}Add New Objective{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="POST" action="{% if objective %}{{ url_for('admin_edit_objective', objective_id=objective.id) }}{% else %}{{ url_for('admin_add_objective') }}{% endif %}" class="admin-form">
+        <div class="form-section">
+            <h3>Objective Information</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title (Hindi) *</label>
+                    <input type="text" id="title" name="title" value="{% if objective %}{{ objective.title }}{% endif %}" required>
+                </div>
+                <div class="form-group">
+                    <label for="titleEn">Title (English) *</label>
+                    <input type="text" id="titleEn" name="titleEn" value="{% if objective %}{{ objective.titleEn }}{% endif %}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Hindi) *</label>
+                <textarea id="description" name="description" rows="4" required>{% if objective %}{{ objective.description }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="descriptionEn">Description (English) *</label>
+                <textarea id="descriptionEn" name="descriptionEn" rows="4" required>{% if objective %}{{ objective.descriptionEn }}{% endif %}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="icon">Icon SVG Code</label>
+                <textarea id="icon" name="icon" rows="6" placeholder='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">...</svg>'>{% if objective and objective.icon %}{{ objective.icon }}{% endif %}</textarea>
+                <small>Paste the complete SVG code for the icon. The icon will be displayed in the objectives banner.</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('admin_objectives') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">{% if objective %}Update Objective{% else %}Add Objective{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

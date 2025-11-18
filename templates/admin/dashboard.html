@@ -31,6 +31,15 @@
             <a href="{{ url_for('admin_photos') }}" class="card-link">Manage Photos →</a>
         </div>
     </div>
+
+    <div class="dashboard-card">
+        <div class="card-icon">🎯</div>
+        <div class="card-content">
+            <h3>Objectives</h3>
+            <p class="card-number">{{ objective_count }}</p>
+            <a href="{{ url_for('admin_objectives') }}" class="card-link">Manage Objectives →</a>
+        </div>
+    </div>
 </div>
 
 <div class="dashboard-actions">
@@ -42,6 +51,9 @@
     </a>
     <a href="{{ url_for('admin_add_photo_gallery') }}" class="btn btn-primary">
         <span>+</span> Add Photo Category
+    </a>
+    <a href="{{ url_for('admin_add_objective') }}" class="btn btn-primary">
+        <span>+</span> Add New Objective
     </a>
 </div>
 {% endblock %}

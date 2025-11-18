@@ -25,7 +25,9 @@ from data_manager import (
     get_navbar_dropdowns_data, get_dropdown_for_nav_item, update_dropdown_for_nav_item,
     toggle_dropdown_enabled, add_dropdown_column, update_dropdown_column, delete_dropdown_column,
     add_dropdown_item, update_dropdown_item, delete_dropdown_item,
-    update_dropdown_column_order, update_dropdown_item_order, update_global_social_media
+    update_dropdown_column_order, update_dropdown_item_order, update_global_social_media,
+    get_all_objectives, get_objective_by_id, add_objective, update_objective, delete_objective,
+    update_objective_order
 )
 from storage import storage_manager
 
@@ -120,7 +122,8 @@ def home():
     blogs = get_all_blogs()
     home_blogs = blogs[:3]
     slider_images = get_all_slider_images()
-    return render_template('home.html', home_blogs=home_blogs, slider_images=slider_images)
+    objectives = get_all_objectives()
+    return render_template('home.html', home_blogs=home_blogs, slider_images=slider_images, objectives=objectives)
 
 @app.route('/blog')
 def blog():
@@ -157,12 +160,14 @@ def project3():
     return render_template('project3.html')
 
 @app.route('/photos')
-def photos():
+@app.route('/photos/<gallery_id>')
+def photos(gallery_id=None):
     galleries = get_all_galleries()
     return render_template(
         'photos.html',
         galleries=galleries,
-        galleries_json=json.dumps(galleries, ensure_ascii=False)
+        galleries_json=json.dumps(galleries, ensure_ascii=False),
+        gallery_id=gallery_id
     )
 
 @app.route('/videos')
@@ -315,10 +320,12 @@ def admin_dashboard():
     blogs = get_all_blogs()
     events = get_all_events()
     galleries = get_all_galleries()
+    objectives = get_all_objectives()
     return render_template('admin/dashboard.html', 
                          blog_count=len(blogs), 
                          event_count=len(events),
-                         gallery_count=len(galleries))
+                         gallery_count=len(galleries),
+                         objective_count=len(objectives))
 
 # Blog Management Routes
 @app.route('/admin/blogs')
@@ -515,6 +522,76 @@ def admin_reorder_events():
     if update_event_order(event_ids):
         return jsonify({'success': True, 'message': 'Event order updated successfully'})
     return jsonify({'success': False, 'message': 'Error updating event order'}), 400
+
+# Objectives Management Routes
+@app.route('/admin/objectives')
+@login_required
+def admin_objectives():
+    objectives = get_all_objectives()
+    return render_template('admin/objectives.html', objectives=objectives)
+
+@app.route('/admin/objectives/add', methods=['GET', 'POST'])
+@login_required
+def admin_add_objective():
+    if request.method == 'POST':
+        objective_data = {
+            'title': request.form.get('title', '').strip(),
+            'titleEn': request.form.get('titleEn', '').strip(),
+            'description': request.form.get('description', '').strip(),
+            'descriptionEn': request.form.get('descriptionEn', '').strip(),
+            'icon': request.form.get('icon', '').strip(),
+        }
+        
+        if add_objective(objective_data):
+            flash('Objective added successfully!', 'success')
+            return redirect(url_for('admin_objectives'))
+        else:
+            flash('Error adding objective', 'error')
+    
+    return render_template('admin/objective_form.html', objective=None)
+
+@app.route('/admin/objectives/edit/<objective_id>', methods=['GET', 'POST'])
+@login_required
+def admin_edit_objective(objective_id):
+    objective = get_objective_by_id(objective_id)
+    if not objective:
+        flash('Objective not found', 'error')
+        return redirect(url_for('admin_objectives'))
+    
+    if request.method == 'POST':
+        objective_data = {
+            'title': request.form.get('title', '').strip(),
+            'titleEn': request.form.get('titleEn', '').strip(),
+            'description': request.form.get('description', '').strip(),
+            'descriptionEn': request.form.get('descriptionEn', '').strip(),
+            'icon': request.form.get('icon', '').strip(),
+        }
+        
+        if update_objective(objective_id, objective_data):
+            flash('Objective updated successfully!', 'success')
+            return redirect(url_for('admin_objectives'))
+        else:
+            flash('Error updating objective', 'error')
+    
+    return render_template('admin/objective_form.html', objective=objective)
+
+@app.route('/admin/objectives/delete/<objective_id>', methods=['POST'])
+@login_required
+def admin_delete_objective(objective_id):
+    if delete_objective(objective_id):
+        flash('Objective deleted successfully!', 'success')
+    else:
+        flash('Error deleting objective', 'error')
+    return redirect(url_for('admin_objectives'))
+
+@app.route('/admin/objectives/reorder', methods=['POST'])
+@login_required
+def admin_reorder_objectives():
+    data = request.get_json()
+    objective_ids = data.get('objective_ids', [])
+    if update_objective_order(objective_ids):
+        return jsonify({'success': True, 'message': 'Objective order updated successfully'})
+    return jsonify({'success': False, 'message': 'Error updating objective order'}), 400
 
 # Photo Gallery Management Routes
 @app.route('/admin/photos')

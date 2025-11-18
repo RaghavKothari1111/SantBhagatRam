@@ -44,6 +44,7 @@ class Config:
     VIDEOS_DROPDOWN_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'videos_dropdown_data.json')
     NAVBAR_DROPDOWNS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'navbar_dropdowns_data.json')
     ADMIN_SESSION_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'admin_session_data.json')
+    OBJECTIVES_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'objectives_data.json')
 
 # Ensure upload directory exists
 os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)

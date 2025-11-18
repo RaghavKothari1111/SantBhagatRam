@@ -1,0 +1,152 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Objectives{% endblock %}
+{% block page_title %}Objective Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>All Objectives</h2>
+    <a href="{{ url_for('admin_add_objective') }}" class="btn btn-primary">
+        <span>+</span> Add New Objective
+    </a>
+</div>
+
+{% if objectives %}
+    <div class="table-container">
+        <p class="reorder-hint">💡 Drag rows by the handle (☰) to reorder objectives</p>
+        <table class="data-table sortable-table" id="objectivesTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>ID</th>
+                    <th>Title (Hindi)</th>
+                    <th>Title (English)</th>
+                    <th>Description (Hindi)</th>
+                    <th>Description (English)</th>
+                    <th>Icon</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="objectivesTableBody">
+                {% for objective in objectives %}
+                <tr class="draggable-row" draggable="true" data-objective-id="{{ objective.id }}">
+                    <td class="drag-handle">☰</td>
+                    <td>{{ objective.id }}</td>
+                    <td>{{ objective.title[:40] }}{% if objective.title|length > 40 %}...{% endif %}</td>
+                    <td>{{ objective.titleEn[:40] }}{% if objective.titleEn|length > 40 %}...{% endif %}</td>
+                    <td>{{ objective.description[:50] }}{% if objective.description|length > 50 %}...{% endif %}</td>
+                    <td>{{ objective.descriptionEn[:50] }}{% if objective.descriptionEn|length > 50 %}...{% endif %}</td>
+                    <td>
+                        {% if objective.icon %}
+                            <div class="icon-preview">{{ objective.icon|safe }}</div>
+                        {% else %}
+                            <span class="no-icon">No Icon</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('admin_edit_objective', objective_id=objective.id) }}" class="btn btn-sm btn-edit">Edit</a>
+                        <form method="POST" action="{{ url_for('admin_delete_objective', objective_id=objective.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this objective?');">
+                            <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>No objectives found. <a href="{{ url_for('admin_add_objective') }}">Add your first objective</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const tableBody = document.getElementById('objectivesTableBody');
+    if (!tableBody) return;
+    
+    let draggedRow = null;
+    let draggedOverRow = null;
+    
+    // Make rows draggable
+    const rows = tableBody.querySelectorAll('.draggable-row');
+    rows.forEach(row => {
+        row.addEventListener('dragstart', function(e) {
+            draggedRow = this;
+            this.style.opacity = '0.5';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        });
+        
+        row.addEventListener('dragend', function(e) {
+            this.style.opacity = '';
+            rows.forEach(r => r.classList.remove('drag-over'));
+        });
+        
+        row.addEventListener('dragover', function(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (draggedRow && this !== draggedRow) {
+                rows.forEach(r => r.classList.remove('drag-over'));
+                this.classList.add('drag-over');
+                draggedOverRow = this;
+            }
+            return false;
+        });
+        
+        row.addEventListener('drop', function(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            if (draggedRow !== this && draggedRow) {
+                const allRows = Array.from(tableBody.querySelectorAll('.draggable-row'));
+                const draggedIndex = allRows.indexOf(draggedRow);
+                const targetIndex = allRows.indexOf(this);
+                
+                if (draggedIndex < targetIndex) {
+                    tableBody.insertBefore(draggedRow, this.nextSibling);
+                } else {
+                    tableBody.insertBefore(draggedRow, this);
+                }
+                
+                // Save new order
+                const newOrder = Array.from(tableBody.querySelectorAll('.draggable-row')).map(row => 
+                    row.getAttribute('data-objective-id')
+                );
+                
+                fetch('{{ url_for("admin_reorder_objectives") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ objective_ids: newOrder })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Order updated successfully');
+                    } else {
+                        console.error('Error updating order:', data.message);
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    location.reload();
+                });
+            }
+            
+            rows.forEach(r => r.classList.remove('drag-over'));
+            return false;
+        });
+    });
+})();
+</script>
+{% endblock %}
+

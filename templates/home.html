@@ -72,161 +72,52 @@
         <div class="objectives-scroll-wrapper">
             <div class="objectives-scroll-track" id="objectives-scroll-track">
                 <!-- First set of objectives -->
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
+                {% if objectives %}
+                    {% for objective in objectives %}
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            {% if objective.icon %}
+                                {{ objective.icon|safe }}
+                            {% else %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}</h3>
+                        <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else objective.description }}</p>
                     </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
+                    {% endfor %}
+                {% else %}
+                    <!-- Fallback objectives if none exist -->
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion</h3>
+                        <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.</p>
                     </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner2Title">Building Spiritual Community</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner2Desc">Creating sacred spaces where souls connect and grow together. Our community serves as a foundation for collective spiritual evolution, fostering deep bonds through shared practices and divine experiences.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner3Title">Sharing Ancient Wisdom</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner3Desc">Preserving and teaching timeless spiritual knowledge for modern seekers. Through sacred texts, meditation practices, and enlightened guidance, we illuminate the path to inner awakening and self-realization.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner4Title">Promoting Global Harmony</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner4Desc">Working towards universal peace and understanding across all cultures. We embrace diversity as a divine gift and strive to unite humanity through the shared values of love, respect, and spiritual consciousness.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner5Title">Facilitating Spiritual Growth</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner5Desc">Guiding individuals on their personal journey of spiritual awakening. Through dedicated practices, divine teachings, and transformative experiences, we help seekers discover their true essence and divine purpose.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner6Title">Nurturing Inner Peace</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner6Desc">Teaching practices for achieving lasting tranquility and balance. In a world of chaos, we provide tools and wisdom to cultivate inner stillness, enabling profound peace that radiates outward to touch all aspects of life.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner7Title">Inspiring Divine Service</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner7Desc">Encouraging selfless service as a path to spiritual elevation. Through acts of compassion and seva, we demonstrate that serving others is serving the divine, creating ripples of positive change throughout the world.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner8Title">Empowering Transformation</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner8Desc">Supporting profound personal and collective transformation. We believe every soul has the potential for divine awakening, and we provide the sacred space, guidance, and community needed for this beautiful metamorphosis.</p>
-                </div>
+                {% endif %}
                 <!-- Duplicate set for seamless loop -->
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
+                {% if objectives %}
+                    {% for objective in objectives %}
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            {% if objective.icon %}
+                                {{ objective.icon|safe }}
+                            {% else %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}</h3>
+                        <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else objective.description }}</p>
                     </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner2Title">Building Spiritual Community</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner2Desc">Creating sacred spaces where souls connect and grow together. Our community serves as a foundation for collective spiritual evolution, fostering deep bonds through shared practices and divine experiences.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner3Title">Sharing Ancient Wisdom</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner3Desc">Preserving and teaching timeless spiritual knowledge for modern seekers. Through sacred texts, meditation practices, and enlightened guidance, we illuminate the path to inner awakening and self-realization.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner4Title">Promoting Global Harmony</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner4Desc">Working towards universal peace and understanding across all cultures. We embrace diversity as a divine gift and strive to unite humanity through the shared values of love, respect, and spiritual consciousness.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner5Title">Facilitating Spiritual Growth</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner5Desc">Guiding individuals on their personal journey of spiritual awakening. Through dedicated practices, divine teachings, and transformative experiences, we help seekers discover their true essence and divine purpose.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner6Title">Nurturing Inner Peace</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner6Desc">Teaching practices for achieving lasting tranquility and balance. In a world of chaos, we provide tools and wisdom to cultivate inner stillness, enabling profound peace that radiates outward to touch all aspects of life.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner7Title">Inspiring Divine Service</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner7Desc">Encouraging selfless service as a path to spiritual elevation. Through acts of compassion and seva, we demonstrate that serving others is serving the divine, creating ripples of positive change throughout the world.</p>
-                </div>
-                <div class="objective-card">
-                    <div class="objective-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="objective-card-title" data-lang-home="objectiveBanner8Title">Empowering Transformation</h3>
-                    <p class="objective-card-description" data-lang-home="objectiveBanner8Desc">Supporting profound personal and collective transformation. We believe every soul has the potential for divine awakening, and we provide the sacred space, guidance, and community needed for this beautiful metamorphosis.</p>
-                </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,0 +1,69 @@
+[
+  {
+    "id": "obj-1",
+    "order": 1,
+    "title": "पीड़ित मानवता की हर प्रकार से सेवा करना जो कि बिना किसी धर्म जाति लिंग सामाजिक प्रतिष्ठा एवं धर्म के भेदभाव के बिना की जावेगी।",
+    "titleEn": "To serve suffering humanity in every way, without discrimination based on religion, caste, gender, social status, or creed.",
+    "description": "हमारा संस्थान बिना किसी भेदभाव के सभी लोगों की सेवा करने के लिए प्रतिबद्ध है। हम समाज के सभी वर्गों के लिए समान अवसर और सेवाएं प्रदान करते हैं।",
+    "descriptionEn": "Our institute is committed to serving all people without any discrimination. We provide equal opportunities and services to all sections of society.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z\"></path></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "obj-2",
+    "order": 2,
+    "title": "बीमार व्यक्तियों की चिकित्सा एवं सेवा करना एवं इसमें सहयोग करना।",
+    "titleEn": "To provide medical treatment and service to sick individuals and cooperate in it.",
+    "description": "हम बीमार और जरूरतमंद लोगों को गुणवत्तापूर्ण चिकित्सा सुविधाएं प्रदान करते हैं। चिकित्सा जांच, उपचार, और स्वास्थ्य जागरूकता कार्यक्रमों के माध्यम से समुदाय की सेवा करते हैं।",
+    "descriptionEn": "We provide quality medical facilities to the sick and needy. We serve the community through medical checkups, treatments, and health awareness programs.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "obj-3",
+    "order": 3,
+    "title": "अस्पताल बनाना एवं संचालन करना चिकित्सा से संबंधित भवन निर्माण करना इत्यादि।",
+    "titleEn": "To build and operate hospitals, construct medical-related buildings, etc.",
+    "description": "हम अस्पतालों, क्लीनिकों, और चिकित्सा से संबंधित भवनों के निर्माण और संचालन में सक्रिय हैं। आधुनिक चिकित्सा सुविधाओं के साथ स्वास्थ्य केंद्र स्थापित करके समुदाय की स्वास्थ्य आवश्यकताओं को पूरा करते हैं।",
+    "descriptionEn": "We are actively involved in the construction and operation of hospitals, clinics, and medical-related buildings. We establish health centers with modern medical facilities to meet the health needs of the community.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"></path><polyline points=\"9 22 9 12 15 12 15 22\"></polyline></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "obj-4",
+    "order": 4,
+    "title": "चिकित्सालय में भर्ती रोगियों के लिए भोजन व्यवस्था करना जहां राज्य के तौर पर सुविधा उपलब्ध नहीं है।",
+    "titleEn": "To arrange food for patients admitted to hospitals where state facilities are not available.",
+    "description": "हम उन अस्पतालों में भर्ती रोगियों के लिए भोजन की व्यवस्था करते हैं जहां सरकारी सुविधाएं उपलब्ध नहीं हैं। हमारा लक्ष्य यह सुनिश्चित करना है कि हर रोगी को उपचार के दौरान स्वस्थ और पौष्टिक भोजन मिले।",
+    "descriptionEn": "We arrange food for patients admitted to hospitals where government facilities are not available. Our goal is to ensure that every patient receives healthy and nutritious food during treatment.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"></path><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "obj-5",
+    "order": 5,
+    "title": "आदिवासी एवं ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार उपलब्ध कराना।",
+    "titleEn": "To provide free nutritious food in tribal and rural areas.",
+    "description": "हमारा संस्थान आदिवासी और ग्रामीण क्षेत्रों में निशुल्क पौष्टिक आहार वितरण कार्यक्रम चलाता है। हमारा उद्देश्य कुपोषण को कम करना और इन समुदायों के स्वास्थ्य में सुधार करना है।",
+    "descriptionEn": "Our institute runs free nutritious food distribution programs in tribal and rural areas. Our aim is to reduce malnutrition and improve the health of these communities.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z\"></path></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "obj-6",
+    "order": 6,
+    "title": "आदिवासी एवं ग्रामीण एवं शहरी गरीबों अनुसूचित जातियों जनजातियों के लिए विभिन्न प्रकार के प्रशिक्षणात्मक केंद्रों का संचालन एवं निर्देशन करना।",
+    "titleEn": "To operate and direct various types of training centers for tribal, rural, and urban poor, Scheduled Castes and Scheduled Tribes.",
+    "description": "हमारा संस्थान आदिवासी, ग्रामीण और शहरी गरीबों, अनुसूचित जातियों और जनजातियों के लिए प्रशिक्षण केंद्र संचालित करता है। व्यावसायिक प्रशिक्षण, कौशल विकास, और रोजगार-उन्मुख प्रशिक्षण प्रदान करके इन समुदायों को आत्मनिर्भर बनाते हैं।",
+    "descriptionEn": "Our institute operates training centers for tribal, rural and urban poor, Scheduled Castes and Scheduled Tribes. We make these communities self-reliant by providing vocational training, skill development, and employment-oriented training.",
+    "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 19.5A2.5 2.5 0 0 1 6.5 17H20\"></path><path d=\"M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z\"></path></svg>",
+    "created_at": "2025-01-18T00:00:00",
+    "updated_at": "2025-01-18T00:00:00"
+  }
+]
+

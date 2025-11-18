@@ -81,6 +81,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
     window.galleryData = {{ galleries_json|safe }};
+    window.initialGalleryId = {{ gallery_id|tojson if gallery_id else 'null' }};
 </script>
 <script src="{{ url_for('static', filename='js/masonry.js') }}"></script>
 <script src="{{ url_for('static', filename='js/photos.js') }}"></script>

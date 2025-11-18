@@ -16,6 +16,16 @@ class PhotoGallery {
 
     initialize() {
         this.setupEventListeners();
+        this.setupUrlHandling();
+        
+        // Check if there's an initial gallery ID from URL or server
+        const galleryId = this.getGalleryIdFromUrl() || window.initialGalleryId;
+        if (galleryId) {
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                this.openEventPhotos(galleryId);
+            }, 100);
+        }
     }
 
     getCurrentLanguage() {
@@ -24,6 +34,73 @@ class PhotoGallery {
 
     findEvent(eventId) {
         return this.eventsData.find(event => String(event.id) === String(eventId));
+    }
+
+    // URL Helper Functions
+    getGalleryIdFromUrl() {
+        const path = window.location.pathname;
+        const match = path.match(/^\/photos\/(.+)$/);
+        return match ? match[1] : null;
+    }
+
+    updateUrlForGallery(galleryId) {
+        const newUrl = `/photos/${galleryId}`;
+        if (window.location.pathname !== newUrl) {
+            window.history.pushState({ galleryId: galleryId }, '', newUrl);
+        }
+    }
+
+    updateUrlForPhotosList() {
+        if (window.location.pathname !== '/photos') {
+            window.history.pushState({}, '', '/photos');
+        }
+    }
+
+    setupUrlHandling() {
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (e) => {
+            const galleryId = this.getGalleryIdFromUrl();
+            const modal = document.getElementById('photoModal');
+            const isModalOpen = modal && modal.classList.contains('active');
+            
+            if (galleryId) {
+                // URL has gallery ID, open that gallery
+                if (!isModalOpen || String(this.currentEvent?.id) !== String(galleryId)) {
+                    // Don't update URL again since we're already at the correct URL
+                    const event = this.findEvent(galleryId);
+                    if (event) {
+                        this.currentEvent = event;
+                        this.currentPhotos = Array.isArray(event.photos) ? event.photos : [];
+                        this.showPhotoModal();
+                    }
+                }
+            } else {
+                // URL doesn't have gallery ID, close modal if open
+                if (isModalOpen) {
+                    // Temporarily disable URL update to avoid recursion
+                    const modal = document.getElementById('photoModal');
+                    if (modal) {
+                        // Clean up masonry instance
+                        if (this.masonryInstance) {
+                            this.masonryInstance.destroy();
+                            this.masonryInstance = null;
+                        }
+                        
+                        const photosGrid = document.querySelector('.photos-grid');
+                        if (photosGrid) {
+                            photosGrid.classList.remove('masonry-container');
+                            photosGrid.style.display = '';
+                            photosGrid.style.gridTemplateColumns = '';
+                            photosGrid.style.gap = '';
+                        }
+                        
+                        modal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        // Don't call updateUrlForPhotosList() here since URL is already correct
+                    }
+                }
+            }
+        });
     }
 
     openEventPhotos(eventId) {
@@ -40,6 +117,10 @@ class PhotoGallery {
 
         this.currentEvent = event;
         this.currentPhotos = Array.isArray(event.photos) ? event.photos : [];
+        
+        // Update URL to include gallery ID
+        this.updateUrlForGallery(eventId);
+        
         this.showPhotoModal();
     }
 
@@ -266,6 +347,9 @@ class PhotoGallery {
             
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
+            
+            // Update URL back to photos list
+            this.updateUrlForPhotosList();
         }
     }
 

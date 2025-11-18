@@ -782,3 +782,71 @@ def update_global_social_media(social_data):
     data['social_media'] = social_data
     return save_navbar_dropdowns_data(data)
 
+# Objectives Management
+def get_all_objectives():
+    """Get all objectives, sorted by order"""
+    objectives = load_json_data(Config.OBJECTIVES_DATA_FILE, default=[])
+    # Sort by order field (default to 0 if not set)
+    objectives.sort(key=lambda x: x.get('order', 0))
+    return objectives
+
+def get_objective_by_id(objective_id):
+    """Get a specific objective by ID"""
+    objectives = get_all_objectives()
+    for objective in objectives:
+        if str(objective.get('id')) == str(objective_id):
+            return objective
+    return None
+
+def add_objective(objective_data):
+    """Add a new objective"""
+    objectives = get_all_objectives()
+    
+    # Generate ID if not provided
+    if 'id' not in objective_data or not objective_data['id']:
+        objective_data['id'] = str(uuid.uuid4())[:8]
+    
+    # Set order to be last (highest order + 1)
+    if 'order' not in objective_data:
+        max_order = max([obj.get('order', 0) for obj in objectives] + [0])
+        objective_data['order'] = max_order + 1
+    
+    # Add timestamp
+    objective_data['created_at'] = datetime.now().isoformat()
+    objective_data['updated_at'] = datetime.now().isoformat()
+    
+    objectives.append(objective_data)
+    return save_json_data(Config.OBJECTIVES_DATA_FILE, objectives)
+
+def update_objective(objective_id, objective_data):
+    """Update an existing objective"""
+    objectives = get_all_objectives()
+    for i, objective in enumerate(objectives):
+        if str(objective.get('id')) == str(objective_id):
+            objective_data['id'] = objective_id
+            objective_data['order'] = objective.get('order', objective_data.get('order', 0))
+            objective_data['created_at'] = objective.get('created_at', datetime.now().isoformat())
+            objective_data['updated_at'] = datetime.now().isoformat()
+            objectives[i] = objective_data
+            return save_json_data(Config.OBJECTIVES_DATA_FILE, objectives)
+    return False
+
+def delete_objective(objective_id):
+    """Delete an objective"""
+    objectives = get_all_objectives()
+    objectives = [obj for obj in objectives if str(obj.get('id')) != str(objective_id)]
+    return save_json_data(Config.OBJECTIVES_DATA_FILE, objectives)
+
+def update_objective_order(objective_ids):
+    """Update the order of objectives based on provided list of IDs"""
+    objectives = load_json_data(Config.OBJECTIVES_DATA_FILE, default=[])
+    objective_dict = {str(obj.get('id')): obj for obj in objectives}
+    
+    # Update order for each objective based on its position in the list
+    for index, objective_id in enumerate(objective_ids, start=1):
+        if str(objective_id) in objective_dict:
+            objective_dict[str(objective_id)]['order'] = index
+            objective_dict[str(objective_id)]['updated_at'] = datetime.now().isoformat()
+    
+    return save_json_data(Config.OBJECTIVES_DATA_FILE, objectives)
+
