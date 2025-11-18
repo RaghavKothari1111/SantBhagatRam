@@ -228,6 +228,13 @@
     align-items: start;
 }
 
+/* Masonry Grid Styles */
+.photos-grid.masonry-container {
+    position: relative;
+    min-height: 100vh;
+    display: block;
+}
+
 .photo-item {
     width: 100%;
     overflow: hidden;
@@ -380,6 +387,12 @@
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 15px;
         align-items: start;
+    }
+
+    /* Masonry container on mobile */
+    .photos-grid.masonry-container {
+        min-height: auto;
+        padding: 10px 5px;
     }
     
     .photo-item img {

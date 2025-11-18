@@ -5,6 +5,7 @@ class PhotoGallery {
         this.currentPhotoIndex = 0;
         this.currentPhotos = [];
         this.eventsData = Array.isArray(window.galleryData) ? window.galleryData : [];
+        this.masonryInstance = null;
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initialize());
@@ -62,6 +63,13 @@ class PhotoGallery {
         modalDate.textContent = date || '';
 
         photosGrid.innerHTML = '';
+        
+        // Clean up previous masonry instance
+        if (this.masonryInstance) {
+            this.masonryInstance.destroy();
+            this.masonryInstance = null;
+        }
+
         if (!this.currentPhotos.length) {
             const noPhotos = document.createElement('p');
             noPhotos.className = 'no-photos-message';
@@ -69,25 +77,108 @@ class PhotoGallery {
             noPhotos.textContent = 'जल्द ही तस्वीरें जोड़ी जाएंगी।';
             photosGrid.appendChild(noPhotos);
         } else {
-            this.currentPhotos.forEach((photo, index) => {
-                const photoItem = document.createElement('div');
-                photoItem.className = 'photo-item';
+            console.log('Loading photos:', this.currentPhotos.length, 'photos');
+            
+            // Prepare items for masonry
+            const masonryItems = this.currentPhotos.map((photo, index) => {
                 const captionText = lang === 'en'
                     ? (photo.captionEn || photo.caption || '')
                     : (photo.caption || photo.captionEn || '');
-                photoItem.innerHTML = `<img src="${photo.url}" alt="${captionText || `Photo ${index + 1}`}" loading="lazy">`;
-                photoItem.addEventListener('click', () => this.openLightbox(index));
-                photosGrid.appendChild(photoItem);
+                
+                // Estimate height based on image aspect ratio (default to 400)
+                const height = photo.height || 400;
+                
+                return {
+                    id: `photo-${index}`,
+                    img: photo.url,
+                    url: photo.url,
+                    height: height,
+                    index: index,
+                    onClick: () => this.openLightbox(index)
+                };
             });
+
+            // Show photos immediately with regular grid first
+            this.fallbackToRegularGrid(photosGrid, masonryItems);
+
+            // Then try to upgrade to masonry if available
+            setTimeout(() => {
+                // Check if MasonryGrid is available and container has width
+                if (typeof MasonryGrid !== 'undefined' && photosGrid.offsetWidth > 0) {
+                    try {
+                        // Clear regular grid
+                        photosGrid.innerHTML = '';
+                        photosGrid.classList.add('masonry-container');
+                        
+                        // Initialize masonry grid with mobile optimizations
+                        const isMobile = window.innerWidth <= 768;
+                        this.masonryInstance = new MasonryGrid(photosGrid, {
+                            ease: 'power3.out',
+                            duration: isMobile ? 0.4 : 0.6,
+                            stagger: isMobile ? 0.03 : 0.05,
+                            animateFrom: 'bottom',
+                            scaleOnHover: !isMobile, // Disable hover scale on mobile
+                            hoverScale: 0.95,
+                            blurToFocus: !isMobile, // Disable blur on mobile for performance
+                            colorShiftOnHover: false
+                        });
+
+                        // Set items and render
+                        this.masonryInstance.setItems(masonryItems).catch(err => {
+                            console.error('Masonry error:', err);
+                            // Keep regular grid if masonry fails
+                        });
+                    } catch (error) {
+                        console.error('Masonry initialization error:', error);
+                        // Keep regular grid if masonry fails
+                    }
+                }
+            }, 200);
         }
 
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
+    fallbackToRegularGrid(photosGrid, items) {
+        console.log('Using fallback regular grid');
+        photosGrid.classList.remove('masonry-container');
+        photosGrid.style.display = 'grid';
+        photosGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+        photosGrid.style.gap = '20px';
+        photosGrid.innerHTML = '';
+
+        const lang = this.getCurrentLanguage();
+        items.forEach((item, index) => {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item';
+            const photo = this.currentPhotos[index];
+            const captionText = lang === 'en'
+                ? (photo.captionEn || photo.caption || '')
+                : (photo.caption || photo.captionEn || '');
+            photoItem.innerHTML = `<img src="${item.url}" alt="${captionText || `Photo ${index + 1}`}" loading="lazy">`;
+            photoItem.addEventListener('click', () => this.openLightbox(index));
+            photosGrid.appendChild(photoItem);
+        });
+    }
+
     closePhotoModal() {
         const modal = document.getElementById('photoModal');
         if (modal) {
+            // Clean up masonry instance
+            if (this.masonryInstance) {
+                this.masonryInstance.destroy();
+                this.masonryInstance = null;
+            }
+            
+            const photosGrid = document.querySelector('.photos-grid');
+            if (photosGrid) {
+                photosGrid.classList.remove('masonry-container');
+                photosGrid.style.display = '';
+                photosGrid.style.gridTemplateColumns = '';
+                photosGrid.style.gap = '';
+            }
+            
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
