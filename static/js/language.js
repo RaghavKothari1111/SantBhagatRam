@@ -13,7 +13,12 @@ const translations = {
             videos: "Videos",
             events: "Events",
             donate: "Donate",
-            followUs: "Follow Us"
+            followUs: "Follow Us",
+            allphotos: "All Photos",
+            allvideos: "All Videos",
+            allevents: "All Events",
+            allprojects: "All Projects",
+            allblog: "All Blog"
         },
         // Home Page
         home: {
@@ -197,7 +202,12 @@ const translations = {
             videos: "वीडियो",
             events: "कार्यक्रम",
             donate: "दान करें",
-            followUs: "हमें फॉलो करें"
+            followUs: "हमें फॉलो करें",
+            allphotos: "सभी फोटो",
+            allvideos: "सभी वीडियो",
+            allevents: "सभी कार्यक्रम",
+            allprojects: "सभी प्रोजेक्ट",
+            allblog: "सभी ब्लॉग"
         },
         // Home Page
         home: {

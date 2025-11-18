@@ -30,6 +30,12 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     
+    # Cloudinary settings
+    CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', '')
+    CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '')
+    CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', '')
+    USE_CLOUDINARY = os.environ.get('USE_CLOUDINARY', 'false').lower() == 'true'
+    
     # Data file paths
     BLOGS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'blogs_data.json')
     EVENTS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'events_data.json')

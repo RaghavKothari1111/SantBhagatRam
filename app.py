@@ -27,6 +27,7 @@ from data_manager import (
     add_dropdown_item, update_dropdown_item, delete_dropdown_item,
     update_dropdown_column_order, update_dropdown_item_order, update_global_social_media
 )
+from storage import storage_manager
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -195,12 +196,7 @@ def allowed_file(filename):
 def save_uploaded_file(file):
     """Save uploaded file and return the URL path"""
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        # Add UUID to prevent conflicts
-        unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
-        filepath = os.path.join(Config.UPLOAD_FOLDER, unique_filename)
-        file.save(filepath)
-        return f"/static/uploads/{unique_filename}"
+        return storage_manager.save_file(file, folder='uploads')
     return None
 
 def build_gallery_payload(existing_gallery=None):

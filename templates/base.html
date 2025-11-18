@@ -316,6 +316,10 @@
                         <button class="back-button" type="button" data-back="root" aria-label="Back"></button>
                         <span class="sub-title" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</span>
                     </div>
+                    {# Add "All [Item]" link to access main page #}
+                    <a href="{{ nav_info.url }}" class="mobile-nav-item mobile-nav-all-link dropdown-item-large" data-lang-nav="all{{ nav_info.lang }}">
+                        All {{ nav_info.lang|title }}
+                    </a>
                     {% for column in dropdown_data.columns %}
                         <div class="mobile-nav-column">
                             {% if column.get('title') %}
