@@ -75,15 +75,12 @@
                 // Get the scroll container (we'll use scrollLeft for better compatibility)
                 // Since we're using transform, we need to track position manually
                 const currentPos = getCurrentScrollPosition();
-                const scrollWidth = getScrollWidth();
                 
                 // Decrement scroll position (move right-to-left, negative direction)
                 let newPos = currentPos - speed;
                 
-                // Loop back for infinite scroll effect
-                if (newPos <= -scrollWidth) {
-                    newPos = 0;
-                }
+                // Enforce infinite loop in both directions
+                newPos = enforceInfiniteLoop(newPos);
                 
                 // Apply transform
                 setTransform(newPos);
@@ -127,6 +124,48 @@
             const cardWidth = window.innerWidth < 768 ? 320 : 450;
             const gap = window.innerWidth < 768 ? 16 : 24;
             return (cardWidth + gap) * 8; // 8 cards per set
+        }
+        
+        // -------------------------
+        // INFINITE LOOP ENFORCEMENT (Both Directions)
+        // -------------------------
+        function enforceInfiniteLoop(position) {
+            const totalWidth = getScrollWidth(); // Width of one set (items are duplicated)
+            const half = totalWidth; // Half of total scroll width (one set)
+            
+            // Convert transform position to scrollLeft equivalent for logic
+            // transform: translateX(-value) means content moved left by value
+            // scrollLeft = value means scrolled right by value
+            // So: scrollLeft equivalent = -position
+            
+            const scrollLeftEquivalent = -position;
+            
+            // Too far right → wrap back to middle
+            if (scrollLeftEquivalent >= half * 1.5) {
+                const newScrollLeft = scrollLeftEquivalent - half;
+                return -newScrollLeft; // Convert back to transform position
+            }
+            
+            // Too far left → wrap forward to middle
+            if (scrollLeftEquivalent <= half * 0.5) {
+                const newScrollLeft = scrollLeftEquivalent + half;
+                return -newScrollLeft; // Convert back to transform position
+            }
+            
+            // No teleport needed - position is within valid range
+            return position;
+        }
+        
+        // -------------------------
+        // INITIALIZE INFINITE LOOP POSITION
+        // -------------------------
+        function initializeInfiniteLoopPosition() {
+            const totalWidth = getScrollWidth(); // Width of one set (items are duplicated)
+            // Start in the middle of first set (so we have items on both sides)
+            // scrollLeft = totalWidth * 0.5 means middle of first set
+            // transform: translateX(-totalWidth * 0.5) achieves the same
+            const initialPosition = -totalWidth * 0.5;
+            setTransform(initialPosition);
         }
         
         // -------------------------
@@ -193,7 +232,10 @@
             // dx > 0 -> finger moved right -> content moves right (positive direction)
             // dx < 0 -> finger moved left -> content moves left (negative direction)
             const walk = dx * 1.5; // sensitivity multiplier
-            const newScrollLeft = scrollLeftStart + walk; // Add (not subtract) for natural direction
+            let newScrollLeft = scrollLeftStart + walk; // Add (not subtract) for natural direction
+            
+            // Enforce infinite loop during drag (seamless teleport)
+            newScrollLeft = enforceInfiniteLoop(newScrollLeft);
             
             // Apply manual scroll (disable transition during drag for smoothness)
             setTransform(newScrollLeft, true);
@@ -218,6 +260,13 @@
             isDragging = false;
             isHorizontalDrag = false;
             
+            // Enforce infinite loop one final time after drag ends (handles momentum/flick)
+            const finalPos = getCurrentScrollPosition();
+            const loopedPos = enforceInfiniteLoop(finalPos);
+            if (loopedPos !== finalPos) {
+                setTransform(loopedPos, true); // Instant teleport without transition
+            }
+            
             if (isTap) {
                 // Handle tap to pause/resume
                 handleTap();
@@ -237,6 +286,13 @@
             
             // Re-enable transitions after drag
             scrollTrack.style.transition = '';
+            
+            // Enforce infinite loop after cancel (handles edge cases)
+            const finalPos = getCurrentScrollPosition();
+            const loopedPos = enforceInfiniteLoop(finalPos);
+            if (loopedPos !== finalPos) {
+                setTransform(loopedPos, true); // Instant teleport without transition
+            }
             
             // Resume auto-scroll if not paused
             if (!isPaused) {
@@ -284,8 +340,8 @@
         scrollTrack.style.animation = 'none';
         scrollTrack.style.animationPlayState = 'paused';
         
-        // Initialize scroll position
-        setTransform(0);
+        // Initialize scroll position to middle (so we have items on both sides)
+        initializeInfiniteLoopPosition();
         
         // Add event listeners for touch
         scrollWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
