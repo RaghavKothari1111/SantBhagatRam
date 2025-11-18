@@ -7,203 +7,353 @@
 {% endblock %}
 
 {% block content %}
-<div class="donate-container">
+<div class="donate-page">
+    <!-- Floating Spiritual Vectors Background -->
+    <div class="floating-vectors">
+        <div class="vector vector-diya">🪔</div>
+        <div class="vector vector-lotus">🪷</div>
+        <div class="vector vector-peacock">🪶</div>
+        <div class="vector vector-mandala">🕉️</div>
+        <div class="vector vector-om">ॐ</div>
+    </div>
+
     <!-- Hero Section -->
-    <div class="donate-hero">
-        <div class="hero-content">
-            <div class="hero-icon">🙏</div>
-            <h1 class="hero-title" data-lang-donate="heroTitle">दान करें और सेवा में सहयोग करें</h1>
-            <p class="hero-subtitle" data-lang-donate="heroSubtitle">आपका दान हमारे समाज सेवा के कार्यों को आगे बढ़ाने में मदद करता है</p>
-        </div>
-    </div>
-
-    <!-- Donation Cards -->
-    <div class="donation-cards-container">
-        <div class="donation-card">
-            <div class="card-icon">💝</div>
-            <h3 data-lang-donate="regularDonation">नियमित दान</h3>
-            <p data-lang-donate="regularDesc">मासिक या वार्षिक दान करके हमारे कार्यों में निरंतर सहयोग करें</p>
-            <div class="amount-options">
-                <button class="amount-btn" data-amount="500">₹500</button>
-                <button class="amount-btn" data-amount="1000">₹1,000</button>
-                <button class="amount-btn" data-amount="2500">₹2,500</button>
-                <button class="amount-btn" data-amount="5000">₹5,000</button>
+    <section class="donate-hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🙏</span>
+                    <span data-lang-donate="seva">सेवा</span>
+                </div>
+                <h1 class="hero-title" data-lang-donate="heroTitle">Support Our Divine Initiatives</h1>
+                <p class="hero-subtitle" data-lang-donate="heroSubtitle">Your generous contribution helps us serve humanity, spread compassion, and facilitate spiritual transformation. Together, we can make a meaningful difference in countless lives.</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label" data-lang-donate="livesTouched">Lives Touched</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label" data-lang-donate="programs">Programs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label" data-lang-donate="service">Service</div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="donation-card featured">
-            <div class="featured-badge" data-lang-donate="popular">⭐ लोकप्रिय</div>
-            <div class="card-icon">🌟</div>
-            <h3 data-lang-donate="oneTimeDonation">एकमुश्त दान</h3>
-            <p data-lang-donate="oneTimeDesc">एक बार में दान करके हमारी सेवा में योगदान दें</p>
-            <div class="custom-amount">
-                <label for="customAmount" data-lang-donate="enterAmount">अपनी राशि दर्ज करें:</label>
-                <div class="input-group">
-                    <span class="currency">₹</span>
-                    <input type="number" id="customAmount" placeholder="0" min="100" step="100">
+            <div class="hero-image">
+                <div class="image-wrapper">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Maharaj" class="maharaj-image">
+                    <div class="image-glow"></div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="donation-card">
-            <div class="card-icon">🎁</div>
-            <h3 data-lang-donate="specialDonation">विशेष दान</h3>
-            <p data-lang-donate="specialDesc">विशेष कार्यक्रमों या परियोजनाओं के लिए दान करें</p>
-            <div class="amount-options">
-                <button class="amount-btn" data-amount="10000">₹10,000</button>
-                <button class="amount-btn" data-amount="25000">₹25,000</button>
-                <button class="amount-btn" data-amount="50000">₹50,000</button>
-                <button class="amount-btn" data-amount="100000">₹1,00,000</button>
+    <!-- Donation Purpose Cards -->
+    <section class="donation-purposes-section">
+        <div class="section-header">
+            <h2 class="section-title" data-lang-donate="donationPurposes">Where Your Seva Goes</h2>
+            <p class="section-subtitle" data-lang-donate="purposeSubtitle">Your contribution supports these sacred initiatives</p>
+        </div>
+        <div class="purpose-cards-grid">
+            <div class="purpose-card" data-purpose="gau-seva">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="gauSewa">Gau Sewa</h3>
+                <p class="purpose-description" data-lang-donate="gauSewaDesc">Supporting the care and protection of sacred cows, ensuring their well-being and nourishment.</p>
+            </div>
+
+            <div class="purpose-card" data-purpose="annadaan">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="annadaan">Annadaan</h3>
+                <p class="purpose-description" data-lang-donate="annadaanDesc">Providing nutritious meals to the needy, ensuring no one goes hungry in our community.</p>
+            </div>
+
+            <div class="purpose-card" data-purpose="sadhu-seva">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="sadhuSewa">Vaishnav Seva / Sadhu Sewa</h3>
+                <p class="purpose-description" data-lang-donate="sadhuSewaDesc">Supporting the needs of saints and spiritual seekers on their path of devotion.</p>
+            </div>
+
+            <div class="purpose-card" data-purpose="temple">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="templeDev">Temple Development</h3>
+                <p class="purpose-description" data-lang-donate="templeDevDesc">Building and maintaining sacred spaces for worship and spiritual gatherings.</p>
+            </div>
+
+            <div class="purpose-card" data-purpose="digital">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="digitalOutreach">Digital Outreach & Spiritual Media</h3>
+                <p class="purpose-description" data-lang-donate="digitalOutreachDesc">Spreading divine wisdom through digital platforms and spiritual content.</p>
+            </div>
+
+            <div class="purpose-card" data-purpose="bhandara">
+                <div class="card-icon-wrapper">
+                    <svg class="purpose-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </div>
+                <h3 class="purpose-title" data-lang-donate="bhandara">Bhandara / Satsang Arrangements</h3>
+                <p class="purpose-description" data-lang-donate="bhandaraDesc">Organizing spiritual gatherings, community meals, and devotional programs.</p>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Payment Methods -->
-    <div class="payment-section">
-        <h2 class="section-title" data-lang-donate="paymentMethods">भुगतान के तरीके</h2>
-        <div class="payment-methods">
-            <div class="payment-method">
-                <div class="method-icon">📱</div>
-                <h4 data-lang-donate="upi">UPI</h4>
-                <p data-lang-donate="upiDesc">PhonePe, Google Pay, Paytm</p>
-                <div class="upi-id">santbhagatram@paytm</div>
-                <button class="copy-btn" onclick="copyToClipboard('santbhagatram@paytm')" data-lang-donate="copy">कॉपी करें</button>
+    <!-- Donation Amount Selector -->
+    <section class="donation-amount-section">
+        <div class="amount-container">
+            <h2 class="section-title" data-lang-donate="selectAmount">Select Donation Amount</h2>
+            <div class="amount-buttons">
+                <button class="amount-btn" data-amount="251">₹251</button>
+                <button class="amount-btn" data-amount="501">₹501</button>
+                <button class="amount-btn" data-amount="1100">₹1,100</button>
+                <button class="amount-btn" data-amount="2100">₹2,100</button>
+                <button class="amount-btn" data-amount="5100">₹5,100</button>
+                <button class="amount-btn custom-amount-btn" data-amount="custom">
+                    <span data-lang-donate="custom">Custom</span>
+                </button>
             </div>
-            <div class="payment-method">
-                <div class="method-icon">🏦</div>
-                <h4 data-lang-donate="bankTransfer">Bank Transfer</h4>
-                <p data-lang-donate="bankDesc">Direct Bank Transfer</p>
-                <div class="bank-details">
-                    <p><strong>Account Name:</strong> SantBhagatRam</p>
-                    <p><strong>Account Number:</strong> 1234567890</p>
-                    <p><strong>IFSC Code:</strong> SBIN0001234</p>
-                    <p><strong>Bank:</strong> State Bank of India</p>
+            <div class="custom-amount-input" id="customAmountInput" style="display: none;">
+                <div class="input-wrapper">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" id="customAmount" placeholder="Enter amount" min="100" step="100">
                 </div>
             </div>
-            <div class="payment-method">
-                <div class="method-icon">💳</div>
-                <h4 data-lang-donate="cardPayment">Card Payment</h4>
-                <p data-lang-donate="cardDesc">Credit/Debit Card</p>
-                <button class="donate-btn-primary" onclick="showCardForm()" data-lang-donate="payWithCard">कार्ड से भुगतान</button>
+            <div class="selected-amount-display">
+                <span class="selected-label" data-lang-donate="selectedAmount">Selected Amount:</span>
+                <span class="selected-value" id="selectedAmount">₹0</span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Donation Form -->
-    <div class="donation-form-section">
-        <h2 class="section-title" data-lang-donate="donationInfo">दान की जानकारी</h2>
-        <form class="donation-form" id="donationForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="donorName" data-lang-donate="name">नाम *</label>
-                    <input type="text" id="donorName" name="donorName" required data-lang-donate="namePlaceholder" placeholder="आपका नाम">
+    <!-- UPI Scan & Pay Section -->
+    <section class="upi-section">
+        <div class="upi-container">
+            <div class="upi-content">
+                <h2 class="section-title" data-lang-donate="scanPay">Scan & Pay via UPI</h2>
+                <div class="qr-code-wrapper">
+                    <div class="qr-code-box">
+                        <img src="{{ url_for('static', filename='images/qr-placeholder.png') }}" alt="UPI QR Code" class="qr-code-image" id="qrCodeImage" style="display: none;" onerror="this.style.display='none'; document.getElementById('qrPlaceholder').style.display='flex';">
+                        <div class="qr-placeholder" id="qrPlaceholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <p data-lang-donate="qrPlaceholder">QR Code will be displayed here</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="donorEmail" data-lang-donate="email">ईमेल *</label>
-                    <input type="email" id="donorEmail" name="donorEmail" required data-lang-donate="emailPlaceholder" placeholder="आपका ईमेल">
+                <div class="upi-details">
+                    <div class="upi-id-box">
+                        <label data-lang-donate="upiId">UPI ID:</label>
+                        <div class="upi-id-value" id="upiId">santbhagatram@paytm</div>
+                        <button class="copy-btn" onclick="copyUPI()" data-lang-donate="copy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span data-lang-donate="copy">Copy</span>
+                        </button>
+                    </div>
+                    <div class="upi-apps">
+                        <div class="app-logo">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                            </svg>
+                            <span>GPay</span>
+                        </div>
+                        <div class="app-logo">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                            </svg>
+                            <span>PhonePe</span>
+                        </div>
+                        <div class="app-logo">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                            </svg>
+                            <span>Paytm</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="donorPhone" data-lang-donate="phone">फोन नंबर *</label>
-                    <input type="tel" id="donorPhone" name="donorPhone" required data-lang-donate="phonePlaceholder" placeholder="आपका फोन नंबर">
+        </div>
+    </section>
+
+    <!-- Bank Transfer Details -->
+    <section class="bank-transfer-section">
+        <div class="bank-container">
+            <div class="bank-card">
+                <div class="bank-header">
+                    <div class="bank-icon-wrapper">
+                        <svg class="bank-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                        <div class="lock-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="bank-title" data-lang-donate="bankTransfer">Bank Transfer Details</h3>
                 </div>
-                <div class="form-group">
-                    <label for="donationAmount" data-lang-donate="amount">दान राशि (₹) *</label>
-                    <input type="number" id="donationAmount" name="donationAmount" required placeholder="0" min="100" step="100">
+                <div class="bank-details-grid">
+                    <div class="bank-detail-item">
+                        <label data-lang-donate="bankName">Bank Name:</label>
+                        <div class="detail-value" id="bankName">State Bank of India</div>
+                    </div>
+                    <div class="bank-detail-item">
+                        <label data-lang-donate="accountHolder">Account Holder Name:</label>
+                        <div class="detail-value" id="accountHolder">Sant Bhagat Ram Religious Service Institute</div>
+                    </div>
+                    <div class="bank-detail-item">
+                        <label data-lang-donate="accountNumber">Account Number:</label>
+                        <div class="detail-value copyable" onclick="copyBankDetail('accountNumber')" id="accountNumber">1234567890</div>
+                    </div>
+                    <div class="bank-detail-item">
+                        <label data-lang-donate="ifsc">IFSC Code:</label>
+                        <div class="detail-value copyable" onclick="copyBankDetail('ifsc')" id="ifsc">SBIN0001234</div>
+                    </div>
+                    <div class="bank-detail-item">
+                        <label data-lang-donate="branch">Branch:</label>
+                        <div class="detail-value" id="branch">Chittorgarh</div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="donationMessage" data-lang-donate="message">संदेश (वैकल्पिक)</label>
-                <textarea id="donationMessage" name="donationMessage" rows="4" data-lang-donate="messagePlaceholder" placeholder="आपका संदेश..."></textarea>
-            </div>
-            <div class="form-group checkbox-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" required>
-                    <span data-lang-donate="agreement">मैं दान करने के लिए सहमत हूं और मुझे पता है कि यह राशि वापस नहीं की जाएगी</span>
-                </label>
-            </div>
-            <button type="submit" class="submit-donate-btn gooey-donate">
-                <span class="gooey-effect"></span>
-                <span data-lang-donate="submitDonate">दान करें 🙏</span>
+        </div>
+    </section>
+
+    <!-- Payment Gateway Button -->
+    <section class="payment-gateway-section">
+        <div class="gateway-container">
+            <button class="donate-secure-btn" id="donateSecureBtn" onclick="initiatePayment()">
+                <div class="btn-content">
+                    <svg class="lock-icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span data-lang-donate="donateSecurely">Donate Securely</span>
+                </div>
+                <div class="btn-shine"></div>
             </button>
-        </form>
-    </div>
+            <p class="security-note" data-lang-donate="securityNote">Your payment is secured with 256-bit SSL encryption</p>
+        </div>
+    </section>
 
-    <!-- Impact Section -->
-    <div class="impact-section">
-        <h2 class="section-title" data-lang-donate="impact">आपके दान का प्रभाव</h2>
-        <div class="impact-grid">
-            <div class="impact-item">
-                <div class="impact-number">500+</div>
-                <div class="impact-label" data-lang-donate="familiesHelped">परिवारों की मदद</div>
-            </div>
-            <div class="impact-item">
-                <div class="impact-number">50+</div>
-                <div class="impact-label" data-lang-donate="programsOrganized">कार्यक्रम आयोजित</div>
-            </div>
-            <div class="impact-item">
-                <div class="impact-number">1000+</div>
-                <div class="impact-label" data-lang-donate="peopleReached">लोगों तक पहुंच</div>
-            </div>
-            <div class="impact-item">
-                <div class="impact-number">24/7</div>
-                <div class="impact-label" data-lang-donate="serviceAvailable">सेवा उपलब्ध</div>
+    <!-- What Your Contribution Supports -->
+    <section class="contribution-supports-section">
+        <div class="supports-container">
+            <h2 class="section-title" data-lang-donate="contributionSupports">What Your Contribution Supports</h2>
+            <div class="supports-grid">
+                {% if objectives %}
+                    {% for objective in objectives[:4] %}
+                    <div class="support-card">
+                        <div class="support-icon">
+                            {% if objective.icon %}
+                                {{ objective.icon|safe }}
+                            {% else %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <h4 class="support-title">{{ objective.titleEn if objective.titleEn else objective.title }}</h4>
+                        <p class="support-description">{{ objective.descriptionEn if objective.descriptionEn else objective.description }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Fallback support messages -->
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="support-title">Spreading Love & Compassion</h4>
+                        <p class="support-description">Your seva supports spreading inner peace and unconditional love to all beings.</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h4 class="support-title">Building Spiritual Community</h4>
+                        <p class="support-description">Your donation helps divine service initiatives and community building.</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h4 class="support-title">Facilitating Spiritual Growth</h4>
+                        <p class="support-description">Your support empowers spiritual transformation and personal awakening.</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <h4 class="support-title">Nurturing Inner Peace</h4>
+                        <p class="support-description">Your contribution spreads love & compassion globally, creating harmony.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Blessings Note Section -->
+    <section class="blessings-section">
+        <div class="blessings-container">
+            <div class="blessings-card">
+                <div class="blessings-icon">🙏</div>
+                <h3 class="blessings-title" data-lang-donate="blessingsTitle">Divine Blessings</h3>
+                <p class="blessings-message" data-lang-donate="blessingsMessage">With your kind contribution, may divine blessings flow into your life. Thank you for supporting this sacred mission of serving humanity and spreading spiritual wisdom.</p>
+                <div class="signature-section">
+                    <div class="signature-line"></div>
+                    <p class="signature-label" data-lang-donate="signature">Maharaj's Blessings</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/donate-particles.js') }}"></script>
-<script>
-    // Amount button selection
-    document.querySelectorAll('.amount-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            document.getElementById('donationAmount').value = this.dataset.amount;
-        });
-    });
-
-    // Custom amount input
-    document.getElementById('customAmount').addEventListener('input', function() {
-        document.getElementById('donationAmount').value = this.value;
-    });
-
-    // Copy to clipboard
-    function copyToClipboard(text) {
-        const lang = localStorage.getItem('selectedLanguage') || 'hi';
-        const messages = {
-            en: 'Copied: ' + text,
-            hi: 'कॉपी हो गया: ' + text
-        };
-        navigator.clipboard.writeText(text).then(() => {
-            alert(messages[lang]);
-        });
-    }
-
-    // Form submission
-    document.getElementById('donationForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const lang = localStorage.getItem('selectedLanguage') || 'hi';
-        const messages = {
-            en: 'Thank you! Your donation will help our social service work.',
-            hi: 'धन्यवाद! आपका दान हमारे समाज सेवा के कार्यों में मदद करेगा।'
-        };
-        alert(messages[lang]);
-        // Here you would typically send the data to your backend
-    });
-
-    function showCardForm() {
-        const lang = localStorage.getItem('selectedLanguage') || 'hi';
-        const messages = {
-            en: 'Card payment form will be available soon.',
-            hi: 'कार्ड भुगतान फॉर्म जल्द ही उपलब्ध होगा।'
-        };
-        alert(messages[lang]);
-    }
-</script>
+<script src="{{ url_for('static', filename='js/donate.js') }}"></script>
 {% endblock %}
-

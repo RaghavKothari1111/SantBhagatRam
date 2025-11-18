@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Projects - SantBhagatRam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="projects-container">
+    <!-- Header -->
+    <div class="projects-header">
+        <h1 data-lang-projects="title">Our Projects</h1>
+        <p data-lang-projects="subtitle">Discover our ongoing initiatives and service programs dedicated to serving humanity</p>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+        <div class="project-card" data-project="gau-seva">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Gau Sewa Project">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Ongoing</div>
+                <h3 class="project-title" data-lang-projects="gauSewaTitle">Gau Sewa Initiative</h3>
+                <p class="project-description" data-lang-projects="gauSewaDesc">Dedicated to the care and protection of sacred cows, ensuring their well-being and providing them with proper shelter, food, and medical care.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label" data-lang-projects="cows">Cows</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label" data-lang-projects="care">Care</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card" data-project="annadaan">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Annadaan Project">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Active</div>
+                <h3 class="project-title" data-lang-projects="annadaanTitle">Annadaan Program</h3>
+                <p class="project-description" data-lang-projects="annadaanDesc">Providing nutritious meals to the needy and underprivileged, ensuring no one goes hungry in our community.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label" data-lang-projects="meals">Meals/Day</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">365</span>
+                        <span class="stat-label" data-lang-projects="days">Days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card" data-project="medical">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Medical Services">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Ongoing</div>
+                <h3 class="project-title" data-lang-projects="medicalTitle">Medical Services</h3>
+                <p class="project-description" data-lang-projects="medicalDesc">Offering free medical checkups, treatments, and health awareness programs to serve the community's healthcare needs.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label" data-lang-projects="patients">Patients</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label" data-lang-projects="camps">Camps</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card" data-project="education">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Education Project">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Active</div>
+                <h3 class="project-title" data-lang-projects="educationTitle">Education & Training</h3>
+                <p class="project-description" data-lang-projects="educationDesc">Operating training centers for skill development and vocational training, empowering communities to become self-reliant.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label" data-lang-projects="students">Students</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label" data-lang-projects="centers">Centers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card" data-project="temple">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Temple Development">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Ongoing</div>
+                <h3 class="project-title" data-lang-projects="templeTitle">Temple Development</h3>
+                <p class="project-description" data-lang-projects="templeDesc">Building and maintaining sacred spaces for worship, spiritual gatherings, and community service activities.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">5+</span>
+                        <span class="stat-label" data-lang-projects="temples">Temples</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label" data-lang-projects="devotees">Devotees</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card" data-project="rural">
+            <div class="project-image">
+                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Rural Outreach">
+                <div class="project-overlay">
+                    <div class="project-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="project-content">
+                <div class="project-badge">Active</div>
+                <h3 class="project-title" data-lang-projects="ruralTitle">Rural Outreach</h3>
+                <p class="project-description" data-lang-projects="ruralDesc">Extending our services to tribal and rural areas, providing free nutritious food, healthcare, and educational support.</p>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label" data-lang-projects="villages">Villages</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5000+</span>
+                        <span class="stat-label" data-lang-projects="beneficiaries">Beneficiaries</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Ensure translations are applied after page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            if (window.applyLanguage) {
+                const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
+                window.applyLanguage(lang);
+            }
+        }, 300);
+    });
+</script>
+{% endblock %}
+

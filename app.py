@@ -176,7 +176,8 @@ def videos():
 
 @app.route('/donate')
 def donate():
-    return render_template('donate.html')
+    objectives = get_all_objectives()
+    return render_template('donate.html', objectives=objectives)
 
 @app.route('/events')
 def events():

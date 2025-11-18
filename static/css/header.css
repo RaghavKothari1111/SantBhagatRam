@@ -8,7 +8,7 @@
 
 /* Navbar Styles */
 .navbar {
-    padding: 16px 40px;
+    padding: 9px 40px;
     width: 100%;
     position: sticky;
     top: 0;
@@ -16,7 +16,7 @@
     background: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid #e5e7eb;
-    --navbar-height: 72px;
+    --navbar-height: 50px;
     transition: border-bottom 0.2s ease;
 }
 
@@ -33,7 +33,7 @@ body:has(.drop-down_projects:hover) .navbar {
     max-width: 100%;
     position: relative;
     width: 100%;
-    gap: 20px;
+    gap: 24px;
 }
 
 .logo {
@@ -45,7 +45,7 @@ body:has(.drop-down_projects:hover) .navbar {
 .logo a {
     color: #111827;
     text-decoration: none;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
     transition: opacity 0.2s ease;
     letter-spacing: -0.5px;
@@ -54,7 +54,7 @@ body:has(.drop-down_projects:hover) .navbar {
 }
 
 .logo-img {
-    height: 50px;
+    height: 36px;
     width: auto;
     display: block;
     transition: opacity 0.2s ease;
@@ -73,7 +73,7 @@ body:has(.drop-down_projects:hover) .navbar {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2px;
+    gap: 24px;
     align-items: center;
     margin: 0;
     padding: 0;
@@ -88,27 +88,28 @@ body:has(.drop-down_projects:hover) .navbar {
 
 .nav-links a {
     text-decoration: none;
-    color: #4b5563;
+    color: #000000;
     font-weight: 600;
-    padding: 12px 16px;
+    padding: 7px 12px;
     display: inline-block;
     position: relative;
-    border-radius: 12px;
-    font-size: 16px;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+    border-radius: 8px;
+    font-size: 14px !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     white-space: nowrap;
     min-width: fit-content;
     flex-shrink: 0;
-    line-height: 1.5;
+    line-height: 1.4;
     letter-spacing: 0.01em;
     background-color: transparent;
 }
 
-/* Same spacing for Hindi as English */
+/* Hindi text appears smaller visually, so increase font-size to match English visual size */
 body.lang-hindi .nav-links a {
-    font-size: 16px;
-    padding: 12px 16px;
-    line-height: 1.5;
+    font-size: 15px !important;
+    padding: 7px 12px;
+    line-height: 1.4;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 .nav-links a:hover {
@@ -123,8 +124,8 @@ body.lang-hindi .nav-links a {
 .nav-links > li > a::after {
     content: '';
     position: absolute;
-    bottom: 8px;
-    left: 16px;
+    bottom: 5px;
+    left: 12px;
     width: 0;
     height: 2px;
     background-color: var(--bubblegum-pink);
@@ -132,7 +133,7 @@ body.lang-hindi .nav-links a {
 }
 
 .nav-links > li > a:hover::after {
-    width: calc(100% - 32px);
+    width: calc(100% - 24px);
 }
 
 /* Remove underline from dropdown menu items */
@@ -145,35 +146,36 @@ body.lang-hindi .nav-links a {
 .language-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
+    gap: 4px;
+    padding: 6px 10px;
     background: #f3f4f6;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 600;
-    color: #4b5563;
+    color: #000000;
     cursor: pointer;
     transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 background-color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 border-color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 backdrop-filter 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin-left: 4px;
     white-space: nowrap;
     min-width: fit-content;
     flex-shrink: 0;
-    line-height: 1.4;
+    line-height: 1.3;
     transform: scale(1);
     will-change: transform;
     position: relative;
 }
 
-/* Larger font size for Hindi */
+/* Hindi text appears smaller visually, so increase font-size to match English visual size */
 body.lang-hindi .language-toggle {
-    font-size: 17px;
-    padding: 10px 20px;
+    font-size: 13px !important;
+    padding: 6px 10px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 .language-toggle:hover {
@@ -187,10 +189,19 @@ body.lang-hindi .language-toggle {
 }
 
 .language-toggle-icon {
-    font-size: 14px;
-    font-weight: 700;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0.8;
-    letter-spacing: -0.5px;
+}
+
+.language-toggle-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
 }
 
 /* Donate Button */
@@ -348,21 +359,21 @@ body.lang-hindi [class*="drop-down-menu-"] .dropdown-content {
 }
 
 [class*="drop-down-menu-"] .dropdown-column-title {
-    font-size: 12px;
+    font-size: 12px !important;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 8px;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 [class*="drop-down-menu-"] .dropdown-column-heading {
-    font-size: 24px;
+    font-size: 24px !important;
     font-weight: 700;
     color: #111827;
     margin-bottom: 12px;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     letter-spacing: -0.01em;
 }
 
@@ -370,10 +381,14 @@ body.lang-hindi [class*="drop-down-menu-"] .dropdown-content {
 body.lang-hindi [class*="drop-down-menu-"] .dropdown-column-heading {
     margin-bottom: 12px;
     line-height: 1.4;
+    font-size: 25px !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 body.lang-hindi [class*="drop-down-menu-"] .dropdown-column-title {
     margin-bottom: 8px;
+    font-size: 13px !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 /* Legacy support for specific dropdowns */
@@ -509,6 +524,7 @@ body.lang-hindi [class*="drop-down-menu-"] .dropdown-column-title {
     font-weight: 700 !important;
     line-height: 1.3 !important;
     color: #111827 !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 [class*="drop-down-menu-"] .dropdown-item-small {
@@ -516,6 +532,16 @@ body.lang-hindi [class*="drop-down-menu-"] .dropdown-column-title {
     font-weight: 400 !important;
     line-height: 1.5 !important;
     color: #4b5563 !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Hindi text appears smaller visually, increase font-size to match English */
+body.lang-hindi [class*="drop-down-menu-"] .dropdown-item-small {
+    font-size: 18px !important;
+}
+
+body.lang-hindi [class*="drop-down-menu-"] .dropdown-item-large {
+    font-size: 25px !important;
 }
 
 /* All dropdown links - same hover effect */
@@ -531,7 +557,7 @@ body.lang-hindi [class*="drop-down-menu-"] .dropdown-column-title {
     word-wrap: break-word;
     overflow-wrap: break-word;
     border-radius: 0;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     transform: scale(1);
     background-color: transparent !important;
     border: none !important;
@@ -557,10 +583,11 @@ body.lang-hindi [class*="drop-down-menu-"] li {
 
 body.lang-hindi [class*="drop-down-menu-"] a {
     line-height: 1.4;
-    font-size: 17px;
+    font-size: 18px !important;
     display: inline-block;
     margin: 0;
     padding: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 [class*="drop-down-menu-"] ul {
@@ -667,10 +694,10 @@ body.lang-hindi [class*="drop-down-menu-"] a {
 /* Responsive Header */
 @media (max-width: 768px) {
     .navbar {
-        padding: 10px 20px;
+        padding: 7px 20px;
         width: 100%;
         max-width: 100%;
-        --navbar-height: 60px;
+        --navbar-height: 42px;
     }
 
     .logo {
@@ -680,11 +707,11 @@ body.lang-hindi [class*="drop-down-menu-"] a {
     }
 
     .logo a {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .logo-img {
-        height: 36px;
+        height: 28px;
     }
 
     .nav-content {

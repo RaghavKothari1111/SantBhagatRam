@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>{% block title %}My Website{% endblock %}</title>
     
     <!-- Base Styles -->
@@ -206,7 +206,8 @@
                     'projects': {'url': '/projects', 'lang': 'projects'},
                     'photos': {'url': '/photos', 'lang': 'photos'},
                     'videos': {'url': '/videos', 'lang': 'videos'},
-                    'events': {'url': '/events', 'lang': 'events'}
+                    'events': {'url': '/events', 'lang': 'events'},
+                    'donate': {'url': '/donate', 'lang': 'donate'}
                 } %}
                 {% for nav_item, nav_info in nav_items_map.items() %}
                     {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
@@ -263,7 +264,13 @@
                 {% endfor %}
                 <li>
                     <button class="language-toggle" id="languageBtn" aria-label="Change language">
-                        <span class="language-toggle-icon">Aa</span>
+                        <span class="language-toggle-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </span>
                         <span id="languageBtnText">हिंदी</span>
                     </button>
                 </li>
@@ -286,7 +293,8 @@
                 'projects': {'url': '/projects', 'lang': 'projects'},
                 'photos': {'url': '/photos', 'lang': 'photos'},
                 'videos': {'url': '/videos', 'lang': 'videos'},
-                'events': {'url': '/events', 'lang': 'events'}
+                'events': {'url': '/events', 'lang': 'events'},
+                'donate': {'url': '/donate', 'lang': 'donate'}
             } %}
             {% for nav_item, nav_info in nav_items_map.items() %}
                 {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
@@ -304,7 +312,13 @@
                 {% endif %}
             {% endfor %}
             <button type="button" class="mobile-nav-item" id="languageBtnMobile">
-                <span class="language-toggle-icon">Aa</span>
+                <span class="language-toggle-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                </span>
                 <span id="languageBtnTextMobile">हिंदी</span>
             </button>
         </div>
