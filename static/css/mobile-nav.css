@@ -1,0 +1,257 @@
+/* APPLE-STYLE MOBILE NAVIGATION MENU */
+
+/* Hide hamburger on desktop by default */
+.mobile-nav-toggle {
+    display: none;
+    cursor: pointer;
+    order: 3;
+    margin-left: auto;
+    flex-shrink: 0;
+    z-index: 1001;
+    position: relative;
+}
+
+/* Two-line hamburger */
+.hamburger-two-line {
+    width: 24px;
+    height: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.hamburger-two-line span {
+    display: block;
+    height: 2.5px;
+    width: 100%;
+    background: #1d1d1f;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+}
+
+/* Overlay */
+.mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.mobile-nav-overlay.is-open {
+    transform: translateX(0);
+}
+
+.mobile-nav-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 70px 24px 24px;
+    box-sizing: border-box;
+}
+
+/* Close X */
+.mobile-nav-close {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    font-size: 32px;
+    font-weight: 300;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1d1d1f;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    z-index: 10000;
+}
+
+.mobile-nav-close:hover {
+    opacity: 0.7;
+}
+
+/* Panels (main + submenus) slide horizontally */
+.mobile-nav-panel {
+    position: absolute;
+    inset: 0;
+    padding: 70px 24px 24px;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+.mobile-nav-panel.is-active {
+    transform: translateX(0);
+}
+
+/* Main panel slides left when submenu opens */
+.mobile-nav-panel.slide-left {
+    transform: translateX(-100%);
+}
+
+/* Items – BOLD text like Apple */
+.mobile-nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 28px;
+    font-weight: 600;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1d1d1f;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item:active {
+    opacity: 0.7;
+}
+
+.mobile-nav-item.has-children {
+    position: relative;
+}
+
+.mobile-nav-item.has-children::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #1d1d1f;
+    border-bottom: 2px solid #1d1d1f;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+/* Submenu header with back button */
+.mobile-nav-subheader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.back-button {
+    font-size: 20px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1d1d1f;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+    transition: opacity 0.2s ease;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.back-button:hover,
+.back-button:active {
+    opacity: 0.7;
+}
+
+.sub-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1d1d1f;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Submenu items */
+.mobile-nav-item.dropdown-item-large {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.mobile-nav-item.dropdown-item-small {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+/* Submenu section */
+.mobile-nav-section {
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.mobile-nav-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Language toggle in menu */
+#languageBtnMobile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.language-toggle-icon {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Prevent body scroll when menu is open */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Only show on mobile */
+@media (max-width: 767px) {
+    .mobile-nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Hide desktop nav on mobile */
+    .nav-links-container {
+        display: none !important;
+    }
+}
+
+/* Hide on desktop */
+@media (min-width: 768px) {
+    .mobile-nav-overlay {
+        display: none !important;
+    }
+}
+

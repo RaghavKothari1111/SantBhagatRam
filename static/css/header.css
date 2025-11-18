@@ -647,41 +647,14 @@ body.lang-hindi [class*="drop-down-menu-"] a {
         align-items: center;
     }
 
+    /* Hide old mobile menu toggle - using new Apple-style hamburger */
     .mobile-menu-toggle {
-        display: flex;
-        order: 3;
-        margin-left: auto;
-        flex-shrink: 0;
-        min-width: 44px;
-        min-height: 44px;
-        padding: 8px;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
+        display: none !important;
     }
 
+    /* Hide desktop nav on mobile - using Apple-style menu instead */
     .nav-links-container {
-        order: 2;
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 280px;
-        height: 100vh;
-        background: #ffffff;
-        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
-        max-width: 0;
-        overflow: hidden;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1000;
-        padding: 0;
-    }
-
-    .nav-links-container.active {
-        max-width: 280px;
-        opacity: 1;
-        visibility: visible;
-        padding: 80px 0 20px 0;
+        display: none !important;
     }
 
     .nav-links {

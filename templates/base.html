@@ -178,6 +178,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/language.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-nav.css') }}">
     
 
     
@@ -190,12 +191,13 @@
 <header class="navbar">
     <div class="nav-content">
         <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SantBhagatRam" class="logo-img"></a></div>
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+        <!-- Mobile hamburger (visible only on mobile via CSS) -->
+        <div id="mobileNavToggle" class="mobile-nav-toggle">
+            <div class="hamburger-two-line">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
         <nav class="nav-links-container" id="navLinksContainer">
             <ul class="nav-links">
                 <li><a href="/" data-lang-nav="home">Home</a></li>
@@ -267,6 +269,82 @@
         </nav>
     </div>
 </header>
+
+<!-- Fullscreen mobile nav overlay -->
+<div id="mobileNavOverlay" class="mobile-nav-overlay">
+    <div class="mobile-nav-inner">
+        <!-- Close (X) -->
+        <button id="mobileNavClose" class="mobile-nav-close">×</button>
+        
+        <!-- MAIN PANEL -->
+        <div class="mobile-nav-panel is-active" data-panel="root">
+            <a href="/" class="mobile-nav-item" data-lang-nav="home">Home</a>
+            {% set nav_items_map = {
+                'blog': {'url': '/blog', 'lang': 'blog'},
+                'projects': {'url': '/projects', 'lang': 'projects'},
+                'photos': {'url': '/photos', 'lang': 'photos'},
+                'videos': {'url': '/videos', 'lang': 'videos'},
+                'events': {'url': '/events', 'lang': 'events'}
+            } %}
+            {% for nav_item, nav_info in nav_items_map.items() %}
+                {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
+                {% if dropdown_data.enabled %}
+                    <button
+                        type="button"
+                        class="mobile-nav-item has-children"
+                        data-panel-target="panel-{{ nav_item }}"
+                        data-lang-nav="{{ nav_info.lang }}"
+                    >
+                        {{ nav_info.lang|title }}
+                    </button>
+                {% else %}
+                    <a href="{{ nav_info.url }}" class="mobile-nav-item" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</a>
+                {% endif %}
+            {% endfor %}
+            <button type="button" class="mobile-nav-item" id="languageBtnMobile">
+                <span class="language-toggle-icon">Aa</span>
+                <span id="languageBtnTextMobile">हिंदी</span>
+            </button>
+        </div>
+        
+        <!-- SUBMENUS -->
+        {% for nav_item, nav_info in nav_items_map.items() %}
+            {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
+            {% if dropdown_data.enabled %}
+                <div class="mobile-nav-panel" data-panel="panel-{{ nav_item }}">
+                    <div class="mobile-nav-subheader">
+                        <button class="back-button" type="button" data-back="root">← Back</button>
+                        <span class="sub-title" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</span>
+                    </div>
+                    {% for column in dropdown_data.columns %}
+                        {% if column.get('heading') %}
+                            <a href="{{ nav_info.url }}" class="mobile-nav-item dropdown-item-large" data-column-heading-en="{{ column.get('heading', '') }}" data-column-heading-hi="{{ column.get('heading_hi', column.get('heading', '')) }}">
+                                {{ column.get('heading') }}
+                            </a>
+                        {% endif %}
+                        {% if column.get('items') %}
+                            {% for item in column.get('items', []) %}
+                                <a href="{{ item.get('link', '#') }}" class="mobile-nav-item {% if item.get('font_size') == 'large' %}dropdown-item-large{% else %}dropdown-item-small{% endif %}" data-item-title-en="{{ item.get('title', '') }}" data-item-title-hi="{{ item.get('title_hi', item.get('title', '')) }}">
+                                    {{ item.get('title', '') }}
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                    {# Add social media section #}
+                    <div class="mobile-nav-section">
+                        <div class="mobile-nav-section-title" data-lang-nav="followUs">Follow Us</div>
+                        <a href="{{ navbar_dropdowns_data.social_media.youtube }}" target="_blank" class="mobile-nav-item">
+                            YouTube
+                        </a>
+                        <a href="{{ navbar_dropdowns_data.social_media.instagram }}" target="_blank" class="mobile-nav-item">
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
 
 <!-- Blur overlay for dropdown (below dropdown content) -->
 <div class="blur-overlay" id="blur-area"></div>
@@ -483,6 +561,7 @@
 
 <!-- Load extra JS at the bottom -->
 <script src="{{ url_for('static', filename='js/language.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
 <script>
     // Scroll to Top functionality
     (function() {
