@@ -210,10 +210,17 @@ function calculateSlidePositions(instant = false) {
 }
 
 function updateSlider() {
-    if (isTransitioning) return;
+    if (isTransitioning && !transitionEndHandled) return;
     
     isTransitioning = true;
     dragOffset = 0;
+    transitionEndHandled = false;
+    
+    // Clear any existing timeout
+    if (cloneJumpTimeout) {
+        clearTimeout(cloneJumpTimeout);
+        cloneJumpTimeout = null;
+    }
     
     // Re-enable transitions
     slides.forEach(slide => {
@@ -223,68 +230,201 @@ function updateSlider() {
     // Animate to new positions
     calculateSlidePositions();
     
+    // For mobile, use a shorter timeout and rely on transitionend event
     const duration = getTransitionDuration();
+    const timeoutDuration = isMobileDevice() ? duration + 100 : duration;
+    
+    // Set up fallback timeout for clone jumps (in case transitionend doesn't fire)
+    if (currentIndex === realTotalSlides + 1 || currentIndex === 0) {
+        // For mobile, use a slightly longer timeout to ensure smooth transition
+        const cloneJumpTimeoutDuration = isMobileDevice() ? timeoutDuration + 50 : timeoutDuration;
+        cloneJumpTimeout = setTimeout(() => {
+            if (!transitionEndHandled) {
+                handleCloneJump();
+            }
+        }, cloneJumpTimeoutDuration);
+    }
+    
     setTimeout(() => {
-        isTransitioning = false;
-    }, duration);
+        // Only reset if transition end hasn't been handled
+        if (!transitionEndHandled) {
+            isTransitioning = false;
+        }
+    }, timeoutDuration);
 }
 
 // Handle transition end to fix snapping
-function handleTransitionEnd(e) {
-    // Only handle transitions on gallery items
-    if (!e.target.classList.contains('gallery-item')) return;
-    
+let transitionEndHandled = false;
+let cloneJumpTimeout = null;
+
+function handleCloneJump() {
     // Check if we're on the first clone (after last real slide)
     if (currentIndex === realTotalSlides + 1) {
-        // Instantly jump to first real slide (index 1) without transition
-        slides.forEach(slide => {
-            slide.style.transition = 'none';
+        transitionEndHandled = true;
+        
+        // For mobile, use a shorter delay for smoother transition
+        const delay = isMobileDevice() ? 0 : 0;
+        
+        // Use requestAnimationFrame for smooth transition
+        requestAnimationFrame(() => {
+            // Small delay for mobile to ensure transition completes
+            if (isMobileDevice()) {
+                setTimeout(() => {
+                    // Instantly jump to first real slide (index 1) without transition
+                    slides.forEach(slide => {
+                        slide.style.transition = 'none';
+                    });
+                    
+                    currentIndex = 1;
+                    calculateSlidePositions(true);
+                    
+                    // Force reflow
+                    void container.offsetWidth;
+                    
+                    // Re-enable transitions immediately
+                    requestAnimationFrame(() => {
+                        slides.forEach(slide => {
+                            slide.style.transition = getTransitionString();
+                        });
+                        
+                        // Update dots
+                        dots.forEach((dot, index) => {
+                            dot.classList.toggle('active', index === 0);
+                        });
+                        
+                        // Reset flag and transition state
+                        transitionEndHandled = false;
+                        isTransitioning = false;
+                    });
+                }, 100); // Delay for mobile to ensure transition completes smoothly
+            } else {
+                // Desktop: instant jump
+                slides.forEach(slide => {
+                    slide.style.transition = 'none';
+                });
+                
+                currentIndex = 1;
+                calculateSlidePositions(true);
+                
+                // Force reflow
+                void container.offsetWidth;
+                
+                // Re-enable transitions after a tiny delay
+                requestAnimationFrame(() => {
+                    slides.forEach(slide => {
+                        slide.style.transition = getTransitionString();
+                    });
+                    
+                    // Update dots
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === 0);
+                    });
+                    
+                    // Reset flag and transition state
+                    transitionEndHandled = false;
+                    isTransitioning = false;
+                });
+            }
         });
-        
-        currentIndex = 1;
-        calculateSlidePositions(true);
-        
-        // Force reflow
-        void container.offsetWidth;
-        
-        // Re-enable transitions
-        slides.forEach(slide => {
-            slide.style.transition = getTransitionString();
-        });
-        
-        // Update dots
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === 0);
-        });
+        return true;
     }
     
     // Check if we're on the last clone (index 0)
     if (currentIndex === 0) {
-        // Instantly jump to last real slide without transition
-        slides.forEach(slide => {
-            slide.style.transition = 'none';
+        transitionEndHandled = true;
+        
+        // Use requestAnimationFrame for smooth transition
+        requestAnimationFrame(() => {
+            // For mobile, add small delay to ensure transition completes
+            if (isMobileDevice()) {
+                setTimeout(() => {
+                    // Instantly jump to last real slide without transition
+                    slides.forEach(slide => {
+                        slide.style.transition = 'none';
+                    });
+                    
+                    currentIndex = realTotalSlides;
+                    calculateSlidePositions(true);
+                    
+                    // Force reflow
+                    void container.offsetWidth;
+                    
+                    // Re-enable transitions immediately
+                    requestAnimationFrame(() => {
+                        slides.forEach(slide => {
+                            slide.style.transition = getTransitionString();
+                        });
+                        
+                        // Update dots
+                        dots.forEach((dot, index) => {
+                            dot.classList.toggle('active', index === realTotalSlides - 1);
+                        });
+                        
+                        // Reset flag and transition state
+                        transitionEndHandled = false;
+                        isTransitioning = false;
+                    });
+                }, 100); // Delay for mobile to ensure transition completes smoothly
+            } else {
+                // Desktop: instant jump
+                slides.forEach(slide => {
+                    slide.style.transition = 'none';
+                });
+                
+                currentIndex = realTotalSlides;
+                calculateSlidePositions(true);
+                
+                // Force reflow
+                void container.offsetWidth;
+                
+                // Re-enable transitions after a tiny delay
+                requestAnimationFrame(() => {
+                    slides.forEach(slide => {
+                        slide.style.transition = getTransitionString();
+                    });
+                    
+                    // Update dots
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === realTotalSlides - 1);
+                    });
+                    
+                    // Reset flag and transition state
+                    transitionEndHandled = false;
+                    isTransitioning = false;
+                });
+            }
         });
-        
-        currentIndex = realTotalSlides;
-        calculateSlidePositions(true);
-        
-        // Force reflow
-        void container.offsetWidth;
-        
-        // Re-enable transitions
-        slides.forEach(slide => {
-            slide.style.transition = getTransitionString();
-        });
-        
-        // Update dots
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === realTotalSlides - 1);
-        });
+        return true;
     }
+    
+    return false;
+}
+
+function handleTransitionEnd(e) {
+    // Only handle transitions on gallery items
+    if (!e.target.classList.contains('gallery-item')) return;
+    
+    // Prevent multiple handlers from firing
+    if (transitionEndHandled) return;
+    
+    // Clear any pending timeout
+    if (cloneJumpTimeout) {
+        clearTimeout(cloneJumpTimeout);
+        cloneJumpTimeout = null;
+    }
+    
+    // Try to handle clone jump
+    if (handleCloneJump()) {
+        return;
+    }
+    
+    // For normal transitions, just reset the flag
+    transitionEndHandled = false;
+    isTransitioning = false;
 }
 
 function nextImage() {
-    if (isTransitioning || isDragging) return;
+    if ((isTransitioning && !transitionEndHandled) || isDragging) return;
     
     // Check if we're at the last real slide (index = realTotalSlides)
     if (currentIndex >= realTotalSlides) {
@@ -305,7 +445,7 @@ function nextImage() {
 }
 
 function prevImage() {
-    if (isTransitioning || isDragging) return;
+    if ((isTransitioning && !transitionEndHandled) || isDragging) return;
     
     // Check if we're at the first real slide (index = 1)
     if (currentIndex <= 1) {
@@ -326,7 +466,7 @@ function prevImage() {
 }
 
 function goToSlide(index) {
-    if (isTransitioning || isDragging) return;
+    if ((isTransitioning && !transitionEndHandled) || isDragging) return;
     // Convert real slide index (0-based) to slider index (1-based, accounting for last clone)
     const targetIndex = index + 1; // Real slides start at index 1
     
@@ -375,9 +515,10 @@ let startY = 0;
 let isHorizontal = false;
 let startPageX = 0;
 let startPageY = 0;
+let prevDragOffset = 0;
 
 function handleDragStart(e) {
-    if (isTransitioning) return;
+    if (isTransitioning && !transitionEndHandled) return;
     
     if (e.type === 'touchstart') {
         const t = e.touches[0];
@@ -390,11 +531,13 @@ function handleDragStart(e) {
         // Store clientX for calculations (will be set when horizontal is confirmed)
         startX = t.clientX;
         startY = t.clientY;
+        prevDragOffset = dragOffset; // Store current drag offset
     } else {
         isDragging = true;
         isHorizontal = true; // Mouse events are always horizontal
         startX = e.clientX;
         startY = e.clientY;
+        prevDragOffset = dragOffset;
         e.preventDefault();
     }
     
@@ -426,10 +569,13 @@ function handleDragMove(e) {
                 isDragging = true;
                 // Update startX to current clientX for accurate calculations
                 startX = t.clientX;
-                // Now disable transitions and prevent default
+                // Disable ALL transitions immediately for smooth dragging
                 slides.forEach(slide => {
                     slide.style.transition = 'none';
                 });
+                // Reset drag offset to start fresh
+                dragOffset = 0;
+                prevDragOffset = 0;
             } else if (Math.abs(dy) > Math.abs(dx)) {
                 // Vertical scroll -> let page move normally
                 isDragging = false;
@@ -459,17 +605,22 @@ function handleDragMove(e) {
             slides.forEach(slide => {
                 slide.style.transition = 'none';
             });
+            dragOffset = 0;
+            prevDragOffset = 0;
         }
     }
     
     currentX = clientX;
     const containerWidth = container.offsetWidth || window.innerWidth;
+    
+    // Calculate drag offset in real-time for smooth dragging
     dragOffset = ((currentX - startX) / containerWidth) * 100;
     
-    // Limit drag offset
-    dragOffset = Math.max(-50, Math.min(50, dragOffset));
+    // Allow more drag range for better feel, but limit to prevent extreme values
+    dragOffset = Math.max(-60, Math.min(60, dragOffset));
     
-    calculateSlidePositions();
+    // Update positions in real-time during drag (no transition = instant update)
+    calculateSlidePositions(true); // instant = true to prevent any transitions
 }
 
 function handleDragEnd(e) {
@@ -482,59 +633,109 @@ function handleDragEnd(e) {
     isDragging = false;
     isHorizontal = false;
     
-    // Re-enable transitions
-    slides.forEach(slide => {
-        slide.style.transition = getTransitionString();
-    });
-    
     // Lower threshold for mobile devices (easier to trigger)
-    const threshold = isMobileDevice() ? 10 : 15; // Percentage threshold to trigger slide change
-    const duration = getTransitionDuration();
+    const threshold = isMobileDevice() ? 8 : 15; // Percentage threshold to trigger slide change
     
-        if (Math.abs(dragOffset) > threshold) {
+    // Determine if we should change slides based on drag distance
+    if (Math.abs(dragOffset) > threshold) {
+        // User dragged enough to change slides
         if (dragOffset > 0) {
-            // Moving right (showing previous)
+            // Moving right (showing previous) - swipe left
             if (currentIndex <= 1) {
-                // At first real slide, transition to last clone
+                // At first real slide, transition to last clone for infinite loop
                 isTransitioning = true;
+                transitionEndHandled = false;
                 currentIndex = 0; // Last clone
                 const realIndex = realTotalSlides - 1;
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === realIndex);
                 });
-                updateSlider();
             } else {
+                // Normal backward movement
                 currentIndex--;
                 const realIndex = currentIndex === 0 ? realTotalSlides - 1 : (currentIndex > realTotalSlides ? 0 : currentIndex - 1);
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === realIndex);
                 });
-                updateSlider();
             }
         } else {
-            // Moving left (showing next)
+            // Moving left (showing next) - swipe right
             if (currentIndex >= realTotalSlides) {
-                // At last real slide, transition to first clone
+                // At last real slide, transition to first clone for infinite loop
                 isTransitioning = true;
+                transitionEndHandled = false;
                 currentIndex = realTotalSlides + 1; // First clone
                 const realIndex = 0;
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === realIndex);
                 });
-                updateSlider();
             } else {
+                // Normal forward movement
                 currentIndex++;
                 const realIndex = currentIndex > realTotalSlides ? 0 : (currentIndex < 1 ? realTotalSlides - 1 : currentIndex - 1);
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === realIndex);
                 });
-                updateSlider();
             }
         }
-    } else {
-        // Snap back to current slide
+        
+        // Reset drag offset before transitioning
         dragOffset = 0;
-        updateSlider();
+        prevDragOffset = 0;
+        
+        // Set transitioning state
+        isTransitioning = true;
+        transitionEndHandled = false;
+        
+        // Re-enable transitions for smooth slide change
+        slides.forEach(slide => {
+            slide.style.transition = getTransitionString();
+        });
+        
+        // Update slider position with smooth transition
+        // Use requestAnimationFrame to ensure smooth transition start
+        requestAnimationFrame(() => {
+            calculateSlidePositions(false); // false = use transitions
+            // The transitionend event will handle the clone-to-real jump
+        });
+        
+        // Set up fallback timeout for clone jumps (in case transitionend doesn't fire)
+        if (currentIndex === realTotalSlides + 1 || currentIndex === 0) {
+            const duration = getTransitionDuration();
+            const timeoutDuration = isMobileDevice() ? duration + 150 : duration;
+            if (cloneJumpTimeout) {
+                clearTimeout(cloneJumpTimeout);
+            }
+            cloneJumpTimeout = setTimeout(() => {
+                if (!transitionEndHandled) {
+                    handleCloneJump();
+                }
+            }, timeoutDuration);
+        }
+    } else {
+        // Snap back to current slide (didn't drag enough)
+        dragOffset = 0;
+        prevDragOffset = 0;
+        
+        // Set transitioning state for snap-back
+        isTransitioning = true;
+        
+        // Re-enable transitions for snap-back
+        slides.forEach(slide => {
+            slide.style.transition = getTransitionString();
+        });
+        
+        // Snap back smoothly
+        requestAnimationFrame(() => {
+            calculateSlidePositions(false);
+        });
+        
+        // Reset transition state after snap-back completes
+        const duration = getTransitionDuration();
+        setTimeout(() => {
+            isTransitioning = false;
+            transitionEndHandled = false;
+        }, duration);
     }
     
     // Don't resume autoplay - auto-play is disabled
