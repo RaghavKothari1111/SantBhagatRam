@@ -119,11 +119,27 @@
             scrollTrack.style.transform = `translateX(${value}px)`;
         }
         
-        // Calculate total scroll width (one set of cards)
+        // Calculate total scroll width (one set of cards) - dynamically
         function getScrollWidth() {
-            const cardWidth = window.innerWidth < 768 ? 320 : 450;
+            const cards = scrollTrack.querySelectorAll('.objective-card');
+            if (cards.length === 0) return 0;
+            
+            // Get the number of cards in the first set (half of total, since we duplicate)
+            const cardsPerSet = cards.length / 2;
+            
+            // Calculate actual width by measuring the first set
+            let totalWidth = 0;
             const gap = window.innerWidth < 768 ? 16 : 24;
-            return (cardWidth + gap) * 8; // 8 cards per set
+            const paddingLeft = window.innerWidth < 768 ? 16 : 24;
+            
+            // Measure first card to get actual width
+            if (cards[0]) {
+                const cardRect = cards[0].getBoundingClientRect();
+                const cardWidth = cardRect.width;
+                totalWidth = (cardWidth + gap) * cardsPerSet - gap + paddingLeft;
+            }
+            
+            return totalWidth;
         }
         
         // -------------------------
@@ -131,41 +147,48 @@
         // -------------------------
         function enforceInfiniteLoop(position) {
             const totalWidth = getScrollWidth(); // Width of one set (items are duplicated)
-            const half = totalWidth; // Half of total scroll width (one set)
+            if (totalWidth === 0) return position; // Safety check
             
             // Convert transform position to scrollLeft equivalent for logic
             // transform: translateX(-value) means content moved left by value
             // scrollLeft = value means scrolled right by value
             // So: scrollLeft equivalent = -position
             
-            const scrollLeftEquivalent = -position;
+            let scrollLeftEquivalent = -position;
             
-            // Too far right → wrap back to middle
-            if (scrollLeftEquivalent >= half * 1.5) {
-                const newScrollLeft = scrollLeftEquivalent - half;
-                return -newScrollLeft; // Convert back to transform position
+            // Wrap around when we reach the end of first set
+            // When scrollLeftEquivalent >= totalWidth, we've scrolled past the first set
+            // Jump back by subtracting totalWidth (the duplicate set is already visible)
+            while (scrollLeftEquivalent >= totalWidth) {
+                scrollLeftEquivalent -= totalWidth;
             }
             
-            // Too far left → wrap forward to middle
-            if (scrollLeftEquivalent <= half * 0.5) {
-                const newScrollLeft = scrollLeftEquivalent + half;
-                return -newScrollLeft; // Convert back to transform position
+            // Wrap around when we go before the start
+            // When scrollLeftEquivalent < 0, jump forward by adding totalWidth
+            while (scrollLeftEquivalent < 0) {
+                scrollLeftEquivalent += totalWidth;
             }
             
-            // No teleport needed - position is within valid range
-            return position;
+            // Convert back to transform position
+            return -scrollLeftEquivalent;
         }
         
         // -------------------------
         // INITIALIZE INFINITE LOOP POSITION
         // -------------------------
         function initializeInfiniteLoopPosition() {
-            const totalWidth = getScrollWidth(); // Width of one set (items are duplicated)
-            // Start in the middle of first set (so we have items on both sides)
-            // scrollLeft = totalWidth * 0.5 means middle of first set
-            // transform: translateX(-totalWidth * 0.5) achieves the same
-            const initialPosition = -totalWidth * 0.5;
-            setTransform(initialPosition);
+            // Wait a bit for layout to settle, then calculate
+            setTimeout(() => {
+                const totalWidth = getScrollWidth(); // Width of one set (items are duplicated)
+                if (totalWidth === 0) {
+                    // Retry if width not calculated yet
+                    setTimeout(initializeInfiniteLoopPosition, 100);
+                    return;
+                }
+                // Start at the beginning of first set (position 0)
+                // This ensures seamless loop when we reach the end
+                setTransform(0, true);
+            }, 50);
         }
         
         // -------------------------
