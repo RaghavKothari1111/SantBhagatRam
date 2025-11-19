@@ -16,134 +16,45 @@
 
     <!-- Video Categories -->
     <div class="video-categories">
-        <button class="category-btn active" data-category="all" data-lang-videos="all">सभी</button>
-        <button class="category-btn" data-category="bhajan" data-lang-videos="bhajan">भजन संध्या</button>
-        <button class="category-btn" data-category="seva" data-lang-videos="seva">सेवा कार्य</button>
-        <button class="category-btn" data-category="events" data-lang-videos="events">कार्यक्रम</button>
-        <button class="category-btn" data-category="sermons" data-lang-videos="sermons">प्रवचन</button>
+        <button class="category-btn active" data-category="all" data-lang-videos="all">All</button>
+        <button class="category-btn" data-category="livestream" data-lang-videos="livestream">Livestreams</button>
+        <button class="category-btn" data-category="video" data-lang-videos="videos">Videos</button>
     </div>
 
     <!-- Video Grid -->
     <div class="videos-grid" id="videosGrid">
-        <div class="video-card" data-category="sermons" data-video-url="https://www.youtube.com/embed/BLNMcaS48O8" data-watch-url="https://www.youtube.com/watch?v=BLNMcaS48O8">
+        {% if videos %}
+        {% for video in videos %}
+        <div class="video-card" data-category="{{ video.category }}" data-video-url="{{ video.url }}"
+            data-watch-url="{{ video.watch_url }}" style="display: none;">
             <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Digvijayram Ji Maharaj">
+                <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
                 <div class="play-overlay">
                     <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
+                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt=""
+                            loading="lazy">
                     </div>
                 </div>
-                <div class="video-duration">8:34</div>
             </div>
             <div class="video-info">
-                <h3 data-lang-videos="video1Title">जानिए मन की वृत्ति कैसी है | और इसे वश में कैसे करें ?</h3>
-                <p class="video-date" data-lang-videos="video1Date">YouTube • 1 day ago</p>
-                <p class="video-description" data-lang-videos="video1Desc">दिग्विजयराम जी महाराज मन की वृत्ति और उसे साधने के उपाय समझा रहे हैं।</p>
+                <h3>{{ video.title }}</h3>
+                <p class="video-date">{{ video.date }}</p>
+                <p class="video-description">{{ video.description }}</p>
                 <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=BLNMcaS48O8" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
+                    <a class="video-watch-link" href="{{ video.watch_url }}" target="_blank" rel="noopener noreferrer"
+                        data-lang-videos="watchOnYoutube">Watch on YouTube</a>
                 </div>
             </div>
         </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">No videos found.</div>
+        {% endif %}
+    </div>
 
-        <div class="video-card" data-category="sermons" data-video-url="https://www.youtube.com/embed/AJwnFJrKT6E" data-watch-url="https://www.youtube.com/watch?v=AJwnFJrKT6E">
-            <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Atmadev and Dhundhkari discourse">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
-                    </div>
-                </div>
-                <div class="video-duration">12:10</div>
-            </div>
-            <div class="video-info">
-                <h3 data-lang-videos="video2Title">आत्मदेव व धुंधकारी की कथा से संतोष कैसे पाएं?</h3>
-                <p class="video-date" data-lang-videos="video2Date">YouTube • 3 days ago</p>
-                <p class="video-description" data-lang-videos="video2Desc">हर असंतुष्ट व्यक्ति के लिए आत्मदेव और धुंधकारी की कथा प्रेरक संदेश देती है।</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=AJwnFJrKT6E" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="video-card" data-category="events" data-video-url="https://www.youtube.com/embed/QVBH2Sdr_2s" data-watch-url="https://www.youtube.com/watch?v=QVBH2Sdr_2s">
-            <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Hindu Ekta padyatra blessings">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
-                    </div>
-                </div>
-                <div class="video-duration">4:28</div>
-            </div>
-            <div class="video-info">
-                <h3 data-lang-videos="video3Title">सनातन हिंदू एकता पदयात्रा में आशीर्वचन</h3>
-                <p class="video-date" data-lang-videos="video3Date">YouTube • 4 days ago</p>
-                <p class="video-description" data-lang-videos="video3Desc">पदयात्रा में पूज्य दिग्विजयरामदास जी महाराज के ओजस्वी आशीर्वचन।</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=QVBH2Sdr_2s" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="video-card" data-category="events" data-video-url="https://www.youtube.com/embed/pFydhoyd89s" data-watch-url="https://www.youtube.com/watch?v=pFydhoyd89s">
-            <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Bageshwar Dham padyatra">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
-                    </div>
-                </div>
-                <div class="video-duration">1:30</div>
-            </div>
-            <div class="video-info">
-                <h3 data-lang-videos="video4Title">राम प्रेमी संत दिग्विजयराम जी की पदयात्रा</h3>
-                <p class="video-date" data-lang-videos="video4Date">YouTube • 4 days ago</p>
-                <p class="video-description" data-lang-videos="video4Desc">बागेश्वर महाराज की पदयात्रा में पहुँचे संत दिग्विजयराम जी महाराज के दर्शन।</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=pFydhoyd89s" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="video-card" data-category="sermons" data-video-url="https://www.youtube.com/embed/En4LUGPsN_s" data-watch-url="https://www.youtube.com/watch?v=En4LUGPsN_s">
-            <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Bhagwat in Kaliyug">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
-                    </div>
-                </div>
-                <div class="video-duration">9:54</div>
-            </div>
-            <div class="video-info">
-                <h3 data-lang-videos="video5Title">कलियुग में भागवत का महत्व क्यों?</h3>
-                <p class="video-date" data-lang-videos="video5Date">YouTube • 5 days ago</p>
-                <p class="video-description" data-lang-videos="video5Desc">भागवत कथा कैसे कलियुग में उद्धार का मार्ग बनती है इस पर चर्चा।</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=En4LUGPsN_s" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="video-card" data-category="sermons" data-video-url="https://www.youtube.com/embed/oVlsJns6m9c" data-watch-url="https://www.youtube.com/watch?v=oVlsJns6m9c">
-            <div class="video-thumbnail">
-                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Purpose of human life talk">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt="" loading="lazy">
-                    </div>
-                </div>
-                <div class="video-duration">12:19</div>
-            </div>
-            <div class="video-info">
-                <h3 data-lang-videos="video6Title">मानव जीवन का सबसे बड़ा उद्देश्य क्या है?</h3>
-                <p class="video-date" data-lang-videos="video6Date">YouTube • 7 days ago</p>
-                <p class="video-description" data-lang-videos="video6Desc">जीवन के परम उद्देश्य को महाराज जी सरल भाषा में समझा रहे हैं।</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="https://www.youtube.com/watch?v=oVlsJns6m9c" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
-        </div>
+    <div class="load-more-container" style="text-align: center; margin-top: 40px;">
+        <button id="loadMoreBtn" class="category-btn"
+            style="background: var(--bubblegum-pink); color: white; border: none;">Load More</button>
     </div>
 
     <!-- Video Modal -->
@@ -157,7 +68,8 @@
                 <h2 id="modalVideoTitle"></h2>
                 <p id="modalVideoDate"></p>
                 <p id="modalVideoDescription"></p>
-                <a id="modalWatchLink" class="video-watch-link" href="#" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
+                <a id="modalWatchLink" class="video-watch-link" href="#" target="_blank" rel="noopener noreferrer"
+                    data-lang-videos="watchOnYoutube">Watch on YouTube</a>
             </div>
         </div>
     </div>
@@ -166,42 +78,75 @@
 
 {% block extra_js %}
 <script>
-    // Category filtering
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const category = this.dataset.category;
-            const videos = document.querySelectorAll('.video-card');
-            
-            videos.forEach(video => {
-                if (category === 'all' || video.dataset.category === category) {
-                    video.style.display = 'block';
-                    setTimeout(() => {
-                        video.style.opacity = '1';
-                        video.style.transform = 'scale(1)';
-                    }, 10);
-                } else {
-                    video.style.opacity = '0';
-                    video.style.transform = 'scale(0.8)';
-                    setTimeout(() => {
-                        video.style.display = 'none';
-                    }, 300);
-                }
+    document.addEventListener('DOMContentLoaded', function () {
+        const videosGrid = document.getElementById('videosGrid');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const categoryBtns = document.querySelectorAll('.category-btn[data-category]');
+        let currentCategory = 'all';
+        let visibleCount = 6;
+        const increment = 6;
+
+        function filterVideos() {
+            const allVideos = Array.from(document.querySelectorAll('.video-card'));
+            let filteredVideos = allVideos.filter(video => {
+                return currentCategory === 'all' || video.dataset.category === currentCategory;
+            });
+
+            // Hide all first
+            allVideos.forEach(video => {
+                video.style.display = 'none';
+                video.classList.remove('visible');
+            });
+
+            // Show subset of filtered
+            const toShow = filteredVideos.slice(0, visibleCount);
+            toShow.forEach(video => {
+                video.style.display = 'block';
+                // Trigger reflow for animation
+                void video.offsetWidth;
+                video.classList.add('visible');
+                video.style.opacity = '1';
+                video.style.transform = 'translateY(0)';
+            });
+
+            // Handle Load More button visibility
+            if (visibleCount >= filteredVideos.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Category Click
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.dataset.category;
+                visibleCount = increment; // Reset count on category change
+                filterVideos();
             });
         });
+
+        // Load More Click
+        loadMoreBtn.addEventListener('click', function () {
+            visibleCount += increment;
+            filterVideos();
+        });
+
+        // Initial Load
+        filterVideos();
     });
 
     // Video card click
     document.querySelectorAll('.video-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const title = this.querySelector('h3').textContent;
             const date = this.querySelector('.video-date').textContent;
             const description = this.querySelector('.video-description').textContent;
             const videoUrl = this.dataset.videoUrl;
             const watchUrl = this.dataset.watchUrl || videoUrl?.replace('/embed/', '/watch?v=');
-            
+
             if (videoUrl) {
                 openVideoModal(title, date, description, videoUrl, watchUrl);
             }
@@ -209,7 +154,7 @@
     });
 
     document.querySelectorAll('.video-watch-link').forEach(link => {
-        link.addEventListener('click', function(event) {
+        link.addEventListener('click', function (event) {
             event.stopPropagation();
         });
     });
@@ -232,22 +177,22 @@
     }
 
     // Close modal on outside click
-    document.getElementById('videoModal').addEventListener('click', function(e) {
+    document.getElementById('videoModal').addEventListener('click', function (e) {
         if (e.target === this) {
             closeVideoModal();
         }
     });
-    
+
     // Ensure translations are applied after page loads
-    setTimeout(function() {
+    setTimeout(function () {
         if (window.applyLanguage) {
             const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
             window.applyLanguage(lang);
         }
     }, 300);
-    
-    window.addEventListener('load', function() {
-        setTimeout(function() {
+
+    window.addEventListener('load', function () {
+        setTimeout(function () {
             if (window.applyLanguage) {
                 const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
                 window.applyLanguage(lang);
@@ -256,4 +201,3 @@
     });
 </script>
 {% endblock %}
-

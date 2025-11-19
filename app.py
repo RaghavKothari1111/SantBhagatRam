@@ -27,7 +27,7 @@ from data_manager import (
     add_dropdown_item, update_dropdown_item, delete_dropdown_item,
     update_dropdown_column_order, update_dropdown_item_order, update_global_social_media,
     get_all_objectives, get_objective_by_id, add_objective, update_objective, delete_objective,
-    update_objective_order
+    update_objective_order, get_latest_youtube_videos
 )
 from storage import storage_manager
 
@@ -172,7 +172,8 @@ def photos(gallery_id=None):
 
 @app.route('/videos')
 def videos():
-    return render_template('videos.html')
+    youtube_videos = get_latest_youtube_videos()
+    return render_template('videos.html', videos=youtube_videos)
 
 @app.route('/donate')
 def donate():

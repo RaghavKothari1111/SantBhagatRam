@@ -110,12 +110,29 @@
     animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.video-card:nth-child(1) { animation-delay: 0.1s; }
-.video-card:nth-child(2) { animation-delay: 0.2s; }
-.video-card:nth-child(3) { animation-delay: 0.3s; }
-.video-card:nth-child(4) { animation-delay: 0.4s; }
-.video-card:nth-child(5) { animation-delay: 0.5s; }
-.video-card:nth-child(6) { animation-delay: 0.6s; }
+.video-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.video-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.video-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.video-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.video-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.video-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
 
 .video-card::before {
     content: '';
@@ -146,6 +163,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -155,7 +173,7 @@
 .video-thumbnail {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     background: linear-gradient(135deg, var(--bubblegum-pink) 0%, var(--rosewood) 100%);
     border-radius: 16px 16px 0 0;
@@ -388,7 +406,8 @@
 .video-player {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
     background: #000;
 }
 

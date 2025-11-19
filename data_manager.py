@@ -7,8 +7,10 @@ import json
 import os
 import re
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import Config
+import requests
+import xml.etree.ElementTree as ET
 
 # Import storage manager for Cloudinary support
 try:
@@ -850,3 +852,83 @@ def update_objective_order(objective_ids):
     
     return save_json_data(Config.OBJECTIVES_DATA_FILE, objectives)
 
+
+def get_latest_youtube_videos(limit=50):
+    """Fetch latest videos from YouTube RSS feed"""
+    CHANNEL_ID = "UC6xKFvHyM3KRmaq9grhYz3g"
+    RSS_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL_ID}"
+    CACHE_FILE = os.path.join(os.path.dirname(Config.BLOGS_DATA_FILE), 'youtube_cache.json')
+    
+    # Check cache
+    cached_data = load_json_data(CACHE_FILE, default=None)
+    if cached_data:
+        last_updated = cached_data.get('last_updated')
+        if last_updated:
+            try:
+                last_updated_time = datetime.fromisoformat(last_updated)
+                if datetime.now() - last_updated_time < timedelta(hours=1):
+                    return cached_data.get('videos', [])[:limit]
+            except ValueError:
+                pass # Invalid date format, ignore cache
+
+    try:
+        response = requests.get(RSS_URL, timeout=5)
+        if response.status_code == 200:
+            root = ET.fromstring(response.content)
+            ns = {'yt': 'http://www.youtube.com/xml/schemas/2015', 'media': 'http://search.yahoo.com/mrss/', 'atom': 'http://www.w3.org/2005/Atom'}
+            
+            videos = []
+            for entry in root.findall('atom:entry', ns):
+                video_id = entry.find('yt:videoId', ns).text
+                title = entry.find('atom:title', ns).text
+                published = entry.find('atom:published', ns).text
+                
+                # Parse published date
+                try:
+                    pub_date = datetime.fromisoformat(published.replace('Z', '+00:00'))
+                    days_ago = (datetime.now(pub_date.tzinfo) - pub_date).days
+                except:
+                    days_ago = 0
+                
+                if days_ago == 0:
+                    date_str = "Today"
+                elif days_ago == 1:
+                    date_str = "1 day ago"
+                else:
+                    date_str = f"{days_ago} days ago"
+                
+                media_group = entry.find('media:group', ns)
+                thumbnail = media_group.find('media:thumbnail', ns).attrib['url']
+                description = media_group.find('media:description', ns).text or ""
+                
+                # Determine category
+                category = 'video'
+                if 'LIVE' in title.upper() or 'STREAM' in title.upper():
+                    category = 'livestream'
+                
+                videos.append({
+                    'id': video_id,
+                    'title': title,
+                    'date': f"YouTube • {date_str}",
+                    'description': description[:150] + "..." if len(description) > 150 else description,
+                    'thumbnail': thumbnail,
+                    'url': f"https://www.youtube.com/embed/{video_id}",
+                    'watch_url': f"https://www.youtube.com/watch?v={video_id}",
+                    'category': category
+                })
+            
+            # Save to cache
+            cache_data = {
+                'last_updated': datetime.now().isoformat(),
+                'videos': videos
+            }
+            save_json_data(CACHE_FILE, cache_data)
+            
+            return videos[:limit]
+            
+    except Exception as e:
+        print(f"Error fetching YouTube videos: {e}")
+        if cached_data:
+            return cached_data.get('videos', [])[:limit]
+            
+    return []
