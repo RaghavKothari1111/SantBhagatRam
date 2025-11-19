@@ -172,8 +172,13 @@ def photos(gallery_id=None):
 
 @app.route('/videos')
 def videos():
-    youtube_videos = get_latest_youtube_videos()
-    return render_template('videos.html', videos=youtube_videos)
+    return render_template('videos.html')
+
+@app.route('/api/videos')
+def api_videos():
+    limit = request.args.get('limit', default=50, type=int)
+    youtube_videos = get_latest_youtube_videos(limit=limit)
+    return jsonify(youtube_videos)
 
 @app.route('/donate')
 def donate():

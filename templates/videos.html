@@ -23,36 +23,16 @@
 
     <!-- Video Grid -->
     <div class="videos-grid" id="videosGrid">
-        {% if videos %}
-        {% for video in videos %}
-        <div class="video-card" data-category="{{ video.category }}" data-video-url="{{ video.url }}"
-            data-watch-url="{{ video.watch_url }}" style="display: none;">
-            <div class="video-thumbnail">
-                <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
-                <div class="play-overlay">
-                    <div class="video-play-button" aria-hidden="true">
-                        <img src="{{ url_for('static', filename='images/slider/play-buttton.png') }}" alt=""
-                            loading="lazy">
-                    </div>
-                </div>
+        <div class="loading-spinner" id="loadingSpinner" style="text-align: center; width: 100%; padding: 40px;">
+            <div class="spinner"
+                style="border: 4px solid #f3f3f3; border-top: 4px solid var(--bubblegum-pink); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;">
             </div>
-            <div class="video-info">
-                <h3>{{ video.title }}</h3>
-                <p class="video-date">{{ video.date }}</p>
-                <p class="video-description">{{ video.description }}</p>
-                <div class="video-actions">
-                    <a class="video-watch-link" href="{{ video.watch_url }}" target="_blank" rel="noopener noreferrer"
-                        data-lang-videos="watchOnYoutube">Watch on YouTube</a>
-                </div>
-            </div>
+            <p style="margin-top: 10px; color: var(--text-light);">Loading videos...</p>
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="empty-state">No videos found.</div>
-        {% endif %}
+        <!-- Videos will be populated here by JS -->
     </div>
 
-    <div class="load-more-container" style="text-align: center; margin-top: 40px;">
+    <div class="load-more-container" style="text-align: center; margin-top: 40px; display: none;">
         <button id="loadMoreBtn" class="category-btn"
             style="background: var(--bubblegum-pink); color: white; border: none;">Load More</button>
     </div>
@@ -77,43 +57,129 @@
 {% endblock %}
 
 {% block extra_js %}
+<style>
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const videosGrid = document.getElementById('videosGrid');
+        const loadingSpinner = document.getElementById('loadingSpinner');
         const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const loadMoreContainer = document.querySelector('.load-more-container');
         const categoryBtns = document.querySelectorAll('.category-btn[data-category]');
+
+        let allVideos = [];
         let currentCategory = 'all';
         let visibleCount = 6;
         const increment = 6;
 
-        function filterVideos() {
-            const allVideos = Array.from(document.querySelectorAll('.video-card'));
-            let filteredVideos = allVideos.filter(video => {
-                return currentCategory === 'all' || video.dataset.category === currentCategory;
+        // Fetch videos asynchronously
+        fetch('/api/videos?limit=50')
+            .then(response => response.json())
+            .then(data => {
+                allVideos = data;
+                loadingSpinner.style.display = 'none';
+                if (allVideos.length === 0) {
+                    videosGrid.innerHTML = '<div class="empty-state">No videos found.</div>';
+                } else {
+                    renderVideos();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching videos:', error);
+                loadingSpinner.innerHTML = '<p style="color: red;">Error loading videos. Please try again later.</p>';
             });
 
-            // Hide all first
-            allVideos.forEach(video => {
-                video.style.display = 'none';
-                video.classList.remove('visible');
+        function createVideoCard(video) {
+            const div = document.createElement('div');
+            div.className = 'video-card';
+            div.dataset.category = video.category;
+            div.dataset.videoUrl = video.url;
+            div.dataset.watchUrl = video.watch_url;
+            div.style.display = 'none'; // Hidden by default
+
+            div.innerHTML = `
+                <div class="video-thumbnail">
+                    <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+                    <div class="play-overlay">
+                        <div class="video-play-button" aria-hidden="true">
+                            <img src="/static/images/slider/play-buttton.png" alt="" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3>${video.title}</h3>
+                    <p class="video-date">${video.date}</p>
+                    <p class="video-description">${video.description}</p>
+                    <div class="video-actions">
+                        <a class="video-watch-link" href="${video.watch_url}" target="_blank" rel="noopener noreferrer" data-lang-videos="watchOnYoutube">Watch on YouTube</a>
+                    </div>
+                </div>
+            `;
+
+            // Add click event
+            div.addEventListener('click', function () {
+                openVideoModal(video.title, video.date, video.description, video.url, video.watch_url);
             });
 
-            // Show subset of filtered
-            const toShow = filteredVideos.slice(0, visibleCount);
-            toShow.forEach(video => {
-                video.style.display = 'block';
-                // Trigger reflow for animation
-                void video.offsetWidth;
-                video.classList.add('visible');
-                video.style.opacity = '1';
-                video.style.transform = 'translateY(0)';
+            // Add click event to watch link to prevent bubbling
+            div.querySelector('.video-watch-link').addEventListener('click', function (e) {
+                e.stopPropagation();
             });
 
-            // Handle Load More button visibility
+            return div;
+        }
+
+        function renderVideos() {
+            // Clear existing video cards (keep spinner if needed, but here we rebuild)
+            // Actually, better to append once.
+            // Let's clear grid except spinner
+            videosGrid.innerHTML = '';
+            videosGrid.appendChild(loadingSpinner); // Keep spinner hidden
+
+            // Filter
+            const filteredVideos = allVideos.filter(video => {
+                return currentCategory === 'all' || video.category === currentCategory;
+            });
+
+            if (filteredVideos.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'empty-state';
+                empty.textContent = 'No videos found in this category.';
+                videosGrid.appendChild(empty);
+                loadMoreContainer.style.display = 'none';
+                return;
+            }
+
+            // Create elements for filtered videos
+            filteredVideos.forEach((video, index) => {
+                const card = createVideoCard(video);
+                videosGrid.appendChild(card);
+
+                // Show if within visible count
+                if (index < visibleCount) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                }
+            });
+
+            // Handle Load More visibility
             if (visibleCount >= filteredVideos.length) {
-                loadMoreBtn.style.display = 'none';
+                loadMoreContainer.style.display = 'none';
             } else {
-                loadMoreBtn.style.display = 'inline-block';
+                loadMoreContainer.style.display = 'block';
             }
         }
 
@@ -123,39 +189,44 @@
                 categoryBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 currentCategory = this.dataset.category;
-                visibleCount = increment; // Reset count on category change
-                filterVideos();
+                visibleCount = increment; // Reset count
+                renderVideos();
             });
         });
 
         // Load More Click
         loadMoreBtn.addEventListener('click', function () {
             visibleCount += increment;
-            filterVideos();
-        });
+            // Re-run logic to show more
+            const cards = videosGrid.querySelectorAll('.video-card');
+            let shown = 0;
+            cards.forEach(card => {
+                if (card.style.display !== 'none') shown++;
+            });
 
-        // Initial Load
-        filterVideos();
-    });
+            // We need to find hidden cards that match category and show them
+            // Actually renderVideos rebuilds, which is inefficient but safe. 
+            // Let's just update visibility to be smoother.
 
-    // Video card click
-    document.querySelectorAll('.video-card').forEach(card => {
-        card.addEventListener('click', function () {
-            const title = this.querySelector('h3').textContent;
-            const date = this.querySelector('.video-date').textContent;
-            const description = this.querySelector('.video-description').textContent;
-            const videoUrl = this.dataset.videoUrl;
-            const watchUrl = this.dataset.watchUrl || videoUrl?.replace('/embed/', '/watch?v=');
+            const filteredCards = Array.from(videosGrid.querySelectorAll('.video-card')); // Already filtered by renderVideos? No, renderVideos appends all filtered.
+            // Wait, renderVideos appends ONLY filtered videos.
 
-            if (videoUrl) {
-                openVideoModal(title, date, description, videoUrl, watchUrl);
+            filteredCards.forEach((card, index) => {
+                if (index < visibleCount) {
+                    if (card.style.display === 'none') {
+                        card.style.display = 'block';
+                        // Trigger reflow
+                        void card.offsetWidth;
+                        card.classList.add('visible');
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }
+                }
+            });
+
+            if (visibleCount >= filteredCards.length) {
+                loadMoreContainer.style.display = 'none';
             }
-        });
-    });
-
-    document.querySelectorAll('.video-watch-link').forEach(link => {
-        link.addEventListener('click', function (event) {
-            event.stopPropagation();
         });
     });
 
@@ -190,14 +261,5 @@
             window.applyLanguage(lang);
         }
     }, 300);
-
-    window.addEventListener('load', function () {
-        setTimeout(function () {
-            if (window.applyLanguage) {
-                const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
-                window.applyLanguage(lang);
-            }
-        }, 200);
-    });
 </script>
 {% endblock %}
