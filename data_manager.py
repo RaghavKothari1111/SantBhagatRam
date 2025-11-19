@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 from config import Config
 import requests
 import xml.etree.ElementTree as ET
+from functools import lru_cache
+import time
 
 # Import storage manager for Cloudinary support
 try:
@@ -20,44 +22,70 @@ except ImportError:
     USE_STORAGE_MANAGER = False
     storage_manager = None
 
+# Simple in-memory cache for data loading (5 minutes TTL)
+_data_cache = {}
+_cache_ttl = 300  # 5 minutes in seconds
+
 def _get_filename_from_path(file_path):
     """Extract filename from full path"""
     return os.path.basename(file_path)
 
-def load_json_data(file_path, default=[]):
-    """Load data from JSON file (Cloudinary or local)"""
+def load_json_data(file_path, default=[], use_cache=True):
+    """Load data from JSON file (Cloudinary or local) with caching"""
     filename = _get_filename_from_path(file_path)
     
+    # Check cache first
+    if use_cache and filename in _data_cache:
+        cached_data, cached_time = _data_cache[filename]
+        if time.time() - cached_time < _cache_ttl:
+            return cached_data
+    
+    # Load fresh data
     if USE_STORAGE_MANAGER and storage_manager:
         # Use storage manager (supports Cloudinary)
-        return storage_manager.load_json_data(filename, default=default)
+        data = storage_manager.load_json_data(filename, default=default)
     else:
         # Fallback to local filesystem
         try:
             if os.path.exists(file_path):
                 with open(file_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    data = json.load(f)
+            else:
+                data = default
         except Exception as e:
             print(f"Error loading {file_path}: {e}")
-        return default
+            data = default
+    
+    # Cache the data
+    if use_cache:
+        _data_cache[filename] = (data, time.time())
+    
+    return data
 
 def save_json_data(file_path, data):
-    """Save data to JSON file (Cloudinary or local)"""
+    """Save data to JSON file (Cloudinary or local) and invalidate cache"""
     filename = _get_filename_from_path(file_path)
     
+    result = False
     if USE_STORAGE_MANAGER and storage_manager:
         # Use storage manager (supports Cloudinary)
-        return storage_manager.save_json_data(filename, data)
+        result = storage_manager.save_json_data(filename, data)
     else:
         # Fallback to local filesystem
         try:
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            return True
+            result = True
         except Exception as e:
             print(f"Error saving {file_path}: {e}")
-            return False
+            result = False
+    
+    # Invalidate cache after saving
+    if filename in _data_cache:
+        del _data_cache[filename]
+    
+    return result
 
 # Blog Management
 def generate_slug(title):

@@ -63,12 +63,22 @@ app.config['PERMANENT_SESSION_LIFETIME'] = Config.PERMANENT_SESSION_LIFETIME
 # Security headers
 @app.after_request
 def set_security_headers(response):
-    """Add security headers to all responses"""
+    """Add security headers and caching headers to all responses"""
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     if request.is_secure or os.environ.get('FORCE_HTTPS', '').lower() == 'true':
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    
+    # Add caching headers for static assets
+    if request.endpoint == 'static' or request.path.startswith('/static/'):
+        # Cache static assets for 1 year (browsers will revalidate)
+        response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+        response.headers['Expires'] = 'Thu, 31 Dec 2025 23:59:59 GMT'
+    else:
+        # For HTML pages, cache for 5 minutes
+        response.headers['Cache-Control'] = 'public, max-age=300, must-revalidate'
+    
     return response
 
 @app.before_request

@@ -4,6 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
+    <link rel="dns-prefetch" href="https://cloudinary.com">
+    
+    <!-- Optimized Google Fonts - loaded asynchronously -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
         rel="stylesheet">
@@ -179,6 +187,7 @@
     </style>
 
 
+    <!-- Critical CSS loaded normally -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/language.css') }}">
@@ -195,8 +204,15 @@
     <!-- Navigation Bar -->
     <header class="navbar">
         <div class="nav-content">
-            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}"
-                        alt="SantBhagatRam" class="logo-img"></a></div>
+            <div class="logo"><a href="/">
+                {% set logo_attrs = url_for('static', filename='images/logo.png')|responsive_image(sizes="120px", default_width=120) %}
+                <img src="{{ logo_attrs.src }}" 
+                     srcset="{{ logo_attrs.srcset }}" 
+                     sizes="{{ logo_attrs.sizes }}"
+                     alt="SantBhagatRam" 
+                     class="logo-img"
+                     loading="eager"
+                     fetchpriority="high"></a></div>
             <!-- Mobile donate button and hamburger (visible only on mobile via CSS) -->
             <div class="mobile-nav-actions">
                 <a href="/donate" class="mobile-donate-btn" data-lang-nav="donate">Donate</a>
@@ -658,9 +674,9 @@
         </svg>
     </button>
 
-    <!-- Load extra JS at the bottom -->
-    <script src="{{ url_for('static', filename='js/language.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}"></script>
+    <!-- Load extra JS at the bottom with defer for non-blocking -->
+    <script src="{{ url_for('static', filename='js/language.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/mobile-nav.js') }}" defer></script>
     <script>
         // Scroll to Top functionality
         (function () {
