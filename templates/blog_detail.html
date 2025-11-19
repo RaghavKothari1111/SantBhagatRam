@@ -231,7 +231,14 @@
 
         {% if blog.image %}
         <div class="blog-detail-image-wrapper">
-            <img src="{{ blog.image }}" alt="{{ blog.title }}" class="blog-detail-image" loading="lazy" decoding="async">
+            {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, 360px", default_width=720) %}
+            <img src="{{ img_attrs.src }}" 
+                 srcset="{{ img_attrs.srcset }}" 
+                 sizes="{{ img_attrs.sizes }}"
+                 alt="{{ blog.title }}" 
+                 class="blog-detail-image" 
+                 loading="lazy" 
+                 decoding="async">
         </div>
         {% endif %}
     </div>

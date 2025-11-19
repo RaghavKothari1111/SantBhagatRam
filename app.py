@@ -30,11 +30,28 @@ from data_manager import (
     update_objective_order, get_latest_youtube_videos
 )
 from storage import storage_manager
+from image_utils import generate_responsive_image_attrs, get_responsive_image_url, generate_srcset
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = Config.SECRET_KEY
 ALLOWED_ADMIN_IPS = [ip.strip() for ip in Config.ADMIN_ALLOWED_IPS.split(',') if ip.strip()]
+
+# Add Jinja2 filters for responsive images
+@app.template_filter('responsive_image')
+def responsive_image_filter(url, sizes=None, default_width=1200):
+    """Jinja2 filter for responsive images"""
+    return generate_responsive_image_attrs(url, sizes, default_width)
+
+@app.template_filter('image_srcset')
+def image_srcset_filter(url):
+    """Jinja2 filter for srcset generation"""
+    return generate_srcset(url)
+
+@app.template_filter('optimize_image')
+def optimize_image_filter(url, width=None, quality='auto', format='auto'):
+    """Jinja2 filter for single optimized image URL"""
+    return get_responsive_image_url(url, width, quality, format)
 
 # Configure secure session cookies
 app.config['SESSION_COOKIE_HTTPONLY'] = Config.SESSION_COOKIE_HTTPONLY

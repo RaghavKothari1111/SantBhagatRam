@@ -13,29 +13,41 @@
         <div class="item-container" id="itemContainer">
         {% if slider_images %}
             {% for image in slider_images %}
+            {% set img_attrs = image.imageUrl|responsive_image(sizes="100vw", default_width=1920) %}
             <div class="gallery-item" data-index="{{ loop.index0 }}">
-                <img src="{{ image.imageUrl }}" alt="{{ image.alt or 'Slider Image' }}" {% if loop.index0 == 0 %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+                <img src="{{ img_attrs.src }}" 
+                     srcset="{{ img_attrs.srcset }}" 
+                     sizes="{{ img_attrs.sizes }}"
+                     alt="{{ image.alt or 'Slider Image' }}" 
+                     {% if loop.index0 == 0 %}fetchpriority="high"{% else %}loading="lazy"{% endif %} 
+                     decoding="async">
             </div>
             {% endfor %}
         {% else %}
             <!-- Fallback to default images if no slider images are configured -->
+            {% set fallback1 = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="100vw", default_width=1920) %}
+            {% set fallback2 = url_for('static', filename='images/2.jpeg')|responsive_image(sizes="100vw", default_width=1920) %}
+            {% set fallback3 = url_for('static', filename='images/7.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
+            {% set fallback4 = url_for('static', filename='images/4.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
+            {% set fallback5 = url_for('static', filename='images/5.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
+            {% set fallback6 = url_for('static', filename='images/6.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
             <div class="gallery-item" data-index="0">
-                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1" fetchpriority="high" decoding="async">
+                <img src="{{ fallback1.src }}" srcset="{{ fallback1.srcset }}" sizes="{{ fallback1.sizes }}" alt="Slide 1" fetchpriority="high" decoding="async">
             </div>
             <div class="gallery-item" data-index="1">
-                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2" loading="lazy" decoding="async">
+                <img src="{{ fallback2.src }}" srcset="{{ fallback2.srcset }}" sizes="{{ fallback2.sizes }}" alt="Slide 2" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="2">
-                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3" loading="lazy" decoding="async">
+                <img src="{{ fallback3.src }}" srcset="{{ fallback3.srcset }}" sizes="{{ fallback3.sizes }}" alt="Slide 3" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="3">
-                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4" loading="lazy" decoding="async">
+                <img src="{{ fallback4.src }}" srcset="{{ fallback4.srcset }}" sizes="{{ fallback4.sizes }}" alt="Slide 4" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="4">
-                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5" loading="lazy" decoding="async">
+                <img src="{{ fallback5.src }}" srcset="{{ fallback5.srcset }}" sizes="{{ fallback5.sizes }}" alt="Slide 5" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="5">
-                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6" loading="lazy" decoding="async">
+                <img src="{{ fallback6.src }}" srcset="{{ fallback6.srcset }}" sizes="{{ fallback6.sizes }}" alt="Slide 6" loading="lazy" decoding="async">
             </div>
         {% endif %}
     </div>
@@ -147,9 +159,21 @@
                 <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="home-blog-card" aria-label="{{ blog.title }}">
                     <div class="home-blog-card-image">
                         {% if blog.image %}
-                            <img src="{{ blog.image }}" alt="{{ blog.title }}" loading="lazy" decoding="async">
+                            {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
+                            <img src="{{ img_attrs.src }}" 
+                                 srcset="{{ img_attrs.srcset }}" 
+                                 sizes="{{ img_attrs.sizes }}"
+                                 alt="{{ blog.title }}" 
+                                 loading="lazy" 
+                                 decoding="async">
                         {% else %}
-                            <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ blog.title }}" loading="lazy" decoding="async">
+                            {% set fallback_attrs = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
+                            <img src="{{ fallback_attrs.src }}" 
+                                 srcset="{{ fallback_attrs.srcset }}" 
+                                 sizes="{{ fallback_attrs.sizes }}"
+                                 alt="{{ blog.title }}" 
+                                 loading="lazy" 
+                                 decoding="async">
                         {% endif %}
                     </div>
                     <div class="home-blog-card-content">

@@ -26,7 +26,13 @@
             {% for event in events %}
             <div class="event-card" data-event-id="{{ event.id }}">
                 <div class="event-image">
-                    <img src="{{ event.image }}" alt="{{ event.titleEn }}" loading="lazy" decoding="async">
+                    {% set img_attrs = event.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                    <img src="{{ img_attrs.src }}" 
+                         srcset="{{ img_attrs.srcset }}" 
+                         sizes="{{ img_attrs.sizes }}"
+                         alt="{{ event.titleEn }}" 
+                         loading="lazy" 
+                         decoding="async">
                 </div>
                 <div class="event-content">
                     <div class="event-date-time">

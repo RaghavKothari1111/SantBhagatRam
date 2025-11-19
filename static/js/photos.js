@@ -1,3 +1,68 @@
+/**
+ * Generate responsive image attributes for Cloudinary URLs
+ */
+function generateResponsiveImageAttrs(url, sizes, defaultWidth = 1200) {
+    if (!url) {
+        return { src: '', srcset: '', sizes: sizes || '' };
+    }
+    
+    // Check if it's a Cloudinary URL
+    const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
+    
+    if (!isCloudinary) {
+        // For non-Cloudinary URLs, return as-is
+        return { src: url, srcset: '', sizes: sizes || '' };
+    }
+    
+    // Generate srcset with multiple widths
+    const widths = [400, 800, 1200, 1600, 2000];
+    const srcsetParts = widths.map(width => {
+        const transformedUrl = getCloudinaryUrl(url, width);
+        return `${transformedUrl} ${width}w`;
+    });
+    
+    // Generate default src
+    const src = getCloudinaryUrl(url, defaultWidth);
+    
+    return {
+        src: src,
+        srcset: srcsetParts.join(', '),
+        sizes: sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+    };
+}
+
+/**
+ * Get Cloudinary URL with transformations
+ */
+function getCloudinaryUrl(url, width) {
+    if (!url || !url.includes('cloudinary.com')) {
+        return url;
+    }
+    
+    // Parse Cloudinary URL and add transformations
+    if (url.includes('/upload/')) {
+        const parts = url.split('/upload/');
+        if (parts.length === 2) {
+            const baseUrl = parts[0] + '/upload/';
+            const pathPart = parts[1];
+            
+            // Build transformation string
+            const transformations = [
+                'f_auto',      // Auto format (WebP, AVIF when supported)
+                'q_auto',      // Auto quality
+                `w_${width}`,  // Width
+                'dpr_auto',    // Device pixel ratio
+                'c_auto,g_auto' // Auto crop and gravity
+            ];
+            
+            const transformStr = transformations.join(',');
+            return `${baseUrl}${transformStr}/${pathPart}`;
+        }
+    }
+    
+    return url;
+}
+
 // Photo Gallery JavaScript
 class PhotoGallery {
     constructor() {
@@ -246,7 +311,14 @@ class PhotoGallery {
             const captionText = lang === 'en'
                 ? (photo.captionEn || photo.caption || '')
                 : (photo.caption || photo.captionEn || '');
-            photoItem.innerHTML = `<img src="${item.url}" alt="${captionText || `Photo ${index + 1}`}" loading="lazy" decoding="async">`;
+            // Generate responsive image attributes
+            const imgAttrs = generateResponsiveImageAttrs(item.url, "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px", 1200);
+            photoItem.innerHTML = `<img src="${imgAttrs.src}" 
+                                         srcset="${imgAttrs.srcset}" 
+                                         sizes="${imgAttrs.sizes}" 
+                                         alt="${captionText || `Photo ${index + 1}`}" 
+                                         loading="lazy" 
+                                         decoding="async">`;
             photoItem.addEventListener('click', () => this.openLightbox(index));
             photosGrid.appendChild(photoItem);
         });

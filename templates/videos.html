@@ -69,6 +69,71 @@
     }
 </style>
 <script>
+    /**
+     * Generate responsive image attributes for Cloudinary URLs
+     */
+    function generateResponsiveImageAttrs(url, sizes, defaultWidth = 1200) {
+        if (!url) {
+            return { src: '', srcset: '', sizes: sizes || '' };
+        }
+        
+        // Check if it's a Cloudinary URL
+        const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
+        
+        if (!isCloudinary) {
+            // For non-Cloudinary URLs, return as-is
+            return { src: url, srcset: '', sizes: sizes || '' };
+        }
+        
+        // Generate srcset with multiple widths
+        const widths = [400, 800, 1200, 1600, 2000];
+        const srcsetParts = widths.map(width => {
+            const transformedUrl = getCloudinaryUrl(url, width);
+            return `${transformedUrl} ${width}w`;
+        });
+        
+        // Generate default src
+        const src = getCloudinaryUrl(url, defaultWidth);
+        
+        return {
+            src: src,
+            srcset: srcsetParts.join(', '),
+            sizes: sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+        };
+    }
+
+    /**
+     * Get Cloudinary URL with transformations
+     */
+    function getCloudinaryUrl(url, width) {
+        if (!url || !url.includes('cloudinary.com')) {
+            return url;
+        }
+        
+        // Parse Cloudinary URL and add transformations
+        if (url.includes('/upload/')) {
+            const parts = url.split('/upload/');
+            if (parts.length === 2) {
+                const baseUrl = parts[0] + '/upload/';
+                const pathPart = parts[1];
+                
+                // Build transformation string
+                const transformations = [
+                    'f_auto',      // Auto format (WebP, AVIF when supported)
+                    'q_auto',      // Auto quality
+                    `w_${width}`,  // Width
+                    'dpr_auto',    // Device pixel ratio
+                    'c_auto,g_auto' // Auto crop and gravity
+                ];
+                
+                const transformStr = transformations.join(',');
+                return `${baseUrl}${transformStr}/${pathPart}`;
+            }
+        }
+        
+        return url;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const videosGrid = document.getElementById('videosGrid');
         const loadingSpinner = document.getElementById('loadingSpinner');
@@ -106,12 +171,24 @@
             div.dataset.watchUrl = video.watch_url;
             div.style.display = 'none'; // Hidden by default
 
+            // Generate responsive image attributes for video thumbnail
+            const thumbnailAttrs = generateResponsiveImageAttrs(video.thumbnail, "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", 800);
+            const playButtonAttrs = generateResponsiveImageAttrs("/static/images/slider/play-buttton.png", "60px", 60);
+            
             div.innerHTML = `
                 <div class="video-thumbnail">
-                    <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+                    <img src="${thumbnailAttrs.src}" 
+                         srcset="${thumbnailAttrs.srcset}" 
+                         sizes="${thumbnailAttrs.sizes}" 
+                         alt="${video.title}" 
+                         loading="lazy">
                     <div class="play-overlay">
                         <div class="video-play-button" aria-hidden="true">
-                            <img src="/static/images/slider/play-buttton.png" alt="" loading="lazy">
+                            <img src="${playButtonAttrs.src}" 
+                                 srcset="${playButtonAttrs.srcset}" 
+                                 sizes="${playButtonAttrs.sizes}" 
+                                 alt="" 
+                                 loading="lazy">
                         </div>
                     </div>
                 </div>

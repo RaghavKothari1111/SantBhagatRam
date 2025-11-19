@@ -18,7 +18,11 @@
     <div class="projects-grid">
         <div class="project-card" data-project="gau-seva">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Gau Sewa Project">
+                {% set img1_attrs = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img1_attrs.src }}" 
+                     srcset="{{ img1_attrs.srcset }}" 
+                     sizes="{{ img1_attrs.sizes }}"
+                     alt="Gau Sewa Project">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,7 +50,11 @@
 
         <div class="project-card" data-project="annadaan">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Annadaan Project">
+                {% set img2_attrs = url_for('static', filename='images/2.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img2_attrs.src }}" 
+                     srcset="{{ img2_attrs.srcset }}" 
+                     sizes="{{ img2_attrs.sizes }}"
+                     alt="Annadaan Project">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -76,7 +84,11 @@
 
         <div class="project-card" data-project="medical">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Medical Services">
+                {% set img4_attrs = url_for('static', filename='images/4.jpg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img4_attrs.src }}" 
+                     srcset="{{ img4_attrs.srcset }}" 
+                     sizes="{{ img4_attrs.sizes }}"
+                     alt="Medical Services">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,7 +117,11 @@
 
         <div class="project-card" data-project="education">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Education Project">
+                {% set img5_attrs = url_for('static', filename='images/5.jpg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img5_attrs.src }}" 
+                     srcset="{{ img5_attrs.srcset }}" 
+                     sizes="{{ img5_attrs.sizes }}"
+                     alt="Education Project">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -134,7 +150,11 @@
 
         <div class="project-card" data-project="temple">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Temple Development">
+                {% set img6_attrs = url_for('static', filename='images/6.jpg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img6_attrs.src }}" 
+                     srcset="{{ img6_attrs.srcset }}" 
+                     sizes="{{ img6_attrs.sizes }}"
+                     alt="Temple Development">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -163,7 +183,11 @@
 
         <div class="project-card" data-project="rural">
             <div class="project-image">
-                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Rural Outreach">
+                {% set img7_attrs = url_for('static', filename='images/7.jpg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 400px", default_width=800) %}
+                <img src="{{ img7_attrs.src }}" 
+                     srcset="{{ img7_attrs.srcset }}" 
+                     sizes="{{ img7_attrs.sizes }}"
+                     alt="Rural Outreach">
                 <div class="project-overlay">
                     <div class="project-icon-wrapper">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
