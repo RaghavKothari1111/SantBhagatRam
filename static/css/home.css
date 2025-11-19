@@ -793,8 +793,8 @@
 
     .home-blog-card {
         border-radius: 18px;
-        min-width: 100%;
-        flex: 0 0 100%;
+        min-width: 85%;
+        flex: 0 0 85%;
         scroll-snap-align: center;
     }
 
