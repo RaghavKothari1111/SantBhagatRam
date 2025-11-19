@@ -644,6 +644,54 @@ def admin_delete_photo_gallery(gallery_id):
         flash('Error deleting photo category', 'error')
     return redirect(url_for('admin_photos'))
 
+@app.route('/admin/photos/<gallery_id>/delete-photo/<photo_id>', methods=['DELETE'])
+@login_required
+def admin_delete_photo(gallery_id, photo_id):
+    """Delete a single photo from a gallery via AJAX"""
+    try:
+        gallery = get_gallery_by_id(gallery_id)
+        if not gallery:
+            return jsonify({'success': False, 'error': 'Gallery not found'}), 404
+        
+        # Find and remove the photo
+        photos = gallery.get('photos', [])
+        photo_to_delete = None
+        updated_photos = []
+        
+        for photo in photos:
+            if str(photo.get('id')) == str(photo_id):
+                photo_to_delete = photo
+            else:
+                updated_photos.append(photo)
+        
+        if not photo_to_delete:
+            return jsonify({'success': False, 'error': 'Photo not found'}), 404
+        
+        # Delete the file from storage (cloud or local)
+        photo_url = photo_to_delete.get('url')
+        if photo_url:
+            storage_manager.delete_file(photo_url)
+        
+        # Update gallery with remaining photos
+        gallery['photos'] = updated_photos
+        
+        # Update cover image if it was the deleted photo
+        if gallery.get('coverImage') == photo_url:
+            if updated_photos:
+                gallery['coverImage'] = updated_photos[0].get('url', '')
+            else:
+                gallery['coverImage'] = ''
+        
+        # Save updated gallery
+        if update_gallery(gallery_id, gallery):
+            return jsonify({'success': True, 'message': 'Photo deleted successfully'})
+        else:
+            return jsonify({'success': False, 'error': 'Failed to update gallery'}), 500
+            
+    except Exception as e:
+        print(f"Error deleting photo: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Slider Management Routes
 @app.route('/admin/slider')
 @login_required

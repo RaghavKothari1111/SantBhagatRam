@@ -246,7 +246,7 @@ class PhotoGallery {
             const captionText = lang === 'en'
                 ? (photo.captionEn || photo.caption || '')
                 : (photo.caption || photo.captionEn || '');
-            photoItem.innerHTML = `<img src="${item.url}" alt="${captionText || `Photo ${index + 1}`}" loading="lazy">`;
+            photoItem.innerHTML = `<img src="${item.url}" alt="${captionText || `Photo ${index + 1}`}" loading="lazy" decoding="async">`;
             photoItem.addEventListener('click', () => this.openLightbox(index));
             photosGrid.appendChild(photoItem);
         });

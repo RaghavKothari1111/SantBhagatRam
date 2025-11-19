@@ -23,9 +23,9 @@
         <article class="event-card" data-gallery-id="{{ gallery.id }}">
             <div class="event-card-image">
                 {% if cover %}
-                    <img src="{{ cover }}" alt="{{ gallery.titleEn or gallery.title }}">
+                    <img src="{{ cover }}" alt="{{ gallery.titleEn or gallery.title }}" loading="lazy" decoding="async">
                 {% else %}
-                    <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ gallery.titleEn or gallery.title }}">
+                    <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ gallery.titleEn or gallery.title }}" loading="lazy" decoding="async">
                 {% endif %}
                 <div class="photo-count-badge">
                     <span class="photo-count-number">{{ gallery.photoCount or (gallery.photos|length) }}</span>

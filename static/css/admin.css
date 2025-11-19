@@ -761,19 +761,14 @@ a:hover {
     border: 2px solid transparent;
     border-radius: 12px;
     overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: block;
 }
 
 .existing-photo-card:hover {
     border-color: var(--bubblegum-pink);
-}
-
-.existing-photo-card input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .existing-photo-card img {
@@ -784,23 +779,82 @@ a:hover {
     transition: opacity 0.2s ease;
 }
 
-.photo-checkbox {
+.photo-delete-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo-delete-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.photo-delete-btn:active {
+    transform: scale(0.95);
+}
+
+.photo-delete-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.photo-checkbox-label {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    cursor: pointer;
+    z-index: 9;
+}
+
+.photo-checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.photo-checkbox {
+    display: block;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     border: 2px solid #ffffff;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.existing-photo-card input:checked + .photo-checkbox {
-    background: #ef4444;
-    border-color: #ef4444;
+.photo-checkbox-label input:checked + .photo-checkbox {
+    background: #3b82f6;
+    border-color: #3b82f6;
 }
 
-.existing-photo-card input:checked ~ img {
+.photo-checkbox-label input:checked + .photo-checkbox::after {
+    content: '✓';
+    display: block;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.photo-checkbox-label input:checked ~ img,
+.existing-photo-card:has(.photo-checkbox-label input:checked) img {
     opacity: 0.6;
     filter: grayscale(0.4);
 }

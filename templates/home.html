@@ -14,28 +14,28 @@
         {% if slider_images %}
             {% for image in slider_images %}
             <div class="gallery-item" data-index="{{ loop.index0 }}">
-                <img src="{{ image.imageUrl }}" alt="{{ image.alt or 'Slider Image' }}">
+                <img src="{{ image.imageUrl }}" alt="{{ image.alt or 'Slider Image' }}" {% if loop.index0 == 0 %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
             </div>
             {% endfor %}
         {% else %}
             <!-- Fallback to default images if no slider images are configured -->
             <div class="gallery-item" data-index="0">
-                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1">
+                <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="Slide 1" fetchpriority="high" decoding="async">
             </div>
             <div class="gallery-item" data-index="1">
-                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2">
+                <img src="{{ url_for('static', filename='images/2.jpeg') }}" alt="Slide 2" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="2">
-                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3">
+                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Slide 3" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="3">
-                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
+                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="4">
-                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5">
+                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Slide 5" loading="lazy" decoding="async">
             </div>
             <div class="gallery-item" data-index="5">
-                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6">
+                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Slide 6" loading="lazy" decoding="async">
             </div>
         {% endif %}
     </div>
@@ -147,9 +147,9 @@
                 <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="home-blog-card" aria-label="{{ blog.title }}">
                     <div class="home-blog-card-image">
                         {% if blog.image %}
-                            <img src="{{ blog.image }}" alt="{{ blog.title }}">
+                            <img src="{{ blog.image }}" alt="{{ blog.title }}" loading="lazy" decoding="async">
                         {% else %}
-                            <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ blog.title }}">
+                            <img src="{{ url_for('static', filename='images/1.jpeg') }}" alt="{{ blog.title }}" loading="lazy" decoding="async">
                         {% endif %}
                     </div>
                     <div class="home-blog-card-content">

@@ -26,7 +26,7 @@
             {% for event in events %}
             <div class="event-card" data-event-id="{{ event.id }}">
                 <div class="event-image">
-                    <img src="{{ event.image }}" alt="{{ event.titleEn }}">
+                    <img src="{{ event.image }}" alt="{{ event.titleEn }}" loading="lazy" decoding="async">
                 </div>
                 <div class="event-content">
                     <div class="event-date-time">

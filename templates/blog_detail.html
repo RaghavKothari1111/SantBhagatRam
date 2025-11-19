@@ -231,7 +231,7 @@
 
         {% if blog.image %}
         <div class="blog-detail-image-wrapper">
-            <img src="{{ blog.image }}" alt="{{ blog.title }}" class="blog-detail-image">
+            <img src="{{ blog.image }}" alt="{{ blog.title }}" class="blog-detail-image" loading="lazy" decoding="async">
         </div>
         {% endif %}
     </div>
