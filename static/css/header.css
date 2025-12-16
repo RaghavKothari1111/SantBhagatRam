@@ -23,6 +23,7 @@
 
 /* Desktop Vector Background Layer */
 .desktop-vector-bg {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -35,6 +36,13 @@
     transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     /* Soft shadow for the "window" */
+}
+
+/* Only show on desktop */
+@media (min-width: 769px) {
+    .desktop-vector-bg {
+        display: block;
+    }
 }
 
 /* Floating Vectors Styles */
@@ -786,10 +794,7 @@ body.lang-hindi [class*="drop-down-menu-"] a {
         background: #ffffff;
     }
 
-    /* Hide desktop vector background on mobile */
-    .desktop-vector-bg {
-        display: none !important;
-    }
+
 
     .logo {
         order: 1;
