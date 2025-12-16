@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link rel="dns-prefetch" href="https://cloudinary.com">
-    
+
     <!-- Optimized Google Fonts - loaded asynchronously -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
@@ -203,16 +203,26 @@
 
     <!-- Navigation Bar -->
     <header class="navbar">
+        <!-- Floating Spiritual Vectors Background for Desktop -->
+        <div class="desktop-vector-bg" id="desktopVectorBg">
+            <div class="desktop-nav-vectors">
+                <div class="desktop-nav-vector desktop-nav-vector-diya">🪔</div>
+                <div class="desktop-nav-vector desktop-nav-vector-lotus">🪷</div>
+                <div class="desktop-nav-vector desktop-nav-vector-om-3">ॐ</div>
+                <div class="desktop-nav-vector desktop-nav-vector-lotus-4">🪷</div>
+                <div class="desktop-nav-vector desktop-nav-vector-lotus-3">🪷</div>
+                <div class="desktop-nav-vector desktop-nav-vector-diya-2">🪔</div>
+                <div class="desktop-nav-vector desktop-nav-vector-lotus-2">🪷</div>
+                <div class="desktop-nav-vector desktop-nav-vector-om-new-1">ॐ</div>
+                <div class="desktop-nav-vector desktop-nav-vector-om-new-2">ॐ</div>
+            </div>
+        </div>
         <div class="nav-content">
             <div class="logo"><a href="/">
-                {% set logo_attrs = url_for('static', filename='images/logo.png')|responsive_image(sizes="120px", default_width=120) %}
-                <img src="{{ logo_attrs.src }}" 
-                     srcset="{{ logo_attrs.srcset }}" 
-                     sizes="{{ logo_attrs.sizes }}"
-                     alt="SantBhagatRam" 
-                     class="logo-img"
-                     loading="eager"
-                     fetchpriority="high"></a></div>
+                    {% set logo_attrs = url_for('static', filename='images/logo.png')|responsive_image(sizes="120px",
+                    default_width=120) %}
+                    <img src="{{ logo_attrs.src }}" srcset="{{ logo_attrs.srcset }}" sizes="{{ logo_attrs.sizes }}"
+                        alt="SantBhagatRam" class="logo-img" loading="eager" fetchpriority="high"></a></div>
             <!-- Mobile donate button and hamburger (visible only on mobile via CSS) -->
             <div class="mobile-nav-actions">
                 <a href="/donate" class="mobile-donate-btn" data-lang-nav="donate">Donate</a>
@@ -568,16 +578,31 @@
                 const dropdown = navItem.querySelector('.nav-dropdown');
                 if (!dropdown || !blurArea) return;
 
+                const vectorBg = document.getElementById('desktopVectorBg');
+
                 function openDropdown() {
                     dropdown.classList.add('open');
                     blurArea.classList.add('active');
                     navbar.style.borderBottom = 'none';
+
+                    // Expand vector background
+                    if (vectorBg) {
+                        const dropdownHeight = dropdown.scrollHeight;
+                        const navbarHeight = navbar.offsetHeight;
+                        // Add a bit of padding/buffer if needed, or exact
+                        vectorBg.style.height = (navbarHeight + dropdownHeight) + 'px';
+                    }
                 }
 
                 function closeDropdown() {
                     dropdown.classList.remove('open');
                     blurArea.classList.remove('active');
                     navbar.style.borderBottom = '1px solid #e5e7eb';
+
+                    // Collapse vector background
+                    if (vectorBg) {
+                        vectorBg.style.height = '100%';
+                    }
                 }
 
                 // Open when hovering the nav item
@@ -611,6 +636,11 @@
                     });
                     blurArea.classList.remove('active');
                     navbar.style.borderBottom = '1px solid #e5e7eb';
+                    // Reset vector background
+                    const vectorBg = document.getElementById('desktopVectorBg');
+                    if (vectorBg) {
+                        vectorBg.style.height = '100%';
+                    }
                 });
             }
         });

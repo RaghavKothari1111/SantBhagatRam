@@ -55,32 +55,17 @@
 }
 
 /* Objectives container */
-.objectives-section {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
 
-.objectives-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
 
-.objectives-header h2 {
-    font-size: 1.9rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    color: #111827;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-}
+
+
+
 
 /* Objectives Banner - Horizontal Scrolling */
 .objectives-banner {
     width: 100%;
     background: linear-gradient(to right, var(--bubblegum-pink), var(--bubblegum-pink-2), var(--bubblegum-pink));
-    padding: 80px 0 60px 0;
+    padding: 30px 0 60px 0;
     overflow: hidden;
     position: relative;
     margin-top: 60px;
@@ -156,11 +141,7 @@
     gap: 16px;
 }
 
-.objective-card:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
+
 
 .objective-icon {
     width: 48px;
@@ -549,6 +530,7 @@
     letter-spacing: -0.01em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     transition: color 0.3s ease;
@@ -565,6 +547,7 @@
     margin-bottom: 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     letter-spacing: 0.01em;
@@ -630,13 +613,7 @@
         font-size: 1.9rem;
     }
 
-    .objectives-header h2 {
-        font-size: 1.65rem;
-    }
 
-    .objective-text {
-        font-size: 17px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -659,37 +636,9 @@
         font-size: 1.6rem;
     }
 
-    .objectives-header h2 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-    }
 
-    .objectives-section {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        min-height: 400px;
-    }
 
-    .objectives-scroller {
-        height: 400px;
-        min-height: 400px;
-        max-height: 500px;
-        padding: 20px;
-    }
 
-    .objective-text {
-        font-size: 16px;
-    }
-
-    .objective-item {
-        padding: 18px 20px;
-        margin-bottom: 16px;
-    }
-
-    .objective-item:last-child {
-        margin-bottom: 0;
-    }
 }
 
 @media (max-width: 480px) {
@@ -705,15 +654,7 @@
         font-size: 1.4rem;
     }
 
-    .objectives-scroller {
-        height: 250px;
-        min-height: 250px;
-        padding: 15px;
-    }
 
-    .objective-text {
-        font-size: 14px;
-    }
 }
 
 /* Home Blog Section Responsive */

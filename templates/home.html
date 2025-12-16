@@ -10,66 +10,75 @@
 {% block content %}
 <!-- Full-Width Hero Slider -->
 <section class="tv-plus-gallery">
-        <div class="item-container" id="itemContainer">
+    <div class="item-container" id="itemContainer">
         {% if slider_images %}
-            {% for image in slider_images %}
-            {% set img_attrs = image.imageUrl|responsive_image(sizes="100vw", default_width=1920) %}
-            <div class="gallery-item" data-index="{{ loop.index0 }}">
-                <img src="{{ img_attrs.src }}" 
-                     srcset="{{ img_attrs.srcset }}" 
-                     sizes="{{ img_attrs.sizes }}"
-                     alt="{{ image.alt or 'Slider Image' }}" 
-                     {% if loop.index0 == 0 %}fetchpriority="high"{% else %}loading="lazy"{% endif %} 
-                     decoding="async">
-            </div>
-            {% endfor %}
+        {% for image in slider_images %}
+        {% set img_attrs = image.imageUrl|responsive_image(sizes="100vw", default_width=1920) %}
+        <div class="gallery-item" data-index="{{ loop.index0 }}">
+            <img src="{{ img_attrs.src }}" srcset="{{ img_attrs.srcset }}" sizes="{{ img_attrs.sizes }}"
+                alt="{{ image.alt or 'Slider Image' }}" {% if loop.index0==0 %}fetchpriority="high" {% else
+                %}loading="lazy" {% endif %} decoding="async">
+        </div>
+        {% endfor %}
         {% else %}
-            <!-- Fallback to default images if no slider images are configured -->
-            {% set fallback1 = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="100vw", default_width=1920) %}
-            {% set fallback2 = url_for('static', filename='images/2.jpeg')|responsive_image(sizes="100vw", default_width=1920) %}
-            {% set fallback3 = url_for('static', filename='images/7.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
-            {% set fallback4 = url_for('static', filename='images/4.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
-            {% set fallback5 = url_for('static', filename='images/5.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
-            {% set fallback6 = url_for('static', filename='images/6.jpg')|responsive_image(sizes="100vw", default_width=1920) %}
-            <div class="gallery-item" data-index="0">
-                <img src="{{ fallback1.src }}" srcset="{{ fallback1.srcset }}" sizes="{{ fallback1.sizes }}" alt="Slide 1" fetchpriority="high" decoding="async">
-            </div>
-            <div class="gallery-item" data-index="1">
-                <img src="{{ fallback2.src }}" srcset="{{ fallback2.srcset }}" sizes="{{ fallback2.sizes }}" alt="Slide 2" loading="lazy" decoding="async">
-            </div>
-            <div class="gallery-item" data-index="2">
-                <img src="{{ fallback3.src }}" srcset="{{ fallback3.srcset }}" sizes="{{ fallback3.sizes }}" alt="Slide 3" loading="lazy" decoding="async">
-            </div>
-            <div class="gallery-item" data-index="3">
-                <img src="{{ fallback4.src }}" srcset="{{ fallback4.srcset }}" sizes="{{ fallback4.sizes }}" alt="Slide 4" loading="lazy" decoding="async">
-            </div>
-            <div class="gallery-item" data-index="4">
-                <img src="{{ fallback5.src }}" srcset="{{ fallback5.srcset }}" sizes="{{ fallback5.sizes }}" alt="Slide 5" loading="lazy" decoding="async">
-            </div>
-            <div class="gallery-item" data-index="5">
-                <img src="{{ fallback6.src }}" srcset="{{ fallback6.srcset }}" sizes="{{ fallback6.sizes }}" alt="Slide 6" loading="lazy" decoding="async">
-            </div>
+        <!-- Fallback to default images if no slider images are configured -->
+        {% set fallback1 = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        {% set fallback2 = url_for('static', filename='images/2.jpeg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        {% set fallback3 = url_for('static', filename='images/7.jpg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        {% set fallback4 = url_for('static', filename='images/4.jpg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        {% set fallback5 = url_for('static', filename='images/5.jpg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        {% set fallback6 = url_for('static', filename='images/6.jpg')|responsive_image(sizes="100vw",
+        default_width=1920) %}
+        <div class="gallery-item" data-index="0">
+            <img src="{{ fallback1.src }}" srcset="{{ fallback1.srcset }}" sizes="{{ fallback1.sizes }}" alt="Slide 1"
+                fetchpriority="high" decoding="async">
+        </div>
+        <div class="gallery-item" data-index="1">
+            <img src="{{ fallback2.src }}" srcset="{{ fallback2.srcset }}" sizes="{{ fallback2.sizes }}" alt="Slide 2"
+                loading="lazy" decoding="async">
+        </div>
+        <div class="gallery-item" data-index="2">
+            <img src="{{ fallback3.src }}" srcset="{{ fallback3.srcset }}" sizes="{{ fallback3.sizes }}" alt="Slide 3"
+                loading="lazy" decoding="async">
+        </div>
+        <div class="gallery-item" data-index="3">
+            <img src="{{ fallback4.src }}" srcset="{{ fallback4.srcset }}" sizes="{{ fallback4.sizes }}" alt="Slide 4"
+                loading="lazy" decoding="async">
+        </div>
+        <div class="gallery-item" data-index="4">
+            <img src="{{ fallback5.src }}" srcset="{{ fallback5.srcset }}" sizes="{{ fallback5.sizes }}" alt="Slide 5"
+                loading="lazy" decoding="async">
+        </div>
+        <div class="gallery-item" data-index="5">
+            <img src="{{ fallback6.src }}" srcset="{{ fallback6.srcset }}" sizes="{{ fallback6.sizes }}" alt="Slide 6"
+                loading="lazy" decoding="async">
+        </div>
         {% endif %}
     </div>
-    
+
     <!-- Dot Indicators -->
     <div class="slide-control">
         <button class="play-pause-btn" onclick="toggleAutoPlay()">
-            <img id="playPauseIcon" src="{{ url_for('static', filename='images/slider/pause.png') }}" alt="Pause"/>
+            <img id="playPauseIcon" src="{{ url_for('static', filename='images/slider/pause.png') }}" alt="Pause" />
         </button>
         <div class="progress-dots" id="progressDots">
             {% if slider_images %}
-                {% for image in slider_images %}
-                <span class="dot {% if loop.index0 == 0 %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></span>
-                {% endfor %}
+            {% for image in slider_images %}
+            <span class="dot {% if loop.index0 == 0 %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></span>
+            {% endfor %}
             {% else %}
-                <!-- Fallback dots -->
-                <span class="dot active" onclick="goToSlide(0)"></span>
-                <span class="dot" onclick="goToSlide(1)"></span>
-                <span class="dot" onclick="goToSlide(2)"></span>
-                <span class="dot" onclick="goToSlide(3)"></span>
-                <span class="dot" onclick="goToSlide(4)"></span>
-                <span class="dot" onclick="goToSlide(5)"></span>
+            <!-- Fallback dots -->
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)"></span>
+            <span class="dot" onclick="goToSlide(4)"></span>
+            <span class="dot" onclick="goToSlide(5)"></span>
             {% endif %}
         </div>
     </div>
@@ -85,50 +94,59 @@
             <div class="objectives-scroll-track" id="objectives-scroll-track">
                 <!-- First set of objectives -->
                 {% if objectives %}
-                    {% for objective in objectives %}
-                    <div class="objective-card">
-                        <div class="objective-icon">
-                            {% if objective.icon %}
-                                {{ objective.icon|safe }}
-                            {% else %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                </svg>
-                            {% endif %}
-                        </div>
-                        <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}</h3>
-                        <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else objective.description }}</p>
+                {% for objective in objectives %}
+                <div class="objective-card">
+                    <div class="objective-icon">
+                        {% if objective.icon %}
+                        {{ objective.icon|safe }}
+                        {% else %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        {% endif %}
                     </div>
-                    {% endfor %}
+                    <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}
+                    </h3>
+                    <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else
+                        objective.description }}</p>
+                </div>
+                {% endfor %}
                 {% else %}
-                    <!-- Fallback objectives if none exist -->
-                    <div class="objective-card">
-                        <div class="objective-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion</h3>
-                        <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.</p>
+                <!-- Fallback objectives if none exist -->
+                <div class="objective-card">
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
                     </div>
+                    <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion
+                    </h3>
+                    <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating
+                        unconditional love and compassion in every heart. We believe that through genuine care and
+                        empathy, we can transform lives and create a more harmonious world for all beings.</p>
+                </div>
                 {% endif %}
                 <!-- Duplicate set for seamless loop -->
                 {% if objectives %}
-                    {% for objective in objectives %}
-                    <div class="objective-card">
-                        <div class="objective-icon">
-                            {% if objective.icon %}
-                                {{ objective.icon|safe }}
-                            {% else %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                </svg>
-                            {% endif %}
-                        </div>
-                        <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}</h3>
-                        <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else objective.description }}</p>
+                {% for objective in objectives %}
+                <div class="objective-card">
+                    <div class="objective-icon">
+                        {% if objective.icon %}
+                        {{ objective.icon|safe }}
+                        {% else %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        {% endif %}
                     </div>
-                    {% endfor %}
+                    <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}
+                    </h3>
+                    <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else
+                        objective.description }}</p>
+                </div>
+                {% endfor %}
                 {% endif %}
             </div>
         </div>
@@ -136,12 +154,14 @@
 </section>
 
 <div class="after-slider-marquee">
-    <marquee loop="infinite" behaviour="scroll" data-lang-marquee>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏 
-      &nbsp;&nbsp;&nbsp;&nbsp;
-     🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <marquee loop="infinite" behavior="scroll" data-lang-marquee onmouseover="this.stop();" onmouseout="this.start();">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री
+        रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        🙏 सभी श्रद्धालुजन ध्यान दें! भजन संध्या का आयोजन दिनांक 28 मई, मंगलवार को शाम 7:00 बजे से 10:00 बजे तक श्री
+        रामद्वारा, चित्तौड़गढ़ में किया जाएगा। सादर आमंत्रण 🙏
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </marquee>
 </div>
 
@@ -152,46 +172,47 @@
             <h2 data-lang-home="blogSectionTitle">Latest From Blog</h2>
             <p data-lang-home="blogSectionSubtitle">Stay updated with our latest activities and events</p>
         </div>
-        
+
         <div class="home-blog-grid">
             {% if home_blogs %}
-                {% for blog in home_blogs %}
-                <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="home-blog-card" aria-label="{{ blog.title }}">
-                    <div class="home-blog-card-image">
-                        {% if blog.image %}
-                            {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
-                            <img src="{{ img_attrs.src }}" 
-                                 srcset="{{ img_attrs.srcset }}" 
-                                 sizes="{{ img_attrs.sizes }}"
-                                 alt="{{ blog.title }}" 
-                                 loading="lazy" 
-                                 decoding="async">
-                        {% else %}
-                            {% set fallback_attrs = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
-                            <img src="{{ fallback_attrs.src }}" 
-                                 srcset="{{ fallback_attrs.srcset }}" 
-                                 sizes="{{ fallback_attrs.sizes }}"
-                                 alt="{{ blog.title }}" 
-                                 loading="lazy" 
-                                 decoding="async">
-                        {% endif %}
+            {% for blog in home_blogs %}
+            <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="home-blog-card"
+                aria-label="{{ blog.title }}">
+                <div class="home-blog-card-image">
+                    {% if blog.image %}
+                    {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px)
+                    50vw, 400px", default_width=800) %}
+                    <img src="{{ img_attrs.src }}" srcset="{{ img_attrs.srcset }}" sizes="{{ img_attrs.sizes }}"
+                        alt="{{ blog.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    {% set fallback_attrs = url_for('static',
+                    filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px)
+                    50vw, 400px", default_width=800) %}
+                    <img src="{{ fallback_attrs.src }}" srcset="{{ fallback_attrs.srcset }}"
+                        sizes="{{ fallback_attrs.sizes }}" alt="{{ blog.title }}" loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+                <div class="home-blog-card-content">
+                    <div class="home-blog-card-meta">
+                        <span class="home-blog-card-date" data-lang-blog="datePrefix">दिनांक:</span>
+                        <span class="home-blog-card-date-value" data-lang-blog-date-hi="{{ blog.date }}"
+                            data-lang-blog-date-en="{{ blog.dateEn or blog.date }}">{{ blog.date }}</span>
+                        <span class="home-blog-card-category" data-lang-blog-category-hi="{{ blog.category }}"
+                            data-lang-blog-category-en="{{ blog.categoryEn or blog.category }}">{{ blog.category
+                            }}</span>
                     </div>
-                    <div class="home-blog-card-content">
-                        <div class="home-blog-card-meta">
-                            <span class="home-blog-card-date" data-lang-blog="datePrefix">दिनांक:</span>
-                            <span class="home-blog-card-date-value" data-lang-blog-date-hi="{{ blog.date }}" data-lang-blog-date-en="{{ blog.dateEn or blog.date }}">{{ blog.date }}</span>
-                            <span class="home-blog-card-category" data-lang-blog-category-hi="{{ blog.category }}" data-lang-blog-category-en="{{ blog.categoryEn or blog.category }}">{{ blog.category }}</span>
-                        </div>
-                        <h3 class="home-blog-card-title" data-lang-blog-title-hi="{{ blog.title }}" data-lang-blog-title-en="{{ blog.titleEn or blog.title }}">{{ blog.title }}</h3>
-                        <p class="home-blog-card-excerpt" data-lang-blog-excerpt-hi="{{ blog.excerpt }}" data-lang-blog-excerpt-en="{{ blog.excerptEn or blog.excerpt }}">{{ blog.excerpt }}</p>
-                    </div>
-                </a>
-                {% endfor %}
+                    <h3 class="home-blog-card-title" data-lang-blog-title-hi="{{ blog.title }}"
+                        data-lang-blog-title-en="{{ blog.titleEn or blog.title }}">{{ blog.title }}</h3>
+                    <p class="home-blog-card-excerpt" data-lang-blog-excerpt-hi="{{ blog.excerpt }}"
+                        data-lang-blog-excerpt-en="{{ blog.excerptEn or blog.excerpt }}">{{ blog.excerpt }}</p>
+                </div>
+            </a>
+            {% endfor %}
             {% else %}
-                <div class="home-blog-empty">No blogs available yet. Check back soon!</div>
+            <div class="home-blog-empty">No blogs available yet. Check back soon!</div>
             {% endif %}
         </div>
-        
+
         <div class="home-blog-view-all">
             <a href="{{ url_for('blog') }}" class="view-all-btn" data-lang-home="viewAllBlogs">View All Blogs →</a>
         </div>
