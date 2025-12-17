@@ -632,30 +632,35 @@ function applyLanguage(lang) {
     const langBtnMobile = document.getElementById('languageBtnMobile');
     const langBtnTextMobile = document.getElementById('languageBtnTextMobile');
 
+    const targetLangText = lang === 'en' ? 'हिंदी' : 'English';
+    const targetAriaLabel = lang === 'en' ? 'Switch to Hindi' : 'Switch to English';
+
     if (langBtn) {
-        // Update button text to show the language that will be switched TO
         if (langBtnText) {
-            langBtnText.textContent = lang === 'en' ? 'हिंदी' : 'English';
+            langBtnText.textContent = targetLangText;
         } else {
-            // Fallback: find span that's not the icon
             const langText = langBtn.querySelector('span:not(.language-toggle-icon)');
-            if (langText) {
-                langText.textContent = lang === 'en' ? 'हिंदी' : 'English';
-            }
+            if (langText) langText.textContent = targetLangText;
         }
-        langBtn.setAttribute('aria-label', lang === 'en' ? 'Switch to Hindi' : 'Switch to English');
+        langBtn.setAttribute('aria-label', targetAriaLabel);
     }
 
     if (langBtnMobile) {
         if (langBtnTextMobile) {
-            langBtnTextMobile.textContent = lang === 'en' ? 'हिंदी' : 'English';
+            langBtnTextMobile.textContent = targetLangText;
         } else {
             const langText = langBtnMobile.querySelector('span:not(.language-toggle-icon)');
-            if (langText) {
-                langText.textContent = lang === 'en' ? 'हिंदी' : 'English';
-            }
+            if (langText) langText.textContent = targetLangText;
         }
     }
+
+    // Extra safety: update any element with the language button text classes if they exist
+    document.querySelectorAll('.language-toggle span:not(.language-toggle-icon)').forEach(el => {
+        el.textContent = targetLangText;
+    });
+    document.querySelectorAll('.mobile-nav-item#languageBtnMobile span:not(.language-toggle-icon)').forEach(el => {
+        el.textContent = targetLangText;
+    });
     
     // Dispatch language change event
     const languageChangedEvent = new CustomEvent('languageChanged', { detail: { lang } });
