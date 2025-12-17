@@ -629,6 +629,9 @@ function applyLanguage(lang) {
     // Update language button
     const langBtn = document.getElementById('languageBtn');
     const langBtnText = document.getElementById('languageBtnText');
+    const langBtnMobile = document.getElementById('languageBtnMobile');
+    const langBtnTextMobile = document.getElementById('languageBtnTextMobile');
+
     if (langBtn) {
         // Update button text to show the language that will be switched TO
         if (langBtnText) {
@@ -641,6 +644,17 @@ function applyLanguage(lang) {
             }
         }
         langBtn.setAttribute('aria-label', lang === 'en' ? 'Switch to Hindi' : 'Switch to English');
+    }
+
+    if (langBtnMobile) {
+        if (langBtnTextMobile) {
+            langBtnTextMobile.textContent = lang === 'en' ? 'हिंदी' : 'English';
+        } else {
+            const langText = langBtnMobile.querySelector('span:not(.language-toggle-icon)');
+            if (langText) {
+                langText.textContent = lang === 'en' ? 'हिंदी' : 'English';
+            }
+        }
     }
     
     // Dispatch language change event
