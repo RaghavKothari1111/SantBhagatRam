@@ -1,0 +1,7 @@
+{
+  "projectId": "a12802fe-347f-46cb-93ab-95e668473a74",
+  "createdAt": 1766012456023,
+  "startupCommands": [
+    "source venv/bin/activate && python app.py"
+  ]
+}
