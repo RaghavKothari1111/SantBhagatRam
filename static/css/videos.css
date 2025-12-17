@@ -6,6 +6,8 @@
     margin: 0 auto;
     background: linear-gradient(135deg, #fff0f3ff 0%, #fafafa 50%, #fff0f3ff 100%);
     position: relative;
+    padding-bottom: 120px;
+    /* Compensation for removed footer margin */
 }
 
 .videos-header {

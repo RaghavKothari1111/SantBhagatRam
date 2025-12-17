@@ -6,6 +6,7 @@
     background: linear-gradient(135deg, #fff0f3ff 0%, #fafafa 50%, #fff0f3ff 100%);
     min-height: calc(100vh - 160px);
     position: relative;
+    padding-bottom: 120px;
 }
 
 .gallery-header {
@@ -54,12 +55,29 @@
     animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.event-card:nth-child(1) { animation-delay: 0.1s; }
-.event-card:nth-child(2) { animation-delay: 0.2s; }
-.event-card:nth-child(3) { animation-delay: 0.3s; }
-.event-card:nth-child(4) { animation-delay: 0.4s; }
-.event-card:nth-child(5) { animation-delay: 0.5s; }
-.event-card:nth-child(6) { animation-delay: 0.6s; }
+.event-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.event-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.event-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.event-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.event-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.event-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
 
 .event-card::before {
     content: '';
@@ -90,6 +108,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -495,7 +514,7 @@
         min-height: auto;
         padding: 10px 5px;
     }
-    
+
     .photo-item img {
         width: 100%;
         height: auto;
