@@ -53,6 +53,19 @@ def optimize_image_filter(url, width=None, quality='auto', format='auto'):
     """Jinja2 filter for single optimized image URL"""
     return get_responsive_image_url(url, width, quality, format)
 
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path, endpoint, filename)
+            if os.path.isfile(file_path):
+                values['v'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
+
 # Configure secure session cookies
 app.config['SESSION_COOKIE_HTTPONLY'] = Config.SESSION_COOKIE_HTTPONLY
 app.config['SESSION_COOKIE_SECURE'] = Config.SESSION_COOKIE_SECURE
