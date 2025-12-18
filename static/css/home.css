@@ -104,11 +104,11 @@
     display: flex;
     gap: 24px;
     padding-left: 24px;
-    animation: scroll-horizontal 50s linear infinite;
-    animation-play-state: running;
+    display: flex;
+    gap: 24px;
+    padding-left: 24px;
+    /* Animation handled by JS */
     will-change: transform;
-    /* Smooth transitions for manual scrolling */
-    transition: transform 0.1s linear;
 }
 
 .objectives-scroll-track:hover {
@@ -177,15 +177,7 @@
 }
 
 /* Horizontal Scroll Animation */
-@keyframes scroll-horizontal {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(calc(-450px * 8 - 24px * 8));
-    }
-}
+/* Horizontal Scroll Animation handled by JS */
 
 /* Responsive Styles for Objectives Banner */
 @media (max-width: 768px) {
@@ -232,15 +224,7 @@
         animation-duration: 35s;
     }
 
-    @keyframes scroll-horizontal {
-        0% {
-            transform: translateX(0);
-        }
 
-        100% {
-            transform: translateX(calc(-320px * 8 - 16px * 8));
-        }
-    }
 }
 
 @media (max-width: 480px) {

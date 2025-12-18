@@ -8,16 +8,21 @@
 
 /* Navbar Styles */
 .navbar {
-    padding: 9px 40px;
+    padding: 8px 40px;
+    /* Reduced vertical padding */
     width: 100%;
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: transparent;
-    /* Changed from white to transparent */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-    border-bottom: 1px solid #e5e7eb;
-    --navbar-height: 50px;
+    background: rgba(255, 255, 255, 0.85);
+    /* Slightly more opaque for better blur baseline */
+    backdrop-filter: blur(20px) saturate(180%);
+    /* Increased blur */
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    --navbar-height: 56px;
+    /* Reduced height */
     transition: border-bottom 0.2s ease;
 }
 
@@ -200,7 +205,8 @@ body:has(.drop-down_projects:hover) .navbar {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 24px;
+    gap: 36px;
+    /* Increased gap */
     align-items: center;
     margin: 0;
     padding: 0;
@@ -215,20 +221,39 @@ body:has(.drop-down_projects:hover) .navbar {
 
 .nav-links a {
     text-decoration: none;
-    color: #000000;
-    font-weight: 600;
-    padding: 7px 12px;
+    color: #374151;
+    font-weight: 700;
+    padding: 8px 16px;
     display: inline-block;
     position: relative;
-    border-radius: 8px;
-    font-size: 14px !important;
+    border-radius: 999px;
+    /* Pill shape */
+    font-size: 15px !important;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     white-space: nowrap;
-    min-width: fit-content;
+    min-width: auto;
     flex-shrink: 0;
-    line-height: 1.4;
+    line-height: 1.5;
     letter-spacing: 0.01em;
     background-color: transparent;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Modern Pill Hover Effect */
+.nav-links a:hover {
+    color: #111827 !important;
+    background-color: rgba(0, 0, 0, 0.06) !important;
+    /* Subtle grey hover pill */
+    transform: translateY(-1px);
+}
+
+/* Remove old underline effect */
+.nav-links>li>a::after {
+    display: none;
+}
+
+.nav-links>li>a:hover::after {
+    display: none;
 }
 
 /* Hindi text appears smaller visually, so increase font-size to match English visual size */

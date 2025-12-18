@@ -394,7 +394,7 @@ function setLanguage(lang) {
 // Apply language to all elements
 function applyLanguage(lang) {
     const t = translations[lang];
-    
+
     // Add/remove class to body for language-specific styling
     if (lang === 'hi') {
         document.body.classList.add('lang-hindi');
@@ -403,69 +403,75 @@ function applyLanguage(lang) {
         document.body.classList.add('lang-english');
         document.body.classList.remove('lang-hindi');
     }
-    
+
     // Update navigation
     document.querySelectorAll('[data-lang-nav]').forEach(el => {
         const key = el.getAttribute('data-lang-nav');
         if (t.nav[key]) {
-            el.textContent = t.nav[key];
+            if (el.textContent !== t.nav[key]) {
+                el.textContent = t.nav[key];
+            }
         }
     });
-    
+
     // Update dropdown column titles and headings
     document.querySelectorAll('.dropdown-column-title[data-column-title-en]').forEach(el => {
         const enText = el.getAttribute('data-column-title-en');
         const hiText = el.getAttribute('data-column-title-hi');
         if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         } else if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         }
     });
-    
+
     document.querySelectorAll('.dropdown-column-heading[data-column-heading-en]').forEach(el => {
         const enText = el.getAttribute('data-column-heading-en');
         const hiText = el.getAttribute('data-column-heading-hi');
         if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         } else if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         }
     });
-    
+
     // Update dropdown item titles
     document.querySelectorAll('[data-item-title-en]').forEach(el => {
         const enText = el.getAttribute('data-item-title-en');
         const hiText = el.getAttribute('data-item-title-hi');
         if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         } else if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         }
     });
-    
+
     // Update home page content
     document.querySelectorAll('[data-lang-home]').forEach(el => {
         const key = el.getAttribute('data-lang-home');
         if (t.home[key]) {
-            el.textContent = t.home[key];
+            if (el.textContent !== t.home[key]) {
+                el.textContent = t.home[key];
+            }
         }
     });
-    
+
     // Update footer
     document.querySelectorAll('[data-lang-footer]').forEach(el => {
         const key = el.getAttribute('data-lang-footer');
         if (t.footer[key]) {
-            el.textContent = t.footer[key];
+            if (el.textContent !== t.footer[key]) {
+                el.textContent = t.footer[key];
+            }
         }
     });
-    
+
     // Update marquee
     const marquee = document.querySelector('[data-lang-marquee]');
     if (marquee && t.marquee.announcement) {
         marquee.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${t.marquee.announcement}&nbsp;&nbsp;&nbsp;&nbsp;${t.marquee.announcement}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
     }
-    
+
     // Update blog page content
     document.querySelectorAll('[data-lang-blog]').forEach(el => {
         const key = el.getAttribute('data-lang-blog');
@@ -479,15 +485,15 @@ function applyLanguage(lang) {
                     const contentDiv = document.getElementById('blog-content-' + blogId);
                     const isExpanded = contentDiv && contentDiv.style.display !== 'none';
                     if (!isExpanded) {
-                        el.textContent = t.blog[key];
+                        if (el.textContent !== t.blog[key]) el.textContent = t.blog[key];
                     }
                 } else {
-                    el.textContent = t.blog[key];
+                    if (el.textContent !== t.blog[key]) el.textContent = t.blog[key];
                 }
             }
         }
     });
-    
+
     // Update read less text
     document.querySelectorAll('[data-lang-blog-read-less]').forEach(el => {
         const key = el.getAttribute('data-lang-blog-read-less');
@@ -495,7 +501,7 @@ function applyLanguage(lang) {
             el.setAttribute('data-read-less-text', t.blog[key]);
         }
     });
-    
+
     // Update photos page content
     document.querySelectorAll('[data-lang-photos]').forEach(el => {
         const key = el.getAttribute('data-lang-photos');
@@ -503,11 +509,11 @@ function applyLanguage(lang) {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 el.placeholder = t.photos[key];
             } else {
-                el.textContent = t.photos[key];
+                if (el.textContent !== t.photos[key]) el.textContent = t.photos[key];
             }
         }
     });
-    
+
     // Update videos page content
     document.querySelectorAll('[data-lang-videos]').forEach(el => {
         const key = el.getAttribute('data-lang-videos');
@@ -515,11 +521,11 @@ function applyLanguage(lang) {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 el.placeholder = t.videos[key];
             } else {
-                el.textContent = t.videos[key];
+                if (el.textContent !== t.videos[key]) el.textContent = t.videos[key];
             }
         }
     });
-    
+
     // Update donate page content
     document.querySelectorAll('[data-lang-donate]').forEach(el => {
         const key = el.getAttribute('data-lang-donate');
@@ -527,11 +533,11 @@ function applyLanguage(lang) {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 el.placeholder = t.donate[key];
             } else {
-                el.textContent = t.donate[key];
+                if (el.textContent !== t.donate[key]) el.textContent = t.donate[key];
             }
         }
     });
-    
+
     // Update events page content
     document.querySelectorAll('[data-lang-events]').forEach(el => {
         const key = el.getAttribute('data-lang-events');
@@ -539,93 +545,119 @@ function applyLanguage(lang) {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 el.placeholder = t.events[key];
             } else {
-                el.textContent = t.events[key];
+                if (el.textContent !== t.events[key]) el.textContent = t.events[key];
             }
         }
     });
-    
+
     // Update dynamic blog content (title, excerpt, date, category)
     document.querySelectorAll('[data-lang-blog-title-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-title-hi');
         const enText = el.getAttribute('data-lang-blog-title-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-lang-blog-excerpt-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-excerpt-hi');
         const enText = el.getAttribute('data-lang-blog-excerpt-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-lang-blog-date-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-date-hi');
         const enText = el.getAttribute('data-lang-blog-date-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-lang-blog-category-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-category-hi');
         const enText = el.getAttribute('data-lang-blog-category-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     // Update dynamic blog full content
     document.querySelectorAll('[data-lang-blog-content-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-content-hi');
         const enText = el.getAttribute('data-lang-blog-content-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-gallery-title-hi]').forEach(el => {
         const hiText = el.getAttribute('data-gallery-title-hi');
         const enText = el.getAttribute('data-gallery-title-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-gallery-date-hi]').forEach(el => {
         const hiText = el.getAttribute('data-gallery-date-hi');
         const enText = el.getAttribute('data-gallery-date-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
     document.querySelectorAll('[data-gallery-description-hi]').forEach(el => {
         const hiText = el.getAttribute('data-gallery-description-hi');
         const enText = el.getAttribute('data-gallery-description-en');
         if (lang === 'en' && enText) {
-            el.textContent = enText;
+            if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {
-            el.textContent = hiText;
+            if (el.textContent !== hiText) el.textContent = hiText;
         }
     });
-    
+
+    // Update dynamic objective cards
+    document.querySelectorAll('[data-objective-title-hi]').forEach(el => {
+        const hiText = el.getAttribute('data-objective-title-hi');
+        const enText = el.getAttribute('data-objective-title-en');
+        // Default to Hindi if English is missing, or English if Hindi is missing logic handling:
+        if (lang === 'en') {
+            if (enText && el.textContent !== enText) el.textContent = enText;
+            else if (!enText && hiText && el.textContent !== hiText) el.textContent = hiText; // Fallback
+        } else if (lang === 'hi') {
+            if (hiText && el.textContent !== hiText) el.textContent = hiText;
+            else if (!hiText && enText && el.textContent !== enText) el.textContent = enText; // Fallback
+        }
+    });
+
+    document.querySelectorAll('[data-objective-desc-hi]').forEach(el => {
+        const hiText = el.getAttribute('data-objective-desc-hi');
+        const enText = el.getAttribute('data-objective-desc-en');
+        if (lang === 'en') {
+            if (enText && el.textContent !== enText) el.textContent = enText;
+            else if (!enText && hiText && el.textContent !== hiText) el.textContent = hiText;
+        } else if (lang === 'hi') {
+            if (hiText && el.textContent !== hiText) el.textContent = hiText;
+            else if (!hiText && enText && el.textContent !== enText) el.textContent = enText;
+        }
+    });
+
     // Update language button
     const langBtn = document.getElementById('languageBtn');
     const langBtnText = document.getElementById('languageBtnText');
@@ -661,11 +693,11 @@ function applyLanguage(lang) {
     document.querySelectorAll('.mobile-nav-item#languageBtnMobile span:not(.language-toggle-icon)').forEach(el => {
         el.textContent = targetLangText;
     });
-    
+
     // Dispatch language change event
     const languageChangedEvent = new CustomEvent('languageChanged', { detail: { lang } });
     window.dispatchEvent(languageChangedEvent);
-    
+
     // Update popup language elements
     document.querySelectorAll('[data-lang-popup]').forEach(el => {
         const key = el.getAttribute('data-lang-popup');
@@ -673,7 +705,7 @@ function applyLanguage(lang) {
             el.textContent = t.popup[key];
         }
     });
-    
+
     // Update popup if visible
     updatePopupLanguage(lang);
 }
@@ -705,46 +737,46 @@ function hideLanguagePopup() {
 // Initialize language system
 function initLanguageSystem() {
     const currentLang = getCurrentLanguage();
-    
+
     // Check if language was already selected
     const languageSelected = localStorage.getItem('languageSelected');
-    
+
     // Apply language with a small delay to ensure DOM is ready
     setTimeout(() => {
         applyLanguage(currentLang);
     }, 100);
-    
+
     if (!languageSelected) {
         // Show popup on first visit
         setTimeout(() => {
             showLanguagePopup();
         }, 300);
     }
-    
+
     // Language selection buttons
     document.querySelectorAll('.lang-option').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const lang = this.getAttribute('data-lang');
             setLanguage(lang);
             localStorage.setItem('languageSelected', 'true');
             hideLanguagePopup();
         });
     });
-    
+
     // Language toggle button in navbar
     const langBtn = document.getElementById('languageBtn');
     if (langBtn) {
-        langBtn.addEventListener('click', function() {
+        langBtn.addEventListener('click', function () {
             const currentLang = getCurrentLanguage();
             const newLang = currentLang === 'en' ? 'hi' : 'en';
             setLanguage(newLang);
         });
     }
-    
+
     // Close popup on outside click
     const popup = document.getElementById('languagePopup');
     if (popup) {
-        popup.addEventListener('click', function(e) {
+        popup.addEventListener('click', function (e) {
             if (e.target === this) {
                 // Don't close on outside click, require selection
             }
@@ -761,7 +793,7 @@ if (document.readyState === 'loading') {
 }
 
 // Also apply language when window is fully loaded (after all scripts)
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     const currentLang = getCurrentLanguage();
     setTimeout(() => {
         applyLanguage(currentLang);
@@ -780,7 +812,7 @@ setTimeout(() => {
 }, 1000);
 
 // Also apply language when page becomes visible (for navigation)
-document.addEventListener('visibilitychange', function() {
+document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
         const currentLang = getCurrentLanguage();
         setTimeout(() => {
@@ -795,15 +827,20 @@ function setupMutationObserver() {
         setTimeout(setupMutationObserver, 100);
         return;
     }
-    
-    const observer = new MutationObserver(function(mutations) {
+
+    const observer = new MutationObserver(function (mutations) {
         const currentLang = getCurrentLanguage();
         let shouldApply = false;
-        
-        mutations.forEach(function(mutation) {
+
+        mutations.forEach(function (mutation) {
             if (mutation.addedNodes.length > 0) {
-                mutation.addedNodes.forEach(function(node) {
+                mutation.addedNodes.forEach(function (node) {
                     if (node.nodeType === 1) { // Element node
+                        // Ignore objective scroll track cloning/manipulation to prevent loops
+                        if (node.closest && (node.closest('.objectives-scroll-wrapper') || node.closest('.objectives-scroll-track'))) {
+                            return;
+                        }
+
                         if (node.hasAttribute && (
                             node.hasAttribute('data-lang-blog') ||
                             node.hasAttribute('data-lang-photos') ||
@@ -822,14 +859,14 @@ function setupMutationObserver() {
                 });
             }
         });
-        
+
         if (shouldApply) {
             setTimeout(() => {
                 applyLanguage(currentLang);
             }, 100);
         }
     });
-    
+
     // Start observing
     observer.observe(document.body, {
         childList: true,

@@ -105,10 +105,16 @@
                         </svg>
                         {% endif %}
                     </div>
-                    <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}
+                    <h3 class="objective-card-title"
+                        data-objective-title-en="{{ objective.titleEn if objective.titleEn else '' }}"
+                        data-objective-title-hi="{{ objective.title if objective.title else '' }}">
+                        {{ objective.titleEn if objective.titleEn else objective.title }}
                     </h3>
-                    <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else
-                        objective.description }}</p>
+                    <p class="objective-card-description"
+                        data-objective-desc-en="{{ objective.descriptionEn if objective.descriptionEn else '' }}"
+                        data-objective-desc-hi="{{ objective.description if objective.description else '' }}">
+                        {{ objective.descriptionEn if objective.descriptionEn else objective.description }}
+                    </p>
                 </div>
                 {% endfor %}
                 {% else %}
@@ -141,12 +147,34 @@
                         </svg>
                         {% endif %}
                     </div>
-                    <h3 class="objective-card-title">{{ objective.titleEn if objective.titleEn else objective.title }}
+                    <h3 class="objective-card-title"
+                        data-objective-title-en="{{ objective.titleEn if objective.titleEn else '' }}"
+                        data-objective-title-hi="{{ objective.title if objective.title else '' }}">
+                        {{ objective.titleEn if objective.titleEn else objective.title }}
                     </h3>
-                    <p class="objective-card-description">{{ objective.descriptionEn if objective.descriptionEn else
-                        objective.description }}</p>
+                    <p class="objective-card-description"
+                        data-objective-desc-en="{{ objective.descriptionEn if objective.descriptionEn else '' }}"
+                        data-objective-desc-hi="{{ objective.description if objective.description else '' }}">
+                        {{ objective.descriptionEn if objective.descriptionEn else objective.description }}
+                    </p>
                 </div>
                 {% endfor %}
+                {% else %}
+                <!-- Duplicate fallback objectives if none exist -->
+                <div class="objective-card">
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="objective-card-title" data-lang-home="objectiveBanner1Title">Spreading Love & Compassion
+                    </h3>
+                    <p class="objective-card-description" data-lang-home="objectiveBanner1Desc">Cultivating
+                        unconditional love and compassion in every heart. We believe that through genuine care and
+                        empathy, we can transform lives and create a more harmonious world for all beings.</p>
+                </div>
                 {% endif %}
             </div>
         </div>

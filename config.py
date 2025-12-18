@@ -9,7 +9,8 @@ class Config:
     """Base configuration"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production-12345'
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
-    ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH') or None  # Set via environment variable
+    # Password: raghav12
+    ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH') or 'scrypt:32768:8:1$ZswhGwtzllOz1v7a$94a3d507769bc5fadc39b34f89ddd245311c3fa48fbe617bae67ad881d92381361c29baaede148d9bc9c30832cff9e683cdfc3fa67ccbfe71a3fafa43df42343'
     ADMIN_ALLOWED_IPS = os.environ.get('ADMIN_ALLOWED_IPS', '')
     # Secure cookie settings - production ready
     SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
