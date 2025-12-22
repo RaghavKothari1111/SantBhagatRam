@@ -222,13 +222,13 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
     .blog-container {
-        padding: 40px 60px;
+        padding: 0;
     }
 }
 
 @media (max-width: 968px) {
     .blog-container {
-        padding: 30px 40px;
+        padding: 0;
     }
 
     .blog-posts-grid {
@@ -239,7 +239,7 @@
 
 @media (max-width: 768px) {
     .blog-container {
-        padding: 30px 20px;
+        padding: 0;
     }
 
     .blog-header h1 {
@@ -258,7 +258,7 @@
 
 @media (max-width: 480px) {
     .blog-container {
-        padding: 20px 15px;
+        padding: 0;
     }
 
     .blog-header h1 {

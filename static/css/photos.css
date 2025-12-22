@@ -474,7 +474,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .photo-gallery-container {
-        padding: 30px 15px;
+        padding: 0;
     }
 
     .gallery-header h1 {

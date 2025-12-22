@@ -579,7 +579,7 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
     .events-container {
-        padding: 50px 60px;
+        padding: 0;
     }
 
     .events-grid {
@@ -590,7 +590,7 @@
 
 @media (max-width: 968px) {
     .events-container {
-        padding: 40px 40px;
+        padding: 0;
     }
 
     .events-header h1 {
@@ -613,7 +613,7 @@
 
 @media (max-width: 768px) {
     .events-container {
-        padding: 24px 16px 40px;
+        padding: 0;
     }
 
     .events-header h1 {
@@ -696,7 +696,7 @@
 
 @media (max-width: 480px) {
     .events-container {
-        padding: 30px 20px;
+        padding: 0;
     }
 
     .events-header h1 {
