@@ -3,7 +3,6 @@
     padding: 0;
     width: 100%;
     margin: 0 auto;
-    background: linear-gradient(135deg, #fff0f3ff 0%, #fafafa 50%, #fff0f3ff 100%);
     min-height: calc(100vh - 160px);
     position: relative;
     padding-bottom: 120px;
@@ -475,6 +474,7 @@
 @media (max-width: 768px) {
     .photo-gallery-container {
         padding: 0;
+        /* Ensure it covers full viewport height minus navbar */
     }
 
     .gallery-header h1 {

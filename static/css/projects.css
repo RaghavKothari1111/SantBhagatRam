@@ -4,7 +4,6 @@
     padding: 0;
     width: 100%;
     margin: 0 auto;
-    background: linear-gradient(135deg, #fff0f3ff 0%, #fafafa 50%, #fff0f3ff 100%);
     position: relative;
     padding-bottom: 120px;
 }
@@ -259,13 +258,13 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
     .projects-container {
-        padding: 0;
+        padding: 0 0 40px 0;
     }
 }
 
 @media (max-width: 968px) {
     .projects-container {
-        padding: 0;
+        padding: 0 0 40px 0;
     }
 
     .projects-grid {
@@ -276,7 +275,7 @@
 
 @media (max-width: 768px) {
     .projects-container {
-        padding: 0;
+        padding: 0 0 40px 0;
     }
 
     .projects-header h1 {
@@ -295,7 +294,7 @@
 
 @media (max-width: 480px) {
     .projects-container {
-        padding: 0;
+        padding: 0 0 40px 0;
     }
 
     .projects-header h1 {
