@@ -192,6 +192,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/language.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/banner.css') }}">
 
 
 
@@ -253,7 +254,7 @@
                     {% set dropdown_data = navbar_dropdowns_data.dropdowns.get(nav_item, {}) %}
                     {% if dropdown_data.enabled %}
                     <li class="drop-down_{{ nav_item }} nav-item-has-dropdown">
-                        <a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}▼</a>
+                        <a href="{{ nav_info.url }}" data-lang-nav="{{ nav_info.lang }}">{{ nav_info.lang|title }}</a>
                         <div class="drop-down-menu-{{ nav_item }} nav-dropdown">
                             <div class="dropdown-content">
                                 {% for column in dropdown_data.columns %}

@@ -9,52 +9,57 @@
 {% block content %}
 <div class="blog-container">
     <!-- Header -->
-    <div class="blog-header">
-        <h1 data-lang-blog="title">ब्लॉग</h1>
-        <p data-lang-blog="subtitle">हमारे कार्यों, कार्यक्रमों और सेवा गतिविधियों के बारे में अपडेट</p>
+    <!-- Banner Section -->
+    <div class="page-banner">
+        <div class="banner-content">
+            <h1 data-lang-blog="title">ब्लॉग</h1>
+            <p data-lang-blog="subtitle">हमारे कार्यों, कार्यक्रमों और सेवा गतिविधियों के बारे में अपडेट</p>
+        </div>
+        <div class="banner-image-container">
+        </div>
     </div>
 
     <!-- Blog Posts Grid -->
     <div class="blog-posts-grid">
         {% if blogs %}
-            {% for blog in blogs %}
-            <article class="blog-card" id="blog-{{ blog.id }}">
-                <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="blog-card-link" aria-label="{{ blog.title }}">
-                    <div class="blog-image">
-                        {% if blog.image %}
-                            {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
-                            <img src="{{ img_attrs.src }}" 
-                                 srcset="{{ img_attrs.srcset }}" 
-                                 sizes="{{ img_attrs.sizes }}"
-                                 alt="{{ blog.title }}" 
-                                 loading="lazy" 
-                                 decoding="async">
-                        {% else %}
-                            {% set fallback_attrs = url_for('static', filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px", default_width=800) %}
-                            <img src="{{ fallback_attrs.src }}" 
-                                 srcset="{{ fallback_attrs.srcset }}" 
-                                 sizes="{{ fallback_attrs.sizes }}"
-                                 alt="Blog Post" 
-                                 loading="lazy" 
-                                 decoding="async">
-                        {% endif %}
+        {% for blog in blogs %}
+        <article class="blog-card" id="blog-{{ blog.id }}">
+            <a href="{{ url_for('blog_detail', blog_id=blog.id) }}" class="blog-card-link"
+                aria-label="{{ blog.title }}">
+                <div class="blog-image">
+                    {% if blog.image %}
+                    {% set img_attrs = blog.image|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px)
+                    50vw, 400px", default_width=800) %}
+                    <img src="{{ img_attrs.src }}" srcset="{{ img_attrs.srcset }}" sizes="{{ img_attrs.sizes }}"
+                        alt="{{ blog.title }}" loading="lazy" decoding="async">
+                    {% else %}
+                    {% set fallback_attrs = url_for('static',
+                    filename='images/1.jpeg')|responsive_image(sizes="(max-width: 640px) 100vw, (max-width: 1024px)
+                    50vw, 400px", default_width=800) %}
+                    <img src="{{ fallback_attrs.src }}" srcset="{{ fallback_attrs.srcset }}"
+                        sizes="{{ fallback_attrs.sizes }}" alt="Blog Post" loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-date" data-lang-blog="datePrefix">दिनांक:</span>
+                        <span class="blog-date-value" data-lang-blog-date-hi="{{ blog.date }}"
+                            data-lang-blog-date-en="{{ blog.dateEn }}">{{ blog.date }}</span>
+                        <span class="blog-category" data-lang-blog-category-hi="{{ blog.category }}"
+                            data-lang-blog-category-en="{{ blog.categoryEn }}">{{ blog.category }}</span>
                     </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <span class="blog-date" data-lang-blog="datePrefix">दिनांक:</span>
-                            <span class="blog-date-value" data-lang-blog-date-hi="{{ blog.date }}" data-lang-blog-date-en="{{ blog.dateEn }}">{{ blog.date }}</span>
-                            <span class="blog-category" data-lang-blog-category-hi="{{ blog.category }}" data-lang-blog-category-en="{{ blog.categoryEn }}">{{ blog.category }}</span>
-                        </div>
-                        <h2 class="blog-title" data-lang-blog-title-hi="{{ blog.title }}" data-lang-blog-title-en="{{ blog.titleEn }}">{{ blog.title }}</h2>
-                        <p class="blog-excerpt" data-lang-blog-excerpt-hi="{{ blog.excerpt }}" data-lang-blog-excerpt-en="{{ blog.excerptEn }}">{{ blog.excerpt }}</p>
-                    </div>
-                </a>
-            </article>
-            {% endfor %}
+                    <h2 class="blog-title" data-lang-blog-title-hi="{{ blog.title }}"
+                        data-lang-blog-title-en="{{ blog.titleEn }}">{{ blog.title }}</h2>
+                    <p class="blog-excerpt" data-lang-blog-excerpt-hi="{{ blog.excerpt }}"
+                        data-lang-blog-excerpt-en="{{ blog.excerptEn }}">{{ blog.excerpt }}</p>
+                </div>
+            </a>
+        </article>
+        {% endfor %}
         {% else %}
-            <div class="empty-blog-state">
-                <p>No blogs available yet. Check back soon!</p>
-            </div>
+        <div class="empty-blog-state">
+            <p>No blogs available yet. Check back soon!</p>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -63,44 +68,44 @@
 {% block extra_js %}
 <script>
     // Ensure translations are applied after page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
             if (window.applyLanguage) {
                 const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
                 window.applyLanguage(lang);
             }
         }, 300);
-        
+
     });
-    
-    window.addEventListener('load', function() {
-        setTimeout(function() {
+
+    window.addEventListener('load', function () {
+        setTimeout(function () {
             if (window.applyLanguage) {
                 const lang = window.getCurrentLanguage ? window.getCurrentLanguage() : 'hi';
                 window.applyLanguage(lang);
             }
         }, 200);
-        
+
         // Scroll to specific blog if hash is present in URL
         if (window.location.hash) {
             const hash = window.location.hash;
             const targetElement = document.querySelector(hash);
             if (targetElement) {
-                setTimeout(function() {
-                    targetElement.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
+                setTimeout(function () {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
                     // Add highlight effect
                     targetElement.style.transition = 'box-shadow 0.3s ease';
                     targetElement.style.boxShadow = '0 8px 24px rgba(255, 77, 109, 0.3)';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         targetElement.style.boxShadow = '';
                     }, 2000);
                 }, 300);
             }
         }
     });
-    
+
 </script>
 {% endblock %}

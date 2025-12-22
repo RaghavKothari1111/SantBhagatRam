@@ -20,43 +20,6 @@
       "enabled": true,
       "columns": [
         {
-          "title": "Japan Tour",
-          "heading": "",
-          "items": [
-            {
-              "title": "Inside asharam",
-              "title_hi": "No aasharam",
-              "link": "https://www.google.com",
-              "font_size": "large",
-              "id": "1c9bc451",
-              "order": 1
-            },
-            {
-              "title": "Inside Ramadwara",
-              "link": "https://www.google.com",
-              "font_size": "large",
-              "id": "57a34279",
-              "order": 2
-            },
-            {
-              "title": "Hi There Chittorgarh",
-              "link": "https://www.google.com",
-              "font_size": "large",
-              "id": "b15179f1",
-              "order": 3
-            },
-            {
-              "title": "Rumour of nemesisid",
-              "link": "https://www.google.com",
-              "font_size": "large",
-              "id": "0d9bcccb",
-              "order": 4
-            }
-          ],
-          "id": "0ecdd743",
-          "order": 1
-        },
-        {
           "title": "America",
           "heading": "",
           "items": [

@@ -30,7 +30,7 @@
  * }
  */
 // Make eventsData available globally IMMEDIATELY
-var eventsData = window.eventsData || [];
+var eventsData = window.eventsData || [
     {
         id: '1',
         title: 'भजन संध्या - श्री रामद्वारा',
@@ -334,9 +334,9 @@ function getCurrentLanguage() {
 function formatDate(dateString) {
     const date = new Date(dateString);
     const lang = getCurrentLanguage();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
+    const options = {
+        year: 'numeric',
+        month: 'long',
         day: 'numeric',
         weekday: lang === 'en' ? 'long' : undefined
     };
@@ -357,11 +357,11 @@ function generateGoogleCalendarUrl(event) {
     const startDate = new Date(`${event.date}T${event.time}`);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // 2 hours later
     const lang = getCurrentLanguage();
-    
+
     const title = lang === 'en' ? event.titleEn : event.title;
     const description = lang === 'en' ? event.descriptionEn : event.description;
     const location = lang === 'en' ? event.locationEn : event.location;
-    
+
     const params = new URLSearchParams({
         action: 'TEMPLATE',
         text: title,
@@ -369,7 +369,7 @@ function generateGoogleCalendarUrl(event) {
         details: description,
         location: location
     });
-    
+
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
@@ -378,11 +378,11 @@ function generateOutlookCalendarUrl(event) {
     const startDate = new Date(`${event.date}T${event.time}`);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
     const lang = getCurrentLanguage();
-    
+
     const title = lang === 'en' ? event.titleEn : event.title;
     const description = lang === 'en' ? event.descriptionEn : event.description;
     const location = lang === 'en' ? event.locationEn : event.location;
-    
+
     const params = new URLSearchParams({
         subject: title,
         startdt: startDate.toISOString(),
@@ -390,7 +390,7 @@ function generateOutlookCalendarUrl(event) {
         body: description,
         location: location
     });
-    
+
     return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
 }
 
@@ -407,7 +407,7 @@ function renderEvents() {
         return false;
     }
     console.log('Grid found:', grid);
-    
+
     // Check if eventsData exists (try both local and window scope)
     let dataToUse = eventsData || window.eventsData;
     if (!dataToUse || !Array.isArray(dataToUse)) {
@@ -417,16 +417,16 @@ function renderEvents() {
         grid.innerHTML = '<div class="no-events"><p>Error: Events data not loaded.</p></div>';
         return false;
     }
-    
+
     console.log('Events data available:', dataToUse.length, 'events');
-    
+
     const lang = getCurrentLanguage();
     console.log('Current language:', lang);
-    
+
     // TEMPORARILY SHOW ALL EVENTS FOR TESTING - Remove date filtering
     console.log('TEMPORARY: Showing ALL events regardless of date for testing');
     let upcomingEvents = dataToUse.sort((a, b) => new Date(a.date) - new Date(b.date));
-    
+
     // Original date filtering code (commented out for testing)
     /*
     const today = new Date();
@@ -452,13 +452,13 @@ function renderEvents() {
         upcomingEvents = eventsData.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
     */
-    
+
     // Debug logging
     console.log('Events Page Debug:');
     console.log('- Total events in data:', dataToUse.length);
     console.log('- Upcoming events found:', upcomingEvents.length);
     console.log('- First event:', upcomingEvents[0]);
-    
+
     if (upcomingEvents.length === 0) {
         grid.innerHTML = `
             <div class="no-events">
@@ -467,33 +467,33 @@ function renderEvents() {
         `;
         return false;
     }
-    
+
     console.log('Rendering', upcomingEvents.length, 'events...');
-    
+
     try {
         const html = upcomingEvents.map(event => {
-        const title = lang === 'en' ? event.titleEn : event.title;
-        const description = lang === 'en' ? event.descriptionEn : event.description;
-        const location = lang === 'en' ? event.locationEn : event.location;
-        const addToCalendar = lang === 'en' ? 'Add to Calendar' : 'कैलेंडर में जोड़ें';
-        const googleCalendar = lang === 'en' ? 'Google Calendar' : 'Google कैलेंडर';
-        const outlookCalendar = lang === 'en' ? 'Outlook' : 'Outlook';
-        
-        // Safely format date and time
-        let formattedDate = event.date;
-        let formattedTime = event.time;
-        try {
-            formattedDate = formatDate(event.date);
-        } catch (e) {
-            console.warn('Error formatting date for event', event.id, e);
-        }
-        try {
-            formattedTime = formatTime(event.time);
-        } catch (e) {
-            console.warn('Error formatting time for event', event.id, e);
-        }
-        
-        return `
+            const title = lang === 'en' ? event.titleEn : event.title;
+            const description = lang === 'en' ? event.descriptionEn : event.description;
+            const location = lang === 'en' ? event.locationEn : event.location;
+            const addToCalendar = lang === 'en' ? 'Add to Calendar' : 'कैलेंडर में जोड़ें';
+            const googleCalendar = lang === 'en' ? 'Google Calendar' : 'Google कैलेंडर';
+            const outlookCalendar = lang === 'en' ? 'Outlook' : 'Outlook';
+
+            // Safely format date and time
+            let formattedDate = event.date;
+            let formattedTime = event.time;
+            try {
+                formattedDate = formatDate(event.date);
+            } catch (e) {
+                console.warn('Error formatting date for event', event.id, e);
+            }
+            try {
+                formattedTime = formatTime(event.time);
+            } catch (e) {
+                console.warn('Error formatting time for event', event.id, e);
+            }
+
+            return `
             <div class="event-card">
                 <div class="event-image">
                     <img src="${event.image || '/static/images/1.jpeg'}" alt="${title}" onerror="this.src='/static/images/1.jpeg'">
@@ -523,18 +523,18 @@ function renderEvents() {
             </div>
         `;
         }).join('');
-        
+
         console.log('Generated HTML length:', html.length);
-        
+
         // Clear grid completely first
         grid.innerHTML = '';
-        
+
         // Remove loading message
         const loadingMsg = document.getElementById('loadingMessage');
         if (loadingMsg) {
             loadingMsg.remove();
         }
-        
+
         // Set the HTML
         grid.innerHTML = html;
         console.log('Events rendered successfully!');
@@ -563,75 +563,75 @@ function renderCalendar() {
         console.log('Calendar elements not found');
         return;
     }
-    
+
     console.log('Rendering calendar...');
-    
+
     const lang = getCurrentLanguage();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
+
     // Update month/year display
-    const monthNames = lang === 'en' 
+    const monthNames = lang === 'en'
         ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         : ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
-    
+
     monthYear.textContent = `${monthNames[month]} ${year}`;
-    
+
     // Get first day of month and number of days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
-    
+
     // Get dates with events - use window.eventsData if available
     const dataToUse = window.eventsData || eventsData || [];
     const eventDates = new Set(dataToUse.map(e => e.date));
     console.log('Event dates found:', eventDates.size);
-    
+
     // Clear grid
     grid.innerHTML = '';
-    
+
     // Add day headers
     const dayHeaders = lang === 'en'
         ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         : ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
-    
+
     dayHeaders.forEach(day => {
         const header = document.createElement('div');
         header.className = 'calendar-day-header';
         header.textContent = day;
         grid.appendChild(header);
     });
-    
+
     // Add empty cells for days before month starts
     for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         empty.className = 'calendar-day empty';
         grid.appendChild(empty);
     }
-    
+
     // Add days of month
     for (let day = 1; day <= daysInMonth; day++) {
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
         dayElement.textContent = day;
-        
+
         const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        
+
         // Check if today
         if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
             dayElement.classList.add('today');
         }
-        
+
         // Check if has events
         if (eventDates.has(dateString)) {
             dayElement.classList.add('has-event');
         }
-        
+
         // Check if selected
         if (selectedDate && selectedDate === dateString) {
             dayElement.classList.add('selected');
         }
-        
+
         dayElement.addEventListener('click', () => selectDate(dateString));
         grid.appendChild(dayElement);
     }
@@ -655,12 +655,12 @@ function showDateEvents(dateString) {
         console.log('selectedDateEvents container not found');
         return;
     }
-    
+
     const lang = getCurrentLanguage();
     const dataToUse = window.eventsData || eventsData || [];
     const dateEvents = dataToUse.filter(e => e.date === dateString);
     console.log('Events for', dateString, ':', dateEvents.length);
-    
+
     if (dateEvents.length === 0) {
         const noEvents = lang === 'en' ? 'No events scheduled for this date.' : 'इस तारीख के लिए कोई कार्यक्रम निर्धारित नहीं है।';
         container.innerHTML = `
@@ -670,16 +670,16 @@ function showDateEvents(dateString) {
         `;
         return;
     }
-    
+
     container.innerHTML = `
         <h3 class="selected-date-title">${formatDate(dateString)}</h3>
         <div class="date-events-list">
             ${dateEvents.map(event => {
-                const title = lang === 'en' ? event.titleEn : event.title;
-                const description = lang === 'en' ? event.descriptionEn : event.description;
-                const location = lang === 'en' ? event.locationEn : event.location;
-                
-                return `
+        const title = lang === 'en' ? event.titleEn : event.title;
+        const description = lang === 'en' ? event.descriptionEn : event.description;
+        const location = lang === 'en' ? event.locationEn : event.location;
+
+        return `
                     <div class="date-event-item">
                         <div class="date-event-time">${formatTime(event.time)}</div>
                         <div class="date-event-content">
@@ -689,7 +689,7 @@ function showDateEvents(dateString) {
                         </div>
                     </div>
                 `;
-            }).join('')}
+    }).join('')}
         </div>
     `;
 }
@@ -710,19 +710,19 @@ function changeMonth(direction) {
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.events-section');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const targetTab = tab.getAttribute('data-tab');
-            
+
             // Update active tab
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
+
             // Update active section
             sections.forEach(s => s.classList.remove('active'));
             document.getElementById(`${targetTab}Section`).classList.add('active');
-            
+
             // If switching to calendar, render it
             if (targetTab === 'calendar') {
                 renderCalendar();
@@ -735,14 +735,14 @@ function initTabs() {
 function initializeEvents() {
     console.log('Initializing events page...');
     console.log('Events data length:', eventsData ? eventsData.length : 0);
-    
+
     // Check if we're on events page
     const grid = document.getElementById('eventsGrid');
     if (!grid) {
         console.log('Not on events page, skipping initialization');
         return;
     }
-    
+
     // Render client-side list only if needed
     if (!window.skipJsEventRender) {
         console.log('Rendering events immediately...');
@@ -750,18 +750,18 @@ function initializeEvents() {
     } else {
         console.log('Server rendered events, skipping client render.');
     }
-    
+
     // Wait a bit for DOM to be fully ready for tabs
     setTimeout(() => {
         initTabs();
-        
+
         // Calendar navigation
         const prevBtn = document.getElementById('prevMonth');
         const nextBtn = document.getElementById('nextMonth');
-        
+
         if (prevBtn) prevBtn.addEventListener('click', () => changeMonth(-1));
         if (nextBtn) nextBtn.addEventListener('click', () => changeMonth(1));
-        
+
         // Always render calendar so it has content when tab is opened
         renderCalendar();
     }, 100);
@@ -773,7 +773,7 @@ console.log('events.js: eventsData length:', eventsData ? eventsData.length : 'u
 
 if (document.readyState === 'loading') {
     console.log('events.js: Adding DOMContentLoaded listener');
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         console.log('events.js: DOMContentLoaded fired');
         initializeEvents();
     });
@@ -784,7 +784,7 @@ if (document.readyState === 'loading') {
 }
 
 // Also try on window load as fallback
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     console.log('events.js: Window load fired');
     setTimeout(() => {
         const grid = document.getElementById('eventsGrid');
@@ -803,7 +803,7 @@ window.addEventListener('load', function() {
 });
 
 // Re-render on language change
-window.addEventListener('languageChanged', function() {
+window.addEventListener('languageChanged', function () {
     renderEvents();
     renderCalendar();
     if (selectedDate) {
@@ -817,7 +817,7 @@ window.addEventListener('languageChanged', function() {
 if (typeof window !== 'undefined') {
     window.eventsData = eventsData;
     console.log('events.js: window.eventsData set with', eventsData.length, 'events');
-    
+
     // Also make it available as a global variable
     if (typeof eventsData !== 'undefined') {
         console.log('events.js: eventsData is available globally');
@@ -831,10 +831,10 @@ window.selectDate = selectDate;
 window.showDateEvents = showDateEvents;
 
 // Try to render immediately if we're on the events page
-(function() {
+(function () {
     if (document.getElementById('eventsGrid')) {
         console.log('events.js: eventsGrid found, attempting immediate render...');
-        setTimeout(function() {
+        setTimeout(function () {
             if (window.renderEvents) {
                 console.log('events.js: Calling renderEvents immediately...');
                 window.renderEvents();
