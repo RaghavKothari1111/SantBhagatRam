@@ -602,7 +602,7 @@
     flex: 1;
     overflow-y: auto;
     padding-right: 8px;
-    max-height: 500px;
+    max-height: 260px;
     display: flex;
     flex-direction: column;
     gap: 16px;
