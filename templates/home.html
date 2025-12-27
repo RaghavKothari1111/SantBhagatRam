@@ -284,7 +284,7 @@
         <div class="upcoming-sidebar-list">
             <h3 class="upcoming-sidebar-title" data-lang-events="upcomingEventsSidebar">Upcoming Events</h3>
             <div class="upcoming-sidebar-items">
-                {% for event in upcoming_events[:4] %}
+                {% for event in upcoming_events[:3] %}
                 <div class="sidebar-event-card">
                     <div class="sidebar-event-date">
                         <span class="sidebar-day">{{ event.date.split('-')[2] }}</span>
