@@ -567,8 +567,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 200px;
-    min-height: 200px;
+    height: 225px;
+    min-height: 225px;
     color: #9ca3af;
     font-size: 1.1rem;
     text-align: center;
@@ -600,11 +600,11 @@
 }
 
 .date-events-list {
-    flex: 1;
     overflow-y: auto;
     padding-right: 8px;
-    height: 100px;
-    min-height: 100px;
+    height: 150px;
+    max-height: 150px;
+    min-height: 150px;
     display: flex;
     flex-direction: column;
     gap: 16px;

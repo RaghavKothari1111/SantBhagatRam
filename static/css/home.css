@@ -720,7 +720,7 @@
 
 @media (max-width: 768px) {
     .home-blog-section {
-        padding: 40px 0;
+        padding: 60px 0;
     }
 
     .home-blog-container {
@@ -758,9 +758,9 @@
 
     .home-blog-card {
         border-radius: 18px;
-        min-width: 80vw;
-        width: 80vw;
-        flex: 0 0 80vw;
+        min-width: 75vw;
+        width: 75vw;
+        flex: 0 0 75vw;
         scroll-snap-align: center;
     }
 
@@ -770,7 +770,7 @@
     }
 
     .home-blog-card-content {
-        padding: 28px;
+        padding: 20px;
     }
 
     .home-blog-card-title {
@@ -785,7 +785,7 @@
 
 @media (max-width: 480px) {
     .home-blog-section {
-        padding: 30px 0;
+        padding: 50px 0;
     }
 
     .home-blog-container {
