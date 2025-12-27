@@ -176,6 +176,13 @@ def home():
         [e for e in events_data if e['date'] >= today_str],
         key=lambda x: x['date']
     )
+
+    # Add month abbreviation for display
+    for event in upcoming_events:
+        try:
+            event['month_abbr'] = datetime.strptime(event['date'], '%Y-%m-%d').strftime('%b').upper()
+        except ValueError:
+            event['month_abbr'] = ''
     
     return render_template(
         'home.html', 
@@ -252,6 +259,13 @@ def events():
         [e for e in events_data if e['date'] >= today_str],
         key=lambda x: x['date']
     )
+
+    # Add month abbreviation for display
+    for event in upcoming_events:
+        try:
+            event['month_abbr'] = datetime.strptime(event['date'], '%Y-%m-%d').strftime('%b').upper()
+        except ValueError:
+            event['month_abbr'] = ''
     
     return render_template(
         'events.html',

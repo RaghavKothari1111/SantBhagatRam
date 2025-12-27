@@ -628,7 +628,7 @@
 }
 
 .date-event-item {
-    padding: 20px;
+    padding: 12px;
     background: #f9fafb;
     border-radius: 12px;
     border-left: 4px solid var(--bubblegum-pink);
@@ -645,7 +645,7 @@
     font-size: 0.85rem;
     color: var(--bubblegum-pink);
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     display: inline-block;
     background: rgba(255, 77, 109, 0.1);
     padding: 4px 10px;
@@ -656,8 +656,8 @@
     font-size: 1.1rem;
     font-weight: 700;
     color: #111827;
-    margin-bottom: 8px;
-    line-height: 1.4;
+    margin-bottom: 4px;
+    line-height: 1.2;
 }
 
 .date-event-location {
@@ -666,13 +666,13 @@
     gap: 6px;
     font-size: 0.9rem;
     color: #6b7280;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .date-event-description {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #4b5563;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 /* Responsive Design */
