@@ -369,6 +369,7 @@
     width: 320px;
     flex: 0 0 auto;
     scroll-snap-align: center;
+    scroll-snap-stop: always;
 }
 
 
