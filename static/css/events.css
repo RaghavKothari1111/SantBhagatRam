@@ -844,7 +844,7 @@
     flex-direction: column;
     gap: 20px;
     gap: 20px;
-    height: 100%;
+    height: auto;
 }
 
 .upcoming-sidebar-title {
@@ -870,13 +870,13 @@
 .upcoming-sidebar-items {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .sidebar-event-card {
     display: flex;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px;
+    padding: 12px;
     background: #f9fafb;
     border-radius: 12px;
     transition: all 0.2s ease;
