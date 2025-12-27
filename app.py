@@ -160,10 +160,32 @@ def inject_current_year():
 def home():
     migrate_blog_ids_to_slugs()
     blogs = get_all_blogs()
-    home_blogs = blogs[:3]
+    home_blogs = blogs[:10]
     slider_images = get_all_slider_images()
     objectives = get_all_objectives()
-    return render_template('home.html', home_blogs=home_blogs, slider_images=slider_images, objectives=objectives)
+    
+    # Get events for the calendar section
+    events_data = get_all_events()
+    if not events_data:
+        events_data = EVENTS_DATA
+        
+    
+    # Filter for upcoming events (date >= today) for the sidebar
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    upcoming_events = sorted(
+        [e for e in events_data if e['date'] >= today_str],
+        key=lambda x: x['date']
+    )
+    
+    return render_template(
+        'home.html', 
+        home_blogs=home_blogs, 
+        slider_images=slider_images, 
+        objectives=objectives,
+        events=events_data,
+        upcoming_events=upcoming_events,
+        events_json=json.dumps(events_data, ensure_ascii=False)
+    )
 
 @app.route('/blog')
 def blog():
@@ -223,9 +245,18 @@ def events():
         events_data = EVENTS_DATA
         save_json_data(Config.EVENTS_DATA_FILE, events_data)
     
+    # Sort events by date (descending for general list if needed, or keeping as is)
+    # Filter for upcoming events (date >= today) for the sidebar
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    upcoming_events = sorted(
+        [e for e in events_data if e['date'] >= today_str],
+        key=lambda x: x['date']
+    )
+    
     return render_template(
         'events.html',
         events=events_data,
+        upcoming_events=upcoming_events,
         events_json=json.dumps(events_data, ensure_ascii=False),
     )
 

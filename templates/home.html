@@ -3,8 +3,9 @@
 {% block title %}Home - My Website{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/events.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -198,7 +199,7 @@
     <div class="home-blog-container">
         <div class="home-blog-header">
             <h2 data-lang-home="blogSectionTitle">Latest From Blog</h2>
-            <p data-lang-home="blogSectionSubtitle">Stay updated with our latest activities and events</p>
+
         </div>
 
         <div class="home-blog-grid">
@@ -242,13 +243,75 @@
         </div>
 
         <div class="home-blog-view-all">
-            <a href="{{ url_for('blog') }}" class="view-all-btn" data-lang-home="viewAllBlogs">View All Blogs →</a>
+            <a href="{{ url_for('blog') }}" class="view-all-btn" data-lang-home="viewAllBlogs">View All Blogs</a>
+        </div>
+    </div>
+</section>
+<!-- Calendar Section -->
+<section class="home-events-section">
+    <div class="home-blog-header" style="justify-content: center; margin-bottom: 80px;">
+        <h2 data-lang-home="eventsSectionTitle" style="text-align: center;">Upcoming Events</h2>
+    </div>
+
+    <div id="calendarSection">
+        <div class="selected-date-events" id="selectedDateEvents">
+            <div class="no-events-message" data-lang-events="noEventsMessage">
+                Select a date to view events
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="prevMonth" aria-label="Previous month">‹</button>
+                <h2 class="calendar-month-year" id="calendarMonthYear"></h2>
+                <button class="calendar-nav-btn" id="nextMonth" aria-label="Next month">›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be dynamically generated -->
+            </div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-dot has-event"></span>
+                    <span data-lang-events="legendHasEvent">Has Events</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot today"></span>
+                    <span data-lang-events="legendToday">Today</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="upcoming-sidebar-list">
+            <h3 class="upcoming-sidebar-title" data-lang-events="upcomingEventsSidebar">Upcoming Events</h3>
+            <div class="upcoming-sidebar-items">
+                {% for event in upcoming_events[:4] %}
+                <div class="sidebar-event-card">
+                    <div class="sidebar-event-date">
+                        <span class="sidebar-day">{{ event.date.split('-')[2] }}</span>
+                        <span class="sidebar-month">{{ event.date.split('-')[1] }}</span>
+                    </div>
+                    <div class="sidebar-event-info">
+                        <h4 class="sidebar-event-title" data-title-hi="{{ event.title }}"
+                            data-title-en="{{ event.titleEn }}">{{ event.titleEn }}</h4>
+                        <div class="sidebar-event-meta">
+                            <span data-location-hi="{{ event.location }}" data-location-en="{{ event.locationEn }}">📍
+                                {{ event.locationEn }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    window.eventsData = {{ events_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
 <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
 <script src="{{ url_for('static', filename='js/objectives.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scroller.js') }}"></script>
 {% endblock %}

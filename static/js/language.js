@@ -36,7 +36,7 @@ const translations = {
             learnMore: "Learn More",
             blogSectionTitle: "Latest From Blog",
             blogSectionSubtitle: "Stay updated with our latest activities and events",
-            viewAllBlogs: "View All Blogs →",
+            viewAllBlogs: "View All Blogs",
             objectivesBannerTitle: "Our Objectives",
             objectiveBanner1Title: "Spreading Love & Compassion",
             objectiveBanner1Desc: "Cultivating unconditional love and compassion in every heart. We believe that through genuine care and empathy, we can transform lives and create a more harmonious world for all beings.",
@@ -53,7 +53,8 @@ const translations = {
             objectiveBanner7Title: "Inspiring Divine Service",
             objectiveBanner7Desc: "Encouraging selfless service as a path to spiritual elevation. Through acts of compassion and seva, we demonstrate that serving others is serving the divine, creating ripples of positive change throughout the world.",
             objectiveBanner8Title: "Empowering Transformation",
-            objectiveBanner8Desc: "Supporting profound personal and collective transformation. We believe every soul has the potential for divine awakening, and we provide the sacred space, guidance, and community needed for this beautiful metamorphosis."
+            objectiveBanner8Desc: "Supporting profound personal and collective transformation. We believe every soul has the potential for divine awakening, and we provide the sacred space, guidance, and community needed for this beautiful metamorphosis.",
+            eventsSectionTitle: "Upcoming Events"
         },
         // Footer
         footer: {
@@ -186,7 +187,8 @@ const translations = {
             legendHasEvent: "Has Events",
             legendToday: "Today",
             noEventsMessage: "Select a date to view events",
-            noUpcomingEvents: "No upcoming events scheduled."
+            noUpcomingEvents: "No upcoming events scheduled.",
+            upcomingEventsSidebar: "Upcoming Events"
         }
     },
     hi: {
@@ -225,7 +227,7 @@ const translations = {
             learnMore: "अधिक जानें",
             blogSectionTitle: "ब्लॉग से नवीनतम",
             blogSectionSubtitle: "हमारी नवीनतम गतिविधियों और कार्यक्रमों के साथ अपडेट रहें",
-            viewAllBlogs: "सभी ब्लॉग देखें →",
+            viewAllBlogs: "सभी ब्लॉग देखें",
             objectivesBannerTitle: "हमारे उद्देश्य",
             objectiveBanner1Title: "प्रेम और करुणा का प्रसार",
             objectiveBanner1Desc: "हर हृदय में बिना शर्त प्रेम और करुणा का विकास करना। हम मानते हैं कि वास्तविक देखभाल और सहानुभूति के माध्यम से, हम जीवन को बदल सकते हैं और सभी प्राणियों के लिए एक अधिक सामंजस्यपूर्ण दुनिया बना सकते हैं।",
@@ -242,7 +244,8 @@ const translations = {
             objectiveBanner7Title: "दिव्य सेवा को प्रेरित करना",
             objectiveBanner7Desc: "आध्यात्मिक उत्थान के मार्ग के रूप में निःस्वार्थ सेवा को प्रोत्साहित करना। करुणा और सेवा के कार्यों के माध्यम से, हम प्रदर्शित करते हैं कि दूसरों की सेवा करना दिव्य की सेवा करना है, जो पूरी दुनिया में सकारात्मक परिवर्तन की लहरें पैदा करता है।",
             objectiveBanner8Title: "परिवर्तन को सशक्त बनाना",
-            objectiveBanner8Desc: "गहरे व्यक्तिगत और सामूहिक परिवर्तन का समर्थन करना। हम मानते हैं कि हर आत्मा में दिव्य जागृति की क्षमता है, और हम इस सुंदर रूपांतरण के लिए आवश्यक पवित्र स्थान, मार्गदर्शन और समुदाय प्रदान करते हैं।"
+            objectiveBanner8Desc: "गहरे व्यक्तिगत और सामूहिक परिवर्तन का समर्थन करना। हम मानते हैं कि हर आत्मा में दिव्य जागृति की क्षमता है, और हम इस सुंदर रूपांतरण के लिए आवश्यक पवित्र स्थान, मार्गदर्शन और समुदाय प्रदान करते हैं।",
+            eventsSectionTitle: "आगामी कार्यक्रम",
         },
         // Footer
         footer: {
@@ -373,9 +376,10 @@ const translations = {
             tabUpcoming: "आगामी कार्यक्रम",
             tabCalendar: "कार्यक्रम कैलेंडर",
             legendHasEvent: "कार्यक्रम हैं",
-            legendToday: "आज",
+            legendToday: "आज की तारीख",
             noEventsMessage: "कार्यक्रम देखने के लिए एक तारीख चुनें",
-            noUpcomingEvents: "कोई आगामी कार्यक्रम निर्धारित नहीं है।"
+            noUpcomingEvents: "कोई आगामी कार्यक्रम निर्धारित नहीं है।",
+            upcomingEventsSidebar: "आगामी कार्यक्रम"
         }
     }
 };
@@ -595,6 +599,27 @@ function applyLanguage(lang) {
     document.querySelectorAll('[data-lang-blog-content-hi]').forEach(el => {
         const hiText = el.getAttribute('data-lang-blog-content-hi');
         const enText = el.getAttribute('data-lang-blog-content-en');
+        if (lang === 'en' && enText) {
+            if (el.textContent !== enText) el.textContent = enText;
+        } else if (lang === 'hi' && hiText) {
+            if (el.textContent !== hiText) el.textContent = hiText;
+        }
+    });
+
+    // GENERIC: Update any element with data-title-en/hi (e.g. sidebar events)
+    document.querySelectorAll('[data-title-en]').forEach(el => {
+        const enText = el.getAttribute('data-title-en');
+        const hiText = el.getAttribute('data-title-hi');
+        if (lang === 'en' && enText) {
+            if (el.textContent !== enText) el.textContent = enText;
+        } else if (lang === 'hi' && hiText) {
+            if (el.textContent !== hiText) el.textContent = hiText;
+        }
+    });
+
+    document.querySelectorAll('[data-location-en]').forEach(el => {
+        const enText = el.getAttribute('data-location-en');
+        const hiText = el.getAttribute('data-location-hi');
         if (lang === 'en' && enText) {
             if (el.textContent !== enText) el.textContent = enText;
         } else if (lang === 'hi' && hiText) {

@@ -736,34 +736,40 @@ function initializeEvents() {
     console.log('Initializing events page...');
     console.log('Events data length:', eventsData ? eventsData.length : 0);
 
-    // Check if we're on events page
+    // 1. Initialize Event List (if grid exists)
     const grid = document.getElementById('eventsGrid');
-    if (!grid) {
-        console.log('Not on events page, skipping initialization');
-        return;
-    }
-
-    // Render client-side list only if needed
-    if (!window.skipJsEventRender) {
-        console.log('Rendering events immediately...');
-        renderEvents();
+    if (grid) {
+        // Render client-side list only if needed
+        if (!window.skipJsEventRender) {
+            console.log('Rendering events immediately...');
+            renderEvents();
+        } else {
+            console.log('Server rendered events, skipping client render.');
+        }
     } else {
-        console.log('Server rendered events, skipping client render.');
+        console.log('Not on events page (no eventsGrid), skipping event list initialization');
     }
 
-    // Wait a bit for DOM to be fully ready for tabs
+    // 2. Initialize Calendar (if calendar container exists)
+    // Wait a bit for everything to settle
     setTimeout(() => {
-        initTabs();
+        initTabs(); // Safe to call even if no tabs
 
         // Calendar navigation
         const prevBtn = document.getElementById('prevMonth');
         const nextBtn = document.getElementById('nextMonth');
+        const calendarGrid = document.getElementById('calendarGrid');
 
-        if (prevBtn) prevBtn.addEventListener('click', () => changeMonth(-1));
-        if (nextBtn) nextBtn.addEventListener('click', () => changeMonth(1));
+        if (calendarGrid && (prevBtn || nextBtn)) {
+            console.log('Calendar elements found, initializing calendar...');
+            if (prevBtn) prevBtn.addEventListener('click', () => changeMonth(-1));
+            if (nextBtn) nextBtn.addEventListener('click', () => changeMonth(1));
 
-        // Always render calendar so it has content when tab is opened
-        renderCalendar();
+            // Always render calendar
+            renderCalendar();
+        } else {
+            console.log('Calendar elements not found, skipping calendar initialization');
+        }
     }, 100);
 }
 
@@ -804,6 +810,8 @@ window.addEventListener('load', function () {
 
 // Re-render on language change
 window.addEventListener('languageChanged', function () {
+    // Force enable JS rendering if language changes
+    window.skipJsEventRender = false;
     renderEvents();
     renderCalendar();
     if (selectedDate) {

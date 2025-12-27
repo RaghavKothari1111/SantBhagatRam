@@ -273,13 +273,15 @@
 
 /* Home Blog Section */
 .home-blog-section {
-    background: linear-gradient(to bottom, #ffffff, #f9fafb);
-    padding: 100px 80px;
+    background: linear-gradient(180deg, #fff0f3 0%, #fff5f7 100%);
+    padding: 100px 0;
     width: 100%;
+    margin: 0;
     display: block;
     visibility: visible;
     min-height: 400px;
     position: relative;
+    border-top: 1px solid rgba(255, 77, 109, 0.15);
 }
 
 .home-blog-section::before {
@@ -293,15 +295,19 @@
 }
 
 .home-blog-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
     position: relative;
+    z-index: 2;
 }
 
 .home-blog-header {
     text-align: center;
     margin-bottom: 60px;
     position: relative;
+    padding: 0 20px;
 }
 
 .home-blog-header::after {
@@ -340,12 +346,31 @@
 }
 
 .home-blog-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 30px;
     margin-bottom: 50px;
     min-height: 300px;
+    overflow-x: auto;
+    padding: 50px 60px 50px 350px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    cursor: grab;
 }
+
+.home-blog-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.home-blog-card {
+    min-width: 320px;
+    width: 320px;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+}
+
 
 .home-blog-empty {
     grid-column: 1 / -1;
@@ -644,7 +669,11 @@
 /* Home Blog Section Responsive */
 @media (max-width: 1200px) {
     .home-blog-section {
-        padding: 80px 60px;
+        padding: 80px 0;
+    }
+
+    .home-blog-container {
+        padding: 0;
     }
 
     .home-blog-grid {
@@ -658,7 +687,11 @@
 
 @media (max-width: 968px) {
     .home-blog-section {
-        padding: 70px 40px;
+        padding: 50px 0;
+    }
+
+    .home-blog-container {
+        padding: 0;
     }
 
     .home-blog-header {
@@ -673,9 +706,10 @@
         font-size: 1.1rem;
     }
 
+    /* Reset grid to flex for all screens since we use slider */
     .home-blog-grid {
-        grid-template-columns: repeat(2, 1fr);
         gap: 24px;
+        padding: 20px 40px;
     }
 
     .home-blog-card-image {
@@ -685,7 +719,12 @@
 
 @media (max-width: 768px) {
     .home-blog-section {
-        padding: 60px 30px;
+        padding: 40px 0;
+    }
+
+    .home-blog-container {
+        padding: 0;
+        border-radius: 0;
     }
 
     .home-blog-header {
@@ -707,7 +746,7 @@
         scroll-snap-type: x mandatory;
         gap: 20px;
         margin-bottom: 45px;
-        padding-bottom: 20px;
+        padding: 20px;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
@@ -718,8 +757,9 @@
 
     .home-blog-card {
         border-radius: 18px;
-        min-width: 85%;
-        flex: 0 0 85%;
+        min-width: 80vw;
+        width: 80vw;
+        flex: 0 0 80vw;
         scroll-snap-align: center;
     }
 
@@ -744,7 +784,12 @@
 
 @media (max-width: 480px) {
     .home-blog-section {
-        padding: 50px 20px;
+        padding: 30px 0;
+    }
+
+    .home-blog-container {
+        padding: 0;
+        border-radius: 0;
     }
 
     .home-blog-header {
@@ -813,5 +858,20 @@
         padding: 12px 28px;
         font-size: 0.9rem;
         border-radius: 8px;
+    }
+}
+
+/* Home Events Section */
+.home-events-section {
+    padding: 40px 40px 80px 40px;
+    width: 100%;
+    background-color: #ffe0e6;
+    position: relative;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .home-events-section {
+        padding: 60px 20px;
     }
 }
